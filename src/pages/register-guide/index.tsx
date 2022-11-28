@@ -53,7 +53,7 @@ export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
       setSuccess(true);
       setFile({} as File);
     } catch (error: any) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
     }
 

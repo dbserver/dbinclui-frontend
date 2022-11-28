@@ -100,7 +100,7 @@ export const UpdateCategory: React.FC<
       shortDescription.current!.value = '';
       setGuideId('');
     } catch (error: any) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
     }
   }

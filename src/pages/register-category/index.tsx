@@ -13,7 +13,7 @@ import {
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { Link } from 'react-router-dom';
 import styles from './styles';
-import './styles.css'
+import './styles.css';
 import Notification from '@components/Notification';
 import validateInput from './validator';
 import { GuideInterface, getGuides } from '@services/guides';
@@ -37,7 +37,6 @@ export const RegisterCategory: React.FC<
   const [errorGetGuides, setErrorGetGuides] = useState(false);
   const [errorMessageGetGuides, setErrorMessageGetGuides] = useState('');
   const context = useContext(AccessibilityContext);
-
 
   async function getGuidesService() {
     try {
@@ -71,7 +70,7 @@ export const RegisterCategory: React.FC<
       description.current!.value = '';
       setGuide('');
     } catch (error: any) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
     }
   }

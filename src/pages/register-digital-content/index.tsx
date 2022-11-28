@@ -51,7 +51,6 @@ export const RegisterDigitalContent: React.FC<
     useState('');
   const context = useContext(AccessibilityContext);
 
-
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
@@ -86,7 +85,7 @@ export const RegisterDigitalContent: React.FC<
       setSuccessGetCategories(false);
       setErrorGetCategories(true);
     } catch (error: any) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
     }
   }

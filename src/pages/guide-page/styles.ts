@@ -1,6 +1,10 @@
 import { Theme, SxProps } from '@mui/material';
 
 const indexWrapper: SxProps<Theme> = {
+  overflow: 'auto',
+  height: '25rem',
+  mt: '2rem',
+  scrollbarWidth: 'none',
   alignItems: 'center',
   justifyContent: 'center',
   position: 'fixed',

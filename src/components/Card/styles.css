@@ -1,0 +1,15 @@
+.card {
+  overflow: hidden;
+  box-shadow: 7px 7px 13px 0px rgba(50, 50, 50, 0.22);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 200ms ease-in;
+  padding: 30px;
+}
+
+.card-title {
+  text-align: center;
+}

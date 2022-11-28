@@ -1,0 +1,25 @@
+.footer {
+  /* position: fixed; */
+  bottom: 0;
+  padding: 2rem 0 1rem;
+  text-align: center;
+  width: 100%;
+  height: 125px;
+  flex: 0 1 auto;
+}
+
+.titulo {
+  text-align: left;
+  padding: 1rem 0 0 2rem;
+}
+
+.descricao {
+  text-align: justify;
+  padding: 0.5rem 2rem;
+  font-size: 1em;
+}
+
+.copyright {
+  font-weight: bold;
+  margin: 0 auto;
+}

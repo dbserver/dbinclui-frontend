@@ -1,0 +1,21 @@
+.page-error {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding-top: 100px;
+}
+
+.box-p {
+  text-align: center;
+}
+
+.icon-error {
+  width: 400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 480px) {
+  .icon-error {
+    max-width: 280px;
+  }
+}

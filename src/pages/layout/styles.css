@@ -1,0 +1,4 @@
+.mainLayout {
+  min-height: calc(100vh - 105px);
+  margin: 50px;
+}

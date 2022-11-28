@@ -1,0 +1,44 @@
+.app-header a.MuiButton-root:hover {
+  color: #221f52;
+  text-decoration: underline;
+}
+
+.app-header a.MuiButton-root {
+  color: #221f52;
+  display: block;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.box-links {
+  display: flex;
+  justify-content: right;
+  margin: 1rem 0;
+  max-width: 78%;
+}
+.box-admin {
+  display: flex;
+  flex-flow: row nowrap;
+  position: relative;
+  margin: 1rem 0 1rem 1rem;
+}
+
+.logo {
+  margin-top: 0.8rem;
+}
+
+.app-header .MuiList-root {
+  background-color: #d5d6e6;
+}
+
+a.menu-item-mobile ul {
+  text-decoration: none;
+  padding-top: 1rem;
+}

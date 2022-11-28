@@ -1,0 +1,59 @@
+{
+  "topics": [
+    {
+      "id": 1,
+      "title": "O que é acessibilidade?",
+      "contents": ""
+    },
+    {
+      "id": 2,
+      "title": "Tipos de acessibilidade",
+      "types": [
+        {
+          "type": "ATITUDINAL",
+          "contents": "Refere-se à percepção do outro sem preconceitos,estigmas, estereótypes e discriminações. Todos os demais ts de acessibilidade estão relacionados a essa, pois é a atitude da pessoa que impulsiona a remoção de barreiras."
+        },
+        {
+          "type": "ARQUITETÔNICA",
+          "contents": "Eliminação das barreiras ambientais físicas nas residências, nos edifícios, nos espaços e equipamentos urbanos Exemplos: rampa de acesso, banheiros e elevadores adaptados."
+        },
+        {
+          "type": "ARQUITETÔNICA",
+          "contents": "Eliminação das barreiras ambientais físicas nas residências, nos edifícios, nos espaços e equipamentos urbanos Exemplos: rampa de acesso, banheiros e elevadores adaptados."
+        },
+        {
+          "type": "PROGRAMÁTICA",
+          "contents": "Eliminação de barreiras presentes nas políticas públicas."
+        },
+        {
+          "type": "INSTRUMENTAL",
+          "contents": "Superação das barreiras nos instrumentos, utensílios e ferramentas de estudo (escolar), de trabalho (profissional), de lazer e recreação (comunitária, turística, esportiva)."
+        },
+        {
+          "type": "COMUNICACIONAL",
+          "contents": "Eliminação de barreiras na comunicação interpessoal (face a face, língua de sinais), escrita (jornal, revista, livro, carta, apostila etc., incluindo textos em braile, uso do computador portátil) e virtual (acessibilidade digital)."
+        },
+        {
+          "type": "DIGITAL",
+          "contents": "Eliminação de barreiras na comunicação, de acesso físico, de equipamentos e programas adequados, de conteúdo e apresentação da informação em formatos alternativos."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Boas práticas para a inclusão"
+    },
+    {
+      "id": 4,
+      "title": "Acessibilidade em eventos"
+    },
+    {
+      "id": 5,
+      "title": "Acessibilidade em materiais"
+    },
+    {
+      "id": 6,
+      "title": "Compartilhados"
+    }
+  ]
+}

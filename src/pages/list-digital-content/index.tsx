@@ -26,7 +26,7 @@ import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface DigitalContentInterfaceProps {}
+export interface DigitalContentInterfaceProps { }
 
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
@@ -220,9 +220,6 @@ export const ListDigitalContent: React.FC<
             <FormControl sx={styles.FormControl}>
               <TextField
                 variant="standard"
-                InputProps={{
-                  disableUnderline: true, // <== added this
-                }}
                 sx={styles.TextField}
               />
             </FormControl>

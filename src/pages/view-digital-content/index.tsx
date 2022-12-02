@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import {
   Button,
   Box,
-  Container,
   Grid,
   InputLabel,
   InputBase,
@@ -13,21 +12,17 @@ import {
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
-import FileUploadRounded from '@mui/icons-material/FileUploadRounded';
-import ClearIcon from '@mui/icons-material/Clear';
 import { GuideInterface, getGuides } from '@services/guides';
 import {
   DigitalContentInterface,
   getDigitalContentById,
-  putDigitalContent,
 } from '@services/digitalContent';
 import { CategoryInterface, getCategoriesByGuide } from '@services/categories';
-import validateInput, { InputInterfaceProps } from './validator';
 import Notification from '@components/Notification';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { Link, useParams } from 'react-router-dom';
-import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import ImageCarroussel from '@components/ImageCarroussel';
 
 export interface UpdateDigitalContentProps {}
 
@@ -39,18 +34,16 @@ export interface UpdateDigitalInterface {
   shortDescription: string | undefined;
 }
 
-export const UpdateDigitalContent: React.FC<
+export const ViewDigitalContent: React.FC<
   UpdateDigitalContentProps
 > = (): JSX.Element => {
   const title = useRef<HTMLInputElement>();
   const shortDescription = useRef<HTMLInputElement>();
-  const fileRef = useRef<HTMLInputElement>(null);
   const parametros = useParams();
   const id: string = parametros.id!;
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [error, setError] = useState(false);
@@ -65,6 +58,9 @@ export const UpdateDigitalContent: React.FC<
     useState('');
   const [, setGuideText] = useState<string | undefined>('');
   const [, setCategoryText] = useState<string | undefined>('');
+
+  const [digitalContent, setDigitalContent] =
+    useState<DigitalContentInterface>();
 
   const context = useContext(AccessibilityContext);
 
@@ -95,7 +91,6 @@ export const UpdateDigitalContent: React.FC<
     } catch {
       setErrorMessageGetCategories('Não foram encontradas as categorias');
       setErrorGetCategories(true);
-    } finally {
     }
   };
 
@@ -107,11 +102,18 @@ export const UpdateDigitalContent: React.FC<
     } catch {
       setErrorMessageGetGuides('Não foram encontradas as guias');
       setErrorGetGuides(true);
-    } finally {
     }
   };
 
+  const getDigitalContentByIdService = async (id: string) => {
+    try {
+      const { data } = await getDigitalContentById(id);
+      setDigitalContent(data.data);
+    } catch (error) {}
+  };
+
   useEffect(() => {
+    getDigitalContentByIdService(id);
     getGuidesService(id);
     getDigitalContentCategories(id);
     getDigitalContentGuides();
@@ -121,43 +123,12 @@ export const UpdateDigitalContent: React.FC<
     if (guideId) getDigitalContentCategories(guideId);
   }, [guideId]);
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-
-    const cardBody = {
-      title: title.current?.value || '',
-      shortDescription: shortDescription.current?.value || '',
-      guide: guideId || '',
-      category: categoryId || '',
-    } as { [key: string]: any };
-
-    const formData = new FormData();
-
-    Object.keys(cardBody).forEach((key) => {
-      formData.append(key, cardBody[key]);
-    });
-
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
-
-    try {
-      await validateInput({ ...cardBody, file: files } as InputInterfaceProps);
-      await putDigitalContent(id, formData);
-      setSuccess(true);
-    } catch (error: any) {
-      console.log(error)
-      setErrorMessage(error.response?.data.message ?? error.message);
-      setError(true);
-    }
-  }
-
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} role="main">
       <Grid item md={6} component="section">
         <Box sx={styles.header} component="header">
           <AccessibilityTypography sx={styles.headerTitle}>
-            ATUALIZAR CONTEÚDO DIGITAL
+            VISUALIZAR CONTEÚDO DIGITAL
           </AccessibilityTypography>
         </Box>
         <Box
@@ -168,73 +139,19 @@ export const UpdateDigitalContent: React.FC<
             context.colorAccessibility ? 'accessColor' : 'defaultColor'
           }
         >
-          <Button
-            variant="contained"
-            component="label"
-            sx={styles.buttonDigitalContent}
-          >
-            <Container sx={styles.containerUpload}>
-              <FileUploadRounded sx={styles.uploadIcon} />
-              Selecionar um arquivo
-            </Container>
-            <input
-              data-testid="inputFile"
-              accept="image/*, video/*"
-              type="file"
-              hidden
-              ref={fileRef}
-              multiple
-              onChange={(event: any) => {
-                setFiles([...files, ...event.target.files]);
-              }}
-            />
-          </Button>
-          {files.map((file, index) => (
-            <Box
-              key={index}
-              flexDirection={'row'}
-              display={'flex'}
-              alignItems={'center'}
-            >
-              <CustomTypography component="p" fontSize={16}>
-                {file.name}
-              </CustomTypography>
-              <Button
-                sx={styles.clearButton}
-                onClick={() => {
-                  const newFiles = files.filter((file2, index2) => {
-                    return index2 !== index;
-                  });
+          <Box>
+            <img src={digitalContent?.filePaths[0].filePath} alt="" />
+            <ImageCarroussel contents={[]} height="20rem" width="100%" />
+          </Box>
 
-                  setFiles([...newFiles]);
-
-                  if (!newFiles.length && fileRef.current !== undefined) {
-                    fileRef.current!.value = '';
-                  }
-                }}
-              >
-                <ClearIcon />{' '}
-              </Button>
-            </Box>
-          ))}
-          {!files.length && (
-            <AccessibilityTypography sx={styles.fileName}>
-              Nenhum arquivo selecionado
-            </AccessibilityTypography>
-          )}
-
-          <Box
-            onSubmit={handleSubmit}
-            component="form"
-            flexDirection={'column'}
-            display={'flex'}
-          >
+          <Box component="form" flexDirection={'column'} display={'flex'}>
             <InputLabel htmlFor="guide" id="guideLabel" sx={styles.labelInput}>
               <AccessibilityTypography>Guia:</AccessibilityTypography>
             </InputLabel>
 
             {successGetGuides && guides.length > 0 && (
               <Select
+                disabled={true}
                 labelId="guideLabel"
                 required
                 data-testid="guideTestId"
@@ -277,6 +194,7 @@ export const UpdateDigitalContent: React.FC<
             </InputLabel>
             {successGetCategories && (
               <Select
+                disabled={true}
                 labelId="categoryLabel"
                 data-testid="categoryTestId"
                 role="select"
@@ -321,6 +239,7 @@ export const UpdateDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
+              disabled={true}
             />
             <InputLabel
               htmlFor="description"
@@ -330,6 +249,7 @@ export const UpdateDigitalContent: React.FC<
               <AccessibilityTypography>Descrição:</AccessibilityTypography>
             </InputLabel>
             <InputBase
+              disabled={true}
               inputRef={shortDescription}
               multiline={true}
               minRows={5}
@@ -346,17 +266,6 @@ export const UpdateDigitalContent: React.FC<
               justifyContent={'space-evenly'}
               alignItems={'center'}
             >
-              <Grid item md={6} sx={styles.buttonWrapper}>
-                <Button
-                  sx={styles.button}
-                  variant="contained"
-                  type="submit"
-                  role="button"
-                  data-testid="submit"
-                >
-                  Atualizar
-                </Button>
-              </Grid>
               <Grid item md={6} sx={styles.buttonWrapper}>
                 <Button
                   sx={styles.button}
@@ -398,4 +307,4 @@ export const UpdateDigitalContent: React.FC<
   );
 };
 
-export default UpdateDigitalContent;
+export default ViewDigitalContent;

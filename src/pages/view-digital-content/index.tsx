@@ -9,6 +9,7 @@ import {
   MenuItem,
   Stack,
   Alert,
+  Paper,
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
@@ -22,7 +23,6 @@ import Notification from '@components/Notification';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { Link, useParams } from 'react-router-dom';
 import AccessibilityContext from '@contexts/AccessibilityContext';
-import ImageCarroussel from '@components/ImageCarroussel';
 
 export interface UpdateDigitalContentProps {}
 
@@ -132,6 +132,7 @@ export const ViewDigitalContent: React.FC<
           </AccessibilityTypography>
         </Box>
         <Box
+          border={'solid 2px red'}
           padding={'1rem 3rem'}
           sx={styles.content}
           component="section"
@@ -139,10 +140,26 @@ export const ViewDigitalContent: React.FC<
             context.colorAccessibility ? 'accessColor' : 'defaultColor'
           }
         >
-          <Box>
-            <img src={digitalContent?.filePaths[0].filePath} alt="" />
-            <ImageCarroussel contents={[]} height="20rem" width="100%" />
-          </Box>
+          <Grid item justifyContent={'center'} display="flex">
+            <Paper
+              variant="outlined"
+              sx={{
+                backgroundColor: 'secondary.light',
+                backgroundImage: `url(${digitalContent?.filePaths[0].filePath})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                width: '20rem',
+                height: '14rem',
+                borderRadius: '1.25rem',
+                mb: 2,
+                mt: '30px',
+              }}
+              tabIndex={1}
+              aria-label={'Imagem do conteúdo digital'}
+              role="imagem"
+            />
+          </Grid>
 
           <Box component="form" flexDirection={'column'} display={'flex'}>
             <InputLabel htmlFor="guide" id="guideLabel" sx={styles.labelInput}>
@@ -151,7 +168,7 @@ export const ViewDigitalContent: React.FC<
 
             {successGetGuides && guides.length > 0 && (
               <Select
-                disabled={true}
+                readOnly={true}
                 labelId="guideLabel"
                 required
                 data-testid="guideTestId"
@@ -194,7 +211,7 @@ export const ViewDigitalContent: React.FC<
             </InputLabel>
             {successGetCategories && (
               <Select
-                disabled={true}
+                readOnly={true}
                 labelId="categoryLabel"
                 data-testid="categoryTestId"
                 role="select"
@@ -239,7 +256,7 @@ export const ViewDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
-              disabled={true}
+              readOnly={true}
             />
             <InputLabel
               htmlFor="description"
@@ -249,7 +266,7 @@ export const ViewDigitalContent: React.FC<
               <AccessibilityTypography>Descrição:</AccessibilityTypography>
             </InputLabel>
             <InputBase
-              disabled={true}
+              readOnly={true}
               inputRef={shortDescription}
               multiline={true}
               minRows={5}

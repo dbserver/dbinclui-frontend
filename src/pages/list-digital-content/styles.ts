@@ -10,7 +10,7 @@ const table: SxProps<Theme> = {
   'borderColor': (theme) => theme.palette.text.primary,
   'borderRadius': '1.5rem',
   'border': '2px solid',
-  'width': '1134px',
+  'width': '1233px',
   'mt': '25px',
   'ml': 'auto',
   'mr': 'auto',

@@ -19,7 +19,6 @@ import {
   getDigitalContentById,
 } from '@services/digitalContent';
 import { CategoryInterface, getCategoriesByGuide } from '@services/categories';
-import Notification from '@components/Notification';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { Link, useParams } from 'react-router-dom';
 import AccessibilityContext from '@contexts/AccessibilityContext';
@@ -46,9 +45,6 @@ export const ViewDigitalContent: React.FC<
   const [categoryId, setCategoryId] = useState('');
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const [successGetGuides, setSuccessGetGuides] = useState(false);
   const [errorGetGuides, setErrorGetGuides] = useState(false);
   const [errorMessageGetGuides, setErrorMessageGetGuides] = useState('');
@@ -68,14 +64,12 @@ export const ViewDigitalContent: React.FC<
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
-      setError(false);
       setGuideText(data!.data?.guide?.title);
       setCategoryText(data!.data.category?.title);
       setCategoryId(data.data.category?._id!);
       setGuideId(data.data.guide._id!);
     } catch (error: any) {
-      setError(true);
-      setErrorMessage(error.response?.data.message ?? error.message);
+  
     } finally {
       title.current!.value = data!.data.title;
       shortDescription.current!.value = data!.data.shortDescription;
@@ -300,26 +294,6 @@ export const ViewDigitalContent: React.FC<
           </Box>
         </Box>
       </Grid>
-      {error && (
-        <Notification
-          message={`${errorMessage} 🤔`}
-          variant="error"
-          onClose={() => {
-            setError(false);
-            setErrorMessage('');
-          }}
-        />
-      )}
-      {success && (
-        <Notification
-          message="Atualização realizada com sucesso! ✔"
-          variant="success"
-          onClose={() => {
-            setSuccess(false);
-            window.location.reload();
-          }}
-        />
-      )}
     </Grid>
   );
 };

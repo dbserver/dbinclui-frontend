@@ -10,6 +10,7 @@ import {
   MenuItem,
   Stack,
   Alert,
+  Paper
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
@@ -50,6 +51,7 @@ export const UpdateDigitalContent: React.FC<
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [imageURL, setImageURL] = useState('');
   const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
@@ -72,6 +74,7 @@ export const UpdateDigitalContent: React.FC<
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
+      setImageURL(data.data.filePaths[0].filePath)
       setError(false);
       setGuideText(data!.data?.guide?.title);
       setCategoryText(data!.data.category?.title);
@@ -148,6 +151,10 @@ export const UpdateDigitalContent: React.FC<
       setError(true);
     }
   }
+  const changeIMG = (event: any) => {
+    setFile(event.target.files[0]);
+    setImageURL(URL.createObjectURL(event.target.files[0]))
+  }
 
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} role="main">
@@ -165,6 +172,26 @@ export const UpdateDigitalContent: React.FC<
             context.colorAccessibility ? 'accessColor' : 'defaultColor'
           }
         >
+          <Grid item justifyContent={'center'} display="flex">
+            <Paper
+              variant="outlined"
+              sx={{
+                backgroundColor: 'secondary.light',
+                backgroundImage: `url(${imageURL})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                width: '20rem',
+                height: '14rem',
+                borderRadius: '1.25rem',
+                mb: 2,
+                mt: '30px',
+              }}
+              tabIndex={1}
+              aria-label={'Imagem do conteúdo digital'}
+              role="imagem"
+            />
+          </Grid>
           <Button
             variant="contained"
             component="label"
@@ -180,9 +207,7 @@ export const UpdateDigitalContent: React.FC<
               type="file"
               hidden
               ref={fileRef}
-              onChange={(event: any) => {
-                setFile(event.target.files[0]);
-              }}
+              onChange={changeIMG}
             />
           </Button>
           {file.name && (

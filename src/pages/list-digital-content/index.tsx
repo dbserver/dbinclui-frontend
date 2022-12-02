@@ -1,7 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
-import { Box, Button, CircularProgress, Grid } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  Grid,
+  IconButton,
+  TextField,
+} from '@mui/material';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import styles from './styles';
 import './styles.css';
@@ -198,6 +207,34 @@ export const ListDigitalContent: React.FC<
       <AccessibilityTypography variant="h2" sx={styles.listTitle}>
         LISTAGEM DE CONTEÚDO DIGITAL
       </AccessibilityTypography>
+
+      <Box component="form" onSubmit={() => console.log('submit efetivado')}>
+        <Grid
+          container
+          direction={'row'}
+          justifyContent="center"
+          alignItems="center"
+          margin={1}
+        >
+          <Grid item>
+            <FormControl sx={styles.FormControl}>
+              <TextField
+                variant="standard"
+                InputProps={{
+                  disableUnderline: true, // <== added this
+                }}
+                sx={styles.TextField}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <IconButton type="submit">
+              <SearchIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
+
       <Box>
         {loading ? (
           <Grid container justifyContent={'center'} marginTop={'20px'}>

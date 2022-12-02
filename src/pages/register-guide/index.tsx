@@ -98,7 +98,6 @@ export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
                 type="file"
                 hidden
                 ref={fileRef}
-                multiple
                 onChange={(event: any) => {
                   setFile(event.target.files[0]);
                 }}

@@ -125,7 +125,6 @@ export const UpdateGuide: React.FC<UpdateGuideProps> = (): JSX.Element => {
                   type="file"
                   hidden
                   ref={fileRef}
-                  multiple
                   onChange={(event: any) => {
                     setFile(event.target.files[0]);
                   }}

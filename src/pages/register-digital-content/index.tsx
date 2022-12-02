@@ -150,7 +150,6 @@ export const RegisterDigitalContent: React.FC<
               type="file"
               hidden
               ref={fileRef}
-              multiple
               onChange={(event: any) => {
                 setFiles([...files, ...event.target.files]);
               }}

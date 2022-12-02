@@ -50,7 +50,7 @@ export const UpdateDigitalContent: React.FC<
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [error, setError] = useState(false);
@@ -137,12 +137,10 @@ export const UpdateDigitalContent: React.FC<
       formData.append(key, cardBody[key]);
     });
 
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
-
+    formData.append('files', file);
+    
     try {
-      await validateInput({ ...cardBody, file: files } as InputInterfaceProps);
+      await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
       await putDigitalContent(id, formData);
       setSuccess(true);
     } catch (error: any) {
@@ -182,15 +180,13 @@ export const UpdateDigitalContent: React.FC<
               type="file"
               hidden
               ref={fileRef}
-              multiple
               onChange={(event: any) => {
-                setFiles([...files, ...event.target.files]);
+                setFile(event.target.files[0]);
               }}
             />
           </Button>
-          {files.map((file, index) => (
+          {file.name && (
             <Box
-              key={index}
               flexDirection={'row'}
               display={'flex'}
               alignItems={'center'}
@@ -201,13 +197,9 @@ export const UpdateDigitalContent: React.FC<
               <Button
                 sx={styles.clearButton}
                 onClick={() => {
-                  const newFiles = files.filter((file2, index2) => {
-                    return index2 !== index;
-                  });
+                  setFile({} as File);
 
-                  setFiles([...newFiles]);
-
-                  if (!newFiles.length && fileRef.current !== undefined) {
+                  if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
                   }
                 }}
@@ -215,8 +207,8 @@ export const UpdateDigitalContent: React.FC<
                 <ClearIcon />{' '}
               </Button>
             </Box>
-          ))}
-          {!files.length && (
+          )}
+          {!file.name && (
             <AccessibilityTypography sx={styles.fileName}>
               Nenhum arquivo selecionado
             </AccessibilityTypography>

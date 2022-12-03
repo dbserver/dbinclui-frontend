@@ -215,8 +215,9 @@ export const UpdateDigitalContent: React.FC<
               flexDirection={'row'}
               display={'flex'}
               alignItems={'center'}
+              justifyContent={'flex-end'}
             >
-              <CustomTypography component="p" fontSize={16}>
+              <CustomTypography  component="p" fontSize={16}>
                 {file.name}
               </CustomTypography>
               <Button

@@ -227,6 +227,7 @@ export const UpdateDigitalContent: React.FC<
 
                   if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
+                    setImageURL('')
                   }
                 }}
               >

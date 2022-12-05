@@ -16,6 +16,7 @@ import DialogBoxConfirmation from '@components/DialogBox/DialogBoxConfirmation';
 import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export interface DigitalContentInterfaceProps {}
 
@@ -124,6 +125,22 @@ export const ListDigitalContent: React.FC<
       ),
     },
     {
+      field: 'view',
+      width: 100,
+      renderHeader: () => (
+        <CustomTypography component={'p'} fontSize={14}>
+          Visualizar
+        </CustomTypography>
+      ),
+      renderCell: (params) => (
+        <Button
+          href={params.value}
+          startIcon={<VisibilityIcon />}
+          sx={{ color: 'text.primary' }}
+        ></Button>
+      ),
+    },
+    {
       field: 'edit',
       width: 100,
       sortable: false,
@@ -178,6 +195,7 @@ export const ListDigitalContent: React.FC<
           ? card.shortDescription.substring(0, 30) + '...'
           : card.shortDescription,
       filePaths: card.filePaths[0].filePath,
+      view: '/admin/visualizar-conteudo-digital/' + card._id,
       edit: '/admin/atualizar-conteudo-digital/' + card._id,
       delete: card._id,
     };

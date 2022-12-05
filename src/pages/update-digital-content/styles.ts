@@ -29,6 +29,7 @@ const buttonDigitalContent: SxProps<Theme> = {
   mr: 0,
   ml: 'auto',
   mb: '0.8rem',
+  mt: '1.5rem',
   display: 'block',
   padding: '0.3rem 1rem',
   fontWeight: '700',

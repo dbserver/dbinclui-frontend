@@ -50,9 +50,9 @@ export const UpdateDigitalContent: React.FC<
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [imageURL, setImageURL] = useState('');
+  const [mediaURL, setMediaURL] = useState('');
   const [previousMediaURL, setPreviousMediaURL] = useState('');
-  const [mediaType, setMediaType] = useState('');
+  const [mediaType, setMediaType] = useState<"img" | "video">('img');
   const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
@@ -75,7 +75,7 @@ export const UpdateDigitalContent: React.FC<
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
-      setImageURL(data.data.filePaths[0].filePath);
+      setMediaURL(data.data.filePaths[0].filePath);
       mediaTyping(data.data.filePaths[0].filePath);
       setError(false);
       setGuideText(data!.data?.guide?.title);
@@ -153,17 +153,18 @@ export const UpdateDigitalContent: React.FC<
       setError(true);
     }
   }
+  
   const changeIMG = (event: any) => {
     const fileTarget = event.target.files[0];
-    if(!previousMediaURL) setPreviousMediaURL(imageURL);
+    if(!previousMediaURL) setPreviousMediaURL(mediaURL);
     setFile(fileTarget);
-    setImageURL(URL.createObjectURL(fileTarget));
+    setMediaURL(URL.createObjectURL(fileTarget));
     mediaTyping(fileTarget.name);
   }
 
   const mediaTyping = (fileExtension: string) => {
     let media = fileExtension.split('.').pop();
-    let typeMatch = media?.match(/png|jpg|jpeg|gif/)
+    let typeMatch: "img" | "video" = media?.match(/png|jpg|jpeg|gif/)
                         ? 'img' : 'video'; 
 
     setMediaType(typeMatch);
@@ -186,27 +187,22 @@ export const UpdateDigitalContent: React.FC<
           }
         >
           <Grid item justifyContent={'center'} display="flex"> 
-            <Box sx={{
-              width: '20rem',
-              height: '14rem',
-              borderRadius: '1.25rem',
-              mb: 2,
-              mt: '30px',
-            }} height={'30px'}>
-              <Box
-                component={mediaType as "img" | "video"}
-                controls={mediaType === 'video'}
-                sx={{
-                  width: '20rem',
-                  height: '14rem',
-                  borderRadius: '1.25rem',
-                  mb: 2,
-                  mt: '30px',
-                }}
-                src={imageURL}
-                alt={'Imagem referente ao conteúdo digital'}
-              />
-            </Box>
+            <Box
+              role="media"
+              aria-label={'media do conteúdo digital'}
+              tabIndex={1}
+              component={mediaType}
+              controls={mediaType === 'video'}
+              sx={{
+                minWidth: '15rem',
+                width: '80%',
+                maxHeight: '28rem',
+                borderRadius: '1.25rem',
+                mb: 2,
+                mt: '30px',
+              }}
+              src={mediaURL}
+            />
           </Grid>
           <Button
             variant="contained"
@@ -240,10 +236,11 @@ export const UpdateDigitalContent: React.FC<
                 sx={styles.clearButton}
                 onClick={() => {
                   setFile({} as File);
+                  setMediaURL(previousMediaURL);
+                  mediaTyping(previousMediaURL);
 
                   if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
-                    setImageURL(previousMediaURL);
                   }
                 }}
               >
@@ -251,7 +248,7 @@ export const UpdateDigitalContent: React.FC<
               </Button>
             </Box>
           )}
-          {!file.name && (
+          {!file.name &&  (
             <AccessibilityTypography sx={styles.fileName}>
               Nenhum arquivo selecionado
             </AccessibilityTypography>

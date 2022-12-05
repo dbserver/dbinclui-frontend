@@ -51,6 +51,7 @@ export const UpdateDigitalContent: React.FC<
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [imageURL, setImageURL] = useState('');
+  const [previousMediaURL, setPreviousMediaURL] = useState('');
   const [mediaType, setMediaType] = useState('');
   const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
@@ -154,6 +155,7 @@ export const UpdateDigitalContent: React.FC<
   }
   const changeIMG = (event: any) => {
     const fileTarget = event.target.files[0];
+    if(!previousMediaURL) setPreviousMediaURL(imageURL);
     setFile(fileTarget);
     setImageURL(URL.createObjectURL(fileTarget));
     mediaTyping(fileTarget.name);
@@ -241,7 +243,7 @@ export const UpdateDigitalContent: React.FC<
 
                   if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
-                    setImageURL('')
+                    setImageURL(previousMediaURL);
                   }
                 }}
               >

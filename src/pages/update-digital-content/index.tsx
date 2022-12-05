@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
+import img  from '../../assets/imagem.png'
 import FileUploadRounded from '@mui/icons-material/FileUploadRounded';
 import ClearIcon from '@mui/icons-material/Clear';
 import { GuideInterface, getGuides } from '@services/guides';
@@ -50,7 +51,7 @@ export const UpdateDigitalContent: React.FC<
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [imageURL, setImageURL] = useState('');
+  const [mediaURL, setMediaURL] = useState('');
   const [mediaType, setMediaType] = useState('');
   const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
@@ -74,7 +75,7 @@ export const UpdateDigitalContent: React.FC<
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
-      setImageURL(data.data.filePaths[0].filePath);
+      setMediaURL(data.data.filePaths[0].filePath);
       mediaTyping(data.data.filePaths[0].filePath);
       setError(false);
       setGuideText(data!.data?.guide?.title);
@@ -155,7 +156,7 @@ export const UpdateDigitalContent: React.FC<
   const changeIMG = (event: any) => {
     const fileTarget = event.target.files[0];
     setFile(fileTarget);
-    setImageURL(URL.createObjectURL(fileTarget));
+    setMediaURL(URL.createObjectURL(fileTarget));
     mediaTyping(fileTarget.name);
   }
 
@@ -201,7 +202,7 @@ export const UpdateDigitalContent: React.FC<
                   mb: 2,
                   mt: '30px',
                 }}
-                src={imageURL}
+                src={mediaURL}
                 alt={'Imagem referente ao conteúdo digital'}
               />
             </Box>
@@ -241,7 +242,8 @@ export const UpdateDigitalContent: React.FC<
 
                   if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
-                    setImageURL('')
+                    setMediaType('img')
+                    setMediaURL(img)
                   }
                 }}
               >
@@ -249,7 +251,7 @@ export const UpdateDigitalContent: React.FC<
               </Button>
             </Box>
           )}
-          {!file.name && (
+          {!file.name &&  (
             <AccessibilityTypography sx={styles.fileName}>
               Nenhum arquivo selecionado
             </AccessibilityTypography>

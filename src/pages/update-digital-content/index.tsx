@@ -10,7 +10,6 @@ import {
   MenuItem,
   Stack,
   Alert,
-  Paper
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
@@ -52,6 +51,7 @@ export const UpdateDigitalContent: React.FC<
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [imageURL, setImageURL] = useState('');
+  const [mediaType, setMediaType] = useState('');
   const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
@@ -74,7 +74,8 @@ export const UpdateDigitalContent: React.FC<
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
-      setImageURL(data.data.filePaths[0].filePath)
+      setImageURL(data.data.filePaths[0].filePath);
+      mediaTyping(data.data.filePaths[0].filePath);
       setError(false);
       setGuideText(data!.data?.guide?.title);
       setCategoryText(data!.data.category?.title);
@@ -152,8 +153,18 @@ export const UpdateDigitalContent: React.FC<
     }
   }
   const changeIMG = (event: any) => {
-    setFile(event.target.files[0]);
-    setImageURL(URL.createObjectURL(event.target.files[0]))
+    const fileTarget = event.target.files[0];
+    setFile(fileTarget);
+    setImageURL(URL.createObjectURL(fileTarget));
+    mediaTyping(fileTarget.name);
+  }
+
+  const mediaTyping = (fileExtension: string) => {
+    let media = fileExtension.split('.').pop();
+    let typeMatch = media?.match(/png|jpg|jpeg|gif/)
+                        ? 'img' : 'video'; 
+
+    setMediaType(typeMatch);
   }
 
   return (
@@ -172,25 +183,28 @@ export const UpdateDigitalContent: React.FC<
             context.colorAccessibility ? 'accessColor' : 'defaultColor'
           }
         >
-          <Grid item justifyContent={'center'} display="flex">
-            <Paper
-              variant="outlined"
-              sx={{
-                backgroundColor: 'secondary.light',
-                backgroundImage: `url(${imageURL})`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center center',
-                width: '20rem',
-                height: '14rem',
-                borderRadius: '1.25rem',
-                mb: 2,
-                mt: '30px',
-              }}
-              tabIndex={1}
-              aria-label={'Imagem do conteúdo digital'}
-              role="imagem"
-            />
+          <Grid item justifyContent={'center'} display="flex"> 
+            <Box sx={{
+              width: '20rem',
+              height: '14rem',
+              borderRadius: '1.25rem',
+              mb: 2,
+              mt: '30px',
+            }} height={'30px'}>
+              <Box
+                component={mediaType as "img" | "video"}
+                controls={mediaType === 'video'}
+                sx={{
+                  width: '20rem',
+                  height: '14rem',
+                  borderRadius: '1.25rem',
+                  mb: 2,
+                  mt: '30px',
+                }}
+                src={imageURL}
+                alt={'Imagem referente ao conteúdo digital'}
+              />
+            </Box>
           </Grid>
           <Button
             variant="contained"

@@ -4,7 +4,7 @@ export interface InputInterfaceProps {
   guide: string;
   title: string;
   shortDescription: string;
-  file: File[];  
+  file: File;  
 }
 
 async function validateInput(

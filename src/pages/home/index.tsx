@@ -58,7 +58,7 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                   <CardHome
                     guideId={item._id!}
                     title={item.title}
-                    image={item.filePaths.filePath}
+                    image={item.filePaths?.filePath}
                     path={item.title.toLowerCase().replace(/[- ]+/g, '-')}
                     key={key}
                     tabIndex={key}

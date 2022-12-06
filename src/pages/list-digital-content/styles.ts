@@ -78,6 +78,12 @@ const TextField:SxProps<Theme> ={
   'borderRadius': '50px ',
   'padding': '0 10px 0 10px'
 }
+const TextFieldAccessibility:SxProps<Theme> ={
+  'border':'1px solid #ffff00',
+  'borderRadius': '50px ',
+  'padding': '0 10px 0 10px'
+}
+
 const styles = {
   listTitle,
   table,
@@ -85,7 +91,8 @@ const styles = {
   button,
   buttonTable,
   FormControl,
-  TextField
+  TextField,
+  TextFieldAccessibility
 };
 
 export default styles;

@@ -27,7 +27,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-export interface DigitalContentInterfaceProps { }
+export interface DigitalContentInterfaceProps {}
 
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
@@ -238,13 +238,19 @@ export const ListDigitalContent: React.FC<
             <FormControl sx={styles.FormControl}>
               <TextField
                 variant="standard"
-                sx={styles.TextField}
+                sx={
+                  context.colorAccessibility
+                    ? styles.TextFieldAccessibility
+                    : styles.TextField
+                }
               />
             </FormControl>
           </Grid>
           <Grid item>
             <IconButton type="submit">
-              <SearchIcon />
+              <SearchIcon
+                sx={context.colorAccessibility ? { color: 'yellow' } : null}
+              />
             </IconButton>
           </Grid>
         </Grid>

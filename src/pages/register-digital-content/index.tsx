@@ -25,7 +25,7 @@ import AccessibilityTypography from '@components/AccessibilityTypography';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface RegisterDigitalContentProps {}
+export interface RegisterDigitalContentProps { }
 
 export const RegisterDigitalContent: React.FC<
   RegisterDigitalContentProps
@@ -284,6 +284,7 @@ export const RegisterDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
+              inputProps={{ minLength: 1, maxLength: 32 }}
             />
             <InputLabel
               htmlFor="description"

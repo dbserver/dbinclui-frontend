@@ -52,7 +52,7 @@ export const UpdateDigitalContent: React.FC<
   const [categoryId, setCategoryId] = useState('');
   const [mediaURL, setMediaURL] = useState('');
   const [previousMediaURL, setPreviousMediaURL] = useState('');
-  const [mediaType, setMediaType] = useState<"img" | "video">('img');
+  const [mediaType, setMediaType] = useState<'img' | 'video'>('img');
   const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
@@ -143,33 +143,34 @@ export const UpdateDigitalContent: React.FC<
     });
 
     formData.append('files', file);
-    
+
     try {
       await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
       await putDigitalContent(id, formData);
       setSuccess(true);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
     }
   }
-  
+
   const changeIMG = (event: any) => {
     const fileTarget = event.target.files[0];
-    if(!previousMediaURL) setPreviousMediaURL(mediaURL);
+    if (!previousMediaURL) setPreviousMediaURL(mediaURL);
     setFile(fileTarget);
     setMediaURL(URL.createObjectURL(fileTarget));
     mediaTyping(fileTarget.name);
-  }
+  };
 
   const mediaTyping = (fileExtension: string) => {
     let media = fileExtension.split('.').pop();
-    let typeMatch: "img" | "video" = media?.match(/png|jpg|jpeg|gif/)
-                        ? 'img' : 'video'; 
+    let typeMatch: 'img' | 'video' = media?.match(/png|jpg|jpeg|gif/)
+      ? 'img'
+      : 'video';
 
     setMediaType(typeMatch);
-  }
+  };
 
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} role="main">
@@ -187,7 +188,7 @@ export const UpdateDigitalContent: React.FC<
             context.colorAccessibility ? 'accessColor' : 'defaultColor'
           }
         >
-          <Grid item justifyContent={'center'} display="flex"> 
+          <Grid item justifyContent={'center'} display="flex">
             <Box
               role="media"
               aria-label={'media do conteúdo digital'}
@@ -230,7 +231,7 @@ export const UpdateDigitalContent: React.FC<
               alignItems={'center'}
               justifyContent={'flex-end'}
             >
-              <CustomTypography  component="p" fontSize={16}>
+              <CustomTypography component="p" fontSize={16}>
                 {file.name}
               </CustomTypography>
               <Button
@@ -249,7 +250,7 @@ export const UpdateDigitalContent: React.FC<
               </Button>
             </Box>
           )}
-          {!file.name &&  (
+          {!file.name && (
             <AccessibilityTypography sx={styles.fileName}>
               Nenhum arquivo selecionado
             </AccessibilityTypography>

@@ -66,9 +66,9 @@ export const RegisterDigitalContent: React.FC<
     Object.keys(cardBody).forEach((key) => {
       formData.append(key, cardBody[key]);
     });
-    
+
     formData.append('files', file);
-    
+
     try {
       await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
       await postDigitalContent(formData);

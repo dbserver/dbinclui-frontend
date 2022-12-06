@@ -26,8 +26,9 @@ import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
-export interface DigitalContentInterfaceProps { }
+import { FormEvent, ChangeEvent } from 'react';
+import type { IrowData } from '@interfaces/IrowData';
+export interface DigitalContentInterfaceProps {}
 
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
@@ -44,6 +45,8 @@ export const ListDigitalContent: React.FC<
   const [confirmation, setConfirmation] = useState(false);
   const [id, setId] = useState('');
   const context = useContext(AccessibilityContext);
+
+  const [searchInput, setSearchInput] = useState('');
 
   async function getDigitalContentsService() {
     try {
@@ -188,7 +191,7 @@ export const ListDigitalContent: React.FC<
     },
   ];
 
-  const rowData = digitalContents.map((card) => {
+  const rowData: IrowData = digitalContents.map((card) => {
     return {
       _id: card._id,
       guide:
@@ -210,6 +213,23 @@ export const ListDigitalContent: React.FC<
     };
   });
 
+  const [query, setQuery] = useState('');
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setQuery(searchInput);
+    setSearchInput('');
+  }
+
+  function filterContent(data: IrowData) {
+    return [...data].filter((row) => {
+      return (
+        row.category?.includes(query) ||
+        row.guide.includes(query) ||
+        row.shortDescription.includes(query)
+      );
+    });
+  }
   return (
     <>
       {confirmation && (
@@ -226,7 +246,7 @@ export const ListDigitalContent: React.FC<
         LISTAGEM DE CONTEÚDO DIGITAL
       </AccessibilityTypography>
 
-      <Box component="form" onSubmit={() => console.log('submit efetivado')}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Grid
           container
           direction={'row'}
@@ -237,14 +257,25 @@ export const ListDigitalContent: React.FC<
           <Grid item>
             <FormControl sx={styles.FormControl}>
               <TextField
+                placeholder="Pesquise sua Categoria..."
+                value={searchInput}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setSearchInput(event.target.value)
+                }
                 variant="standard"
-                sx={styles.TextField}
+                sx={
+                  context.colorAccessibility
+                    ? styles.TextFieldAccessibility
+                    : styles.TextField
+                }
               />
             </FormControl>
           </Grid>
           <Grid item>
             <IconButton type="submit">
-              <SearchIcon />
+              <SearchIcon
+                sx={context.colorAccessibility ? { color: '#fff000' } : null}
+              />
             </IconButton>
           </Grid>
         </Grid>
@@ -268,7 +299,7 @@ export const ListDigitalContent: React.FC<
               autoHeight
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
-              rows={rowData}
+              rows={filterContent(rowData)}
               columns={columns}
               sx={styles.table}
               pageSize={10}
@@ -278,6 +309,7 @@ export const ListDigitalContent: React.FC<
                 context.colorAccessibility ? 'accessColor' : 'defaultColor'
               }
             />
+
             <Box sx={styles.buttonBox}>
               <Button
                 data-testid="new"

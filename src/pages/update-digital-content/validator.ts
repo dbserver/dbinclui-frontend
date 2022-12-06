@@ -4,7 +4,11 @@ export interface InputInterfaceProps {
   guide: string;
   title: string;
   shortDescription: string;
+<<<<<<< HEAD
   file: File;  
+=======
+  file: File[];
+>>>>>>> bugfix/DBI-99
 }
 
 async function validateInput(
@@ -16,11 +20,13 @@ async function validateInput(
       .required('O guia é obrigatório'),
     title: yup
       .string()
-      .required('O título é obrigatório'),
+      .required('O título é obrigatório')
+      .min(1)
+      .max(32, 'O título é muito grande'),
     shortDescription: yup.string().required('A descrição é obrigatória'),
     file: yup
-    .mixed()
-    .required('O arquivo é obrigatório'),
+      .mixed()
+      .required('O arquivo é obrigatório'),
   });
 
   return await schema.validate(data);

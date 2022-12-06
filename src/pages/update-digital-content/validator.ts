@@ -4,29 +4,21 @@ export interface InputInterfaceProps {
   guide: string;
   title: string;
   shortDescription: string;
-<<<<<<< HEAD
-  file: File;  
-=======
-  file: File[];
->>>>>>> bugfix/DBI-99
+  file: File;
 }
 
 async function validateInput(
   data: InputInterfaceProps,
 ): Promise<InputInterfaceProps | yup.ValidationError> {
   const schema = yup.object().shape({
-    guide: yup
-      .string()
-      .required('O guia é obrigatório'),
+    guide: yup.string().required('O guia é obrigatório'),
     title: yup
       .string()
       .required('O título é obrigatório')
       .min(1)
       .max(32, 'O título é muito grande'),
     shortDescription: yup.string().required('A descrição é obrigatória'),
-    file: yup
-      .mixed()
-      .required('O arquivo é obrigatório'),
+    file: yup.mixed().required('O arquivo é obrigatório'),
   });
 
   return await schema.validate(data);

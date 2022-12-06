@@ -20,7 +20,7 @@ import { GuideInterface, getGuides } from '@services/guides';
 import { postCategories } from '@services/categories';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface RegisterCategoryProps {}
+export interface RegisterCategoryProps { }
 
 export const RegisterCategory: React.FC<
   RegisterCategoryProps
@@ -152,6 +152,7 @@ export const RegisterCategory: React.FC<
               data-testid="categoryTestId"
               aria-labelledby="categoryLabel"
               sx={styles.input}
+              inputProps={{ minLength: 1, maxLength: 32 }}
             />
             <InputLabel
               htmlFor="description"

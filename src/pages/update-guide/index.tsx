@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom';
 import { FileUploadRounded } from '@mui/icons-material';
 import ClearIcon from '@mui/icons-material/Clear';
 
-export interface UpdateGuideProps {}
+export interface UpdateGuideProps { }
 
 export interface UpdateGuideInterface {
   title?: string | undefined;
@@ -182,6 +182,7 @@ export const UpdateGuide: React.FC<UpdateGuideProps> = (): JSX.Element => {
                   required
                   aria-labelledby="tituloLabel"
                   sx={styles.input}
+                  inputProps={{ minLength: 1, maxLength: 32 }}
                 />
                 <InputLabel
                   htmlFor="descricao"

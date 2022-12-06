@@ -29,7 +29,7 @@ import { Link, useParams } from 'react-router-dom';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface UpdateDigitalContentProps {}
+export interface UpdateDigitalContentProps { }
 
 export interface UpdateDigitalInterface {
   title?: string | undefined;
@@ -321,6 +321,7 @@ export const UpdateDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
+              inputProps={{ minLength: 1, maxLength: 32 }}
             />
             <InputLabel
               htmlFor="description"

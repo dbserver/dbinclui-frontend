@@ -19,7 +19,7 @@ import './styles.css';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { CustomTypography } from '@components/CustomTypography';
 
-export interface RegisterGuideProps {}
+export interface RegisterGuideProps { }
 
 export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
   const title = useRef<HTMLInputElement>();
@@ -156,6 +156,7 @@ export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
                 required
                 aria-labelledby="tituloLabel"
                 sx={styles.input}
+                inputProps={{ minLength: 1, maxLength: 32 }}
               />
               <InputLabel
                 htmlFor="descricao"

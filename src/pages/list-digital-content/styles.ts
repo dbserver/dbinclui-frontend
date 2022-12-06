@@ -60,13 +60,32 @@ const button: SxProps<Theme> = {
     marginTop: '20px',
   },
 };
+const FormControl:SxProps<Theme> = {
+  'display': 'flex',
+  'width': '30rem',
 
+  '@media (max-width:650px)':{
+    display: 'flex',
+    maxWidth: '20rem'
+  },
+  '@media (max-width:500px)':{
+    display: 'flex',
+    maxWidth: '10rem'
+  }
+}
+const TextField:SxProps<Theme> ={
+  'border':'1px solid black',
+  'borderRadius': '50px ',
+  'padding': '0 10px 0 10px'
+}
 const styles = {
   listTitle,
   table,
   buttonBox,
   button,
   buttonTable,
+  FormControl,
+  TextField
 };
 
 export default styles;

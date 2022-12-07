@@ -28,12 +28,24 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
     }
   }
 
+  function removeSpecialsCharacters(texto: string) {
+    texto = texto.replace(/[àáâãå]/g, 'a');
+    texto = texto.replace(/[èéê]/g, 'e');
+    texto = texto.replace(/[ìí]/g, 'i');
+    texto = texto.replace(/[óôõò]/g, 'o');
+    texto = texto.replace(/[ùúû]/g, 'u');
+    return texto;
+  }
+
   const filterCards = () => {
     const queryValue = searchInputRef.current?.value || '';
 
     const currentFilteredCards: GuideInterface[] = cards.filter((card) => {
       const lowerQueryValue = queryValue.toLowerCase();
-      return card.title.toLowerCase().includes(lowerQueryValue);
+
+      return removeSpecialsCharacters(card.title.toLowerCase()).includes(
+        removeSpecialsCharacters(lowerQueryValue),
+      );
     });
 
     setFilteredCards(currentFilteredCards);

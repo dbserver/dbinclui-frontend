@@ -34,37 +34,43 @@ export const UpdateGuide: React.FC<UpdateGuideProps> = (): JSX.Element => {
   const id: string = parametros.id!;
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File>({} as File);
+  const [guideData, setGuideData] = useState({} as { data: GuideInterface });
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function getGuidesService(id: string) {
     let data: { data: GuideInterface } = {} as { data: GuideInterface };
     try {
-      setLoading(true);
       data = (await getGuideById(id)).data;
+      setGuideData(data);
       setError(false);
     } catch (error: any) {
       setError(true);
       setErrorMessage(error.response?.data.message ?? error.message);
     } finally {
       setLoading(false);
-      if (data.data) {
-        if (title.current) {
-          title.current!.value = data!.data.title;
-        }
-
-        if (description.current) {
-          description.current!.value = data!.data.content;
-        }
-      }
     }
   }
 
   useEffect(() => {
     getGuidesService(id);
   }, [id]);
+
+
+  useEffect(() => {
+    if(guideData.data){
+      if (title.current) {
+        title.current!.value = guideData.data.title;
+      }
+
+      if (description.current) {
+        description.current!.value = guideData.data.content;
+      }
+    }
+  }, [guideData]);
+
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();

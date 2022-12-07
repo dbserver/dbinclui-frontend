@@ -1,26 +1,21 @@
-import React, { useEffect, useRef, useState, KeyboardEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Grid, CircularProgress } from '@mui/material';
 import CardHome from '@components/CardHome';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
 
-
-export interface HomeProps { }
+export interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [cards, setCards] = useState<GuideInterface[]>([]);
-  const [filteredCards, setFilteredCards] = useState<GuideInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
-  const queryInputRef = useRef<HTMLInputElement>(null);
 
   async function getGuidesService() {
     try {
       const { data } = await getGuides();
-      await setCards(data.data);
-      setFilteredCards(data.data);
+      setCards(data.data);
       setError(false);
     } catch (error) {
       setError(true);
@@ -28,23 +23,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
       setLoading(false);
     }
   }
-
-  const filterCards = () => {
-    let queryValue = queryInputRef.current?.value || '';
-
-    const filterCards: GuideInterface[] = cards.filter((card) => {
-      const lowerQueryValue = queryValue.toLocaleLowerCase();
-      return card.title.toLocaleLowerCase().includes(lowerQueryValue);
-    });
-
-    setFilteredCards(filterCards);
-  };
-
-  const handleEnterKey = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      filterCards();
-    }
-  };
 
   useEffect(() => {
     getGuidesService();
@@ -70,10 +48,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
               </AccessibilityTypography>
             </Grid>
           </Grid>
-          <label>
-            <input ref={queryInputRef} type="text" onKeyDown={handleEnterKey} />
-            <button onClick={filterCards}>Pesquisar</button>
-          </label>
           <Grid item md={12}>
             <Grid container justifyContent={'center'}>
               {loading ? (
@@ -83,7 +57,7 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                   Desculpe, ocorreu um erro ao carregar a página!
                 </AccessibilityTypography>
               ) : (
-                filteredCards.map((item, key) => (
+                cards.map((item, key) => (
                   <CardHome
                     guideId={item._id!}
                     title={item.title}

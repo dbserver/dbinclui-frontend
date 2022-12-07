@@ -237,6 +237,7 @@ export const ListDigitalContent: React.FC<
           <Grid item>
             <FormControl sx={styles.FormControl}>
               <TextField
+                InputProps={{ disableUnderline: true }}
                 variant="standard"
                 sx={
                   context.colorAccessibility

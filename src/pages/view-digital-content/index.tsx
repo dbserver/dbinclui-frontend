@@ -9,7 +9,6 @@ import {
   MenuItem,
   Stack,
   Alert,
-  Paper,
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
@@ -69,7 +68,6 @@ export const ViewDigitalContent: React.FC<
       setCategoryId(data.data.category?._id!);
       setGuideId(data.data.guide._id!);
     } catch (error: any) {
-  
     } finally {
       title.current!.value = data!.data.title;
       shortDescription.current!.value = data!.data.shortDescription;
@@ -117,6 +115,9 @@ export const ViewDigitalContent: React.FC<
     if (guideId) getDigitalContentCategories(guideId);
   }, [guideId]);
 
+  const fileExtension = digitalContent?.filePaths[0].filePath.split('.').pop();
+  const mediaType = fileExtension?.match(/png|jpg|jpeg|gif/) ? 'img' : 'video';
+
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} role="main">
       <Grid item md={6} component="section">
@@ -135,23 +136,20 @@ export const ViewDigitalContent: React.FC<
           }
         >
           <Grid item justifyContent={'center'} display="flex">
-            <Paper
-              variant="outlined"
+            <Box
+              role="media"
+              aria-label={'media do conteúdo digital'}
+              tabIndex={1}
+              component={mediaType}
+              controls={mediaType === 'video'}
+              src={digitalContent?.filePaths[0].filePath}
               sx={{
-                backgroundColor: 'secondary.light',
-                backgroundImage: `url(${digitalContent?.filePaths[0].filePath})`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center center',
-                width: '20rem',
-                height: '14rem',
+                minWidth: '15rem',
+                width: '80%',
+                maxHeight: '28rem',
                 borderRadius: '1.25rem',
                 mb: 2,
-                mt: '30px',
               }}
-              tabIndex={1}
-              aria-label={'Imagem do conteúdo digital'}
-              role="imagem"
             />
           </Grid>
 

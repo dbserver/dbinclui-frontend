@@ -5,8 +5,7 @@ import AccessibilityTypography from '@components/AccessibilityTypography';
 import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
 
-
-export interface HomeProps { }
+export interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [cards, setCards] = useState<GuideInterface[]>([]);

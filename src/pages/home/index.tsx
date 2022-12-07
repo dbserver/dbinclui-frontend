@@ -3,8 +3,10 @@ import { Container, Grid, CircularProgress } from '@mui/material';
 import CardHome from '@components/CardHome';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { GuideInterface, getGuides } from '@services/guides';
+import { SearchBar } from '@components/SearchBar';
 
-export interface HomeProps {}
+
+export interface HomeProps { }
 
 export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [cards, setCards] = useState<GuideInterface[]>([]);
@@ -52,7 +54,9 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
     <>
       <Container>
         <Grid container justifyContent={'center'}>
-          <Grid item md={12} py={'45px'} px={'20px'} justifyContent={'center'}>
+          <SearchBar />
+
+          <Grid item md={12} py={'20px'} px={'20px'} justifyContent={'center'}>
             <Grid maxWidth={'800px'} m="auto">
               <AccessibilityTypography tabIndex={0} textAlign={'left'}>
                 Bem-vindo ao DB INCLUI, o DB INCLUI é um web app que dissemina a
@@ -83,7 +87,7 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                   <CardHome
                     guideId={item._id!}
                     title={item.title}
-                    image={item.filePaths.filePath}
+                    image={item.filePaths?.filePath}
                     path={item.title.toLowerCase().replace(/[- ]+/g, '-')}
                     key={key}
                     tabIndex={key}

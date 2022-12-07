@@ -1,7 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
-import { Box, Button, CircularProgress, Grid } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  Grid,
+  IconButton,
+  TextField,
+} from '@mui/material';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import styles from './styles';
 import './styles.css';
@@ -16,8 +25,9 @@ import DialogBoxConfirmation from '@components/DialogBox/DialogBoxConfirmation';
 import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
-export interface DigitalContentInterfaceProps {}
+export interface DigitalContentInterfaceProps { }
 
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
@@ -124,6 +134,22 @@ export const ListDigitalContent: React.FC<
       ),
     },
     {
+      field: 'view',
+      width: 100,
+      renderHeader: () => (
+        <CustomTypography component={'p'} fontSize={14}>
+          Visualizar
+        </CustomTypography>
+      ),
+      renderCell: (params) => (
+        <Button
+          href={params.value}
+          startIcon={<VisibilityIcon />}
+          sx={{ color: 'text.primary' }}
+        ></Button>
+      ),
+    },
+    {
       field: 'edit',
       width: 100,
       sortable: false,
@@ -178,6 +204,7 @@ export const ListDigitalContent: React.FC<
           ? card.shortDescription.substring(0, 30) + '...'
           : card.shortDescription,
       filePaths: card.filePaths[0].filePath,
+      view: '/admin/visualizar-conteudo-digital/' + card._id,
       edit: '/admin/atualizar-conteudo-digital/' + card._id,
       delete: card._id,
     };
@@ -198,6 +225,31 @@ export const ListDigitalContent: React.FC<
       <AccessibilityTypography variant="h2" sx={styles.listTitle}>
         LISTAGEM DE CONTEÚDO DIGITAL
       </AccessibilityTypography>
+
+      <Box component="form" onSubmit={() => console.log('submit efetivado')}>
+        <Grid
+          container
+          direction={'row'}
+          justifyContent="center"
+          alignItems="center"
+          margin={1}
+        >
+          <Grid item>
+            <FormControl sx={styles.FormControl}>
+              <TextField
+                variant="standard"
+                sx={styles.TextField}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <IconButton type="submit">
+              <SearchIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
+
       <Box>
         {loading ? (
           <Grid container justifyContent={'center'} marginTop={'20px'}>

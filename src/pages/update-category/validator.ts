@@ -10,7 +10,7 @@ export default async function validateInput(
   data: InputInterface,
 ): Promise<InputInterface | yup.ValidationError> {
   const schema = yup.object().shape({
-    title: yup.string().required('O título da categoria é obrigatório'),
+    title: yup.string().required('O título da categoria é obrigatório').min(1).max(32, 'O título da categoria é muito grande'),
     shortDescription: yup.string().required('A descrição é obrigatória'),
     guide: yup.string().required('O guia é obrigatório'),
   });

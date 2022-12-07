@@ -25,7 +25,7 @@ import AccessibilityTypography from '@components/AccessibilityTypography';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface RegisterDigitalContentProps {}
+export interface RegisterDigitalContentProps { }
 
 export const RegisterDigitalContent: React.FC<
   RegisterDigitalContentProps
@@ -36,7 +36,7 @@ export const RegisterDigitalContent: React.FC<
   const description = useRef<HTMLInputElement>();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const [files, setFiles] = useState<File[]>([]);
+  const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [error, setError] = useState(false);
@@ -67,12 +67,10 @@ export const RegisterDigitalContent: React.FC<
       formData.append(key, cardBody[key]);
     });
 
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
+    formData.append('files', file);
 
     try {
-      await validateInput({ ...cardBody, file: files } as InputInterfaceProps);
+      await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
       await postDigitalContent(formData);
       setSuccess(true);
       title.current!.value = '';
@@ -80,7 +78,7 @@ export const RegisterDigitalContent: React.FC<
       fileRef.current!.value = '';
       setGuide('');
       setCategory('');
-      setFiles([]);
+      setFile({} as File);
       setCategories([]);
       setSuccessGetCategories(false);
       setErrorGetCategories(true);
@@ -150,15 +148,13 @@ export const RegisterDigitalContent: React.FC<
               type="file"
               hidden
               ref={fileRef}
-              multiple
               onChange={(event: any) => {
-                setFiles([...files, ...event.target.files]);
+                setFile(event.target.files[0]);
               }}
             />
           </Button>
-          {files.map((file, index) => (
+          {file.name && (
             <Box
-              key={index}
               flexDirection={'row'}
               display={'flex'}
               alignItems={'center'}
@@ -171,13 +167,9 @@ export const RegisterDigitalContent: React.FC<
                 sx={styles.clearButton}
                 aria-label={`Remover arquivo ${file.name}`}
                 onClick={() => {
-                  const newFiles = files.filter((file2, index2) => {
-                    return index2 !== index;
-                  });
+                  setFile({} as File);
 
-                  setFiles([...newFiles]);
-
-                  if (!newFiles.length && fileRef.current !== undefined) {
+                  if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
                   }
                 }}
@@ -185,8 +177,8 @@ export const RegisterDigitalContent: React.FC<
                 <ClearIcon />
               </Button>
             </Box>
-          ))}
-          {!files.length && (
+          )}
+          {!file.name && (
             <AccessibilityTypography sx={styles.fileName}>
               Nenhum arquivo selecionado
             </AccessibilityTypography>
@@ -292,6 +284,7 @@ export const RegisterDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
+              inputProps={{ minLength: 1, maxLength: 32 }}
             />
             <InputLabel
               htmlFor="description"

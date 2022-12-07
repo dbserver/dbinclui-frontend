@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import {
   Button,
   Box,
-  Container,
   Grid,
   InputLabel,
   InputBase,
@@ -10,26 +9,21 @@ import {
   MenuItem,
   Stack,
   Alert,
+  Paper,
 } from '@mui/material';
 import styles from './styles';
 import './styles.css';
-import FileUploadRounded from '@mui/icons-material/FileUploadRounded';
-import ClearIcon from '@mui/icons-material/Clear';
 import { GuideInterface, getGuides } from '@services/guides';
 import {
   DigitalContentInterface,
   getDigitalContentById,
-  putDigitalContent,
 } from '@services/digitalContent';
 import { CategoryInterface, getCategoriesByGuide } from '@services/categories';
-import validateInput, { InputInterfaceProps } from './validator';
-import Notification from '@components/Notification';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { Link, useParams } from 'react-router-dom';
-import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface UpdateDigitalContentProps { }
+export interface UpdateDigitalContentProps {}
 
 export interface UpdateDigitalInterface {
   title?: string | undefined;
@@ -39,26 +33,18 @@ export interface UpdateDigitalInterface {
   shortDescription: string | undefined;
 }
 
-export const UpdateDigitalContent: React.FC<
+export const ViewDigitalContent: React.FC<
   UpdateDigitalContentProps
 > = (): JSX.Element => {
   const title = useRef<HTMLInputElement>();
   const shortDescription = useRef<HTMLInputElement>();
-  const fileRef = useRef<HTMLInputElement>(null);
   const parametros = useParams();
   const id: string = parametros.id!;
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [mediaURL, setMediaURL] = useState('');
-  const [previousMediaURL, setPreviousMediaURL] = useState('');
-  const [mediaType, setMediaType] = useState<'img' | 'video'>('img');
-  const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const [successGetGuides, setSuccessGetGuides] = useState(false);
   const [errorGetGuides, setErrorGetGuides] = useState(false);
   const [errorMessageGetGuides, setErrorMessageGetGuides] = useState('');
@@ -69,22 +55,21 @@ export const UpdateDigitalContent: React.FC<
   const [, setGuideText] = useState<string | undefined>('');
   const [, setCategoryText] = useState<string | undefined>('');
 
+  const [digitalContent, setDigitalContent] =
+    useState<DigitalContentInterface>();
+
   const context = useContext(AccessibilityContext);
 
   async function getGuidesService(id: string) {
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
-      setMediaURL(data.data.filePaths[0].filePath);
-      mediaTyping(data.data.filePaths[0].filePath);
-      setError(false);
       setGuideText(data!.data?.guide?.title);
       setCategoryText(data!.data.category?.title);
       setCategoryId(data.data.category?._id!);
       setGuideId(data.data.guide._id!);
     } catch (error: any) {
-      setError(true);
-      setErrorMessage(error.response?.data.message ?? error.message);
+  
     } finally {
       title.current!.value = data!.data.title;
       shortDescription.current!.value = data!.data.shortDescription;
@@ -100,7 +85,6 @@ export const UpdateDigitalContent: React.FC<
     } catch {
       setErrorMessageGetCategories('Não foram encontradas as categorias');
       setErrorGetCategories(true);
-    } finally {
     }
   };
 
@@ -112,11 +96,18 @@ export const UpdateDigitalContent: React.FC<
     } catch {
       setErrorMessageGetGuides('Não foram encontradas as guias');
       setErrorGetGuides(true);
-    } finally {
     }
   };
 
+  const getDigitalContentByIdService = async (id: string) => {
+    try {
+      const { data } = await getDigitalContentById(id);
+      setDigitalContent(data.data);
+    } catch (error) {}
+  };
+
   useEffect(() => {
+    getDigitalContentByIdService(id);
     getGuidesService(id);
     getDigitalContentCategories(id);
     getDigitalContentGuides();
@@ -126,61 +117,16 @@ export const UpdateDigitalContent: React.FC<
     if (guideId) getDigitalContentCategories(guideId);
   }, [guideId]);
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-
-    const cardBody = {
-      title: title.current?.value || '',
-      shortDescription: shortDescription.current?.value || '',
-      guide: guideId || '',
-      category: categoryId || '',
-    } as { [key: string]: any };
-
-    const formData = new FormData();
-
-    Object.keys(cardBody).forEach((key) => {
-      formData.append(key, cardBody[key]);
-    });
-
-    formData.append('files', file);
-
-    try {
-      await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
-      await putDigitalContent(id, formData);
-      setSuccess(true);
-    } catch (error: any) {
-      console.log(error);
-      setErrorMessage(error.response?.data.message ?? error.message);
-      setError(true);
-    }
-  }
-
-  const changeIMG = (event: any) => {
-    const fileTarget = event.target.files[0];
-    if (!previousMediaURL) setPreviousMediaURL(mediaURL);
-    setFile(fileTarget);
-    setMediaURL(URL.createObjectURL(fileTarget));
-    mediaTyping(fileTarget.name);
-  };
-
-  const mediaTyping = (fileExtension: string) => {
-    let media = fileExtension.split('.').pop();
-    let typeMatch: 'img' | 'video' = media?.match(/png|jpg|jpeg|gif/)
-      ? 'img'
-      : 'video';
-
-    setMediaType(typeMatch);
-  };
-
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} role="main">
       <Grid item md={6} component="section">
         <Box sx={styles.header} component="header">
           <AccessibilityTypography sx={styles.headerTitle}>
-            ATUALIZAR CONTEÚDO DIGITAL
+            VISUALIZAR CONTEÚDO DIGITAL
           </AccessibilityTypography>
         </Box>
         <Box
+          border={'solid 2px red'}
           padding={'1rem 3rem'}
           sx={styles.content}
           component="section"
@@ -189,85 +135,34 @@ export const UpdateDigitalContent: React.FC<
           }
         >
           <Grid item justifyContent={'center'} display="flex">
-            <Box
-              role="media"
-              aria-label={'media do conteúdo digital'}
-              tabIndex={1}
-              component={mediaType}
-              controls={mediaType === 'video'}
+            <Paper
+              variant="outlined"
               sx={{
-                minWidth: '15rem',
-                width: '80%',
-                maxHeight: '28rem',
+                backgroundColor: 'secondary.light',
+                backgroundImage: `url(${digitalContent?.filePaths[0].filePath})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                width: '20rem',
+                height: '14rem',
                 borderRadius: '1.25rem',
                 mb: 2,
                 mt: '30px',
               }}
-              src={mediaURL}
+              tabIndex={1}
+              aria-label={'Imagem do conteúdo digital'}
+              role="imagem"
             />
           </Grid>
-          <Button
-            variant="contained"
-            component="label"
-            sx={styles.buttonDigitalContent}
-          >
-            <Container sx={styles.containerUpload}>
-              <FileUploadRounded sx={styles.uploadIcon} />
-              Selecionar um arquivo
-            </Container>
-            <input
-              data-testid="inputFile"
-              accept="image/*, video/*"
-              type="file"
-              hidden
-              ref={fileRef}
-              onChange={changeIMG}
-            />
-          </Button>
-          {file.name && (
-            <Box
-              flexDirection={'row'}
-              display={'flex'}
-              alignItems={'center'}
-              justifyContent={'flex-end'}
-            >
-              <CustomTypography component="p" fontSize={16}>
-                {file.name}
-              </CustomTypography>
-              <Button
-                sx={styles.clearButton}
-                onClick={() => {
-                  setFile({} as File);
-                  setMediaURL(previousMediaURL);
-                  mediaTyping(previousMediaURL);
 
-                  if (fileRef.current !== undefined) {
-                    fileRef.current!.value = '';
-                  }
-                }}
-              >
-                <ClearIcon />{' '}
-              </Button>
-            </Box>
-          )}
-          {!file.name && (
-            <AccessibilityTypography sx={styles.fileName}>
-              Nenhum arquivo selecionado
-            </AccessibilityTypography>
-          )}
-
-          <Box
-            onSubmit={handleSubmit}
-            component="form"
-            flexDirection={'column'}
-            display={'flex'}
-          >
+          <Box component="form" flexDirection={'column'} display={'flex'}>
             <InputLabel htmlFor="guide" id="guideLabel" sx={styles.labelInput}>
               <AccessibilityTypography>Guia:</AccessibilityTypography>
             </InputLabel>
 
             {successGetGuides && guides.length > 0 && (
               <Select
+                readOnly={true}
                 labelId="guideLabel"
                 required
                 data-testid="guideTestId"
@@ -310,6 +205,7 @@ export const UpdateDigitalContent: React.FC<
             </InputLabel>
             {successGetCategories && (
               <Select
+                readOnly={true}
                 labelId="categoryLabel"
                 data-testid="categoryTestId"
                 role="select"
@@ -354,7 +250,7 @@ export const UpdateDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
-              inputProps={{ minLength: 1, maxLength: 32 }}
+              readOnly={true}
             />
             <InputLabel
               htmlFor="description"
@@ -364,6 +260,7 @@ export const UpdateDigitalContent: React.FC<
               <AccessibilityTypography>Descrição:</AccessibilityTypography>
             </InputLabel>
             <InputBase
+              readOnly={true}
               inputRef={shortDescription}
               multiline={true}
               minRows={5}
@@ -384,17 +281,6 @@ export const UpdateDigitalContent: React.FC<
                 <Button
                   sx={styles.button}
                   variant="contained"
-                  type="submit"
-                  role="button"
-                  data-testid="submit"
-                >
-                  Atualizar
-                </Button>
-              </Grid>
-              <Grid item md={6} sx={styles.buttonWrapper}>
-                <Button
-                  sx={styles.button}
-                  variant="contained"
                   type="reset"
                   role="button"
                   data-testid="back"
@@ -408,28 +294,8 @@ export const UpdateDigitalContent: React.FC<
           </Box>
         </Box>
       </Grid>
-      {error && (
-        <Notification
-          message={`${errorMessage} 🤔`}
-          variant="error"
-          onClose={() => {
-            setError(false);
-            setErrorMessage('');
-          }}
-        />
-      )}
-      {success && (
-        <Notification
-          message="Atualização realizada com sucesso! ✔"
-          variant="success"
-          onClose={() => {
-            setSuccess(false);
-            window.location.reload();
-          }}
-        />
-      )}
     </Grid>
   );
 };
 
-export default UpdateDigitalContent;
+export default ViewDigitalContent;

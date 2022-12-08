@@ -47,7 +47,7 @@ export const UpdateGuide: React.FC<UpdateGuideProps> = (): JSX.Element => {
       setError(false);
     } catch (error: any) {
       setError(true);
-      setErrorMessage(error.response?.data.message ?? error.message);
+      setErrorMessage(error.response?.data.message[0].msg ?? error.message);
     } finally {
       setLoading(false);
       if (data.data) {

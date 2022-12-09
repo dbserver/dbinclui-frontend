@@ -14,7 +14,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
 
-export interface GuideListPropsInterfaceProps {}
+export interface GuideListPropsInterfaceProps { }
 
 export const GuideList: React.FC<
   GuideListPropsInterfaceProps
@@ -117,7 +117,7 @@ export const GuideList: React.FC<
         <Button
           data-testid="edit"
           href={params.value}
-          startIcon={<CreateSharp />}
+          startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -138,7 +138,7 @@ export const GuideList: React.FC<
             setConfirmation(true);
             setId(params.value);
           }}
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),

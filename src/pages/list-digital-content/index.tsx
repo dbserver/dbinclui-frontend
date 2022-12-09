@@ -27,7 +27,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-export interface DigitalContentInterfaceProps {}
+export interface DigitalContentInterfaceProps { }
 
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
@@ -144,7 +144,7 @@ export const ListDigitalContent: React.FC<
       renderCell: (params) => (
         <Button
           href={params.value}
-          startIcon={<VisibilityIcon />}
+          startIcon={<VisibilityIcon titleAccess="Botão de visualizar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -161,7 +161,7 @@ export const ListDigitalContent: React.FC<
       renderCell: (params) => (
         <Button
           href={params.value}
-          startIcon={<CreateSharp />}
+          startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -181,7 +181,7 @@ export const ListDigitalContent: React.FC<
             setConfirmation(true);
             setId(params.value);
           }}
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),

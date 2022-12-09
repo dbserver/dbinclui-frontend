@@ -84,7 +84,7 @@ export const UpdateDigitalContent: React.FC<
       setGuideId(data.data.guide._id!);
     } catch (error: any) {
       setError(true);
-      setErrorMessage(error.response?.data.message ?? error.message);
+      setErrorMessage(error.response?.data.message[0].msg ?? error.message);
     } finally {
       title.current!.value = data!.data.title;
       shortDescription.current!.value = data!.data.shortDescription;

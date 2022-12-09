@@ -68,7 +68,7 @@ export const UpdateCategory: React.FC<
       setGuideText((data!.data?.guide as GuideInterface)?.title);
     } catch (error: any) {
       setError(true);
-      setErrorMessage(error.response?.data.message ?? error.message);
+      setErrorMessage(error.response?.data.message[0].msg ?? error.message);
     } finally {
       setLoading(false);
       title.current!.value = data!.data.title;

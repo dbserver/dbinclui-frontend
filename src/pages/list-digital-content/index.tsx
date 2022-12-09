@@ -46,8 +46,6 @@ export const ListDigitalContent: React.FC<
   const [id, setId] = useState('');
   const context = useContext(AccessibilityContext);
 
-  const [searchInput, setSearchInput] = useState('');
-
   async function getDigitalContentsService() {
     try {
       const { data } = await getDigitalContent();
@@ -212,21 +210,30 @@ export const ListDigitalContent: React.FC<
       delete: card._id,
     };
   });
-
+  const [searchInput, setSearchInput] = useState('');
   const [query, setQuery] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setQuery(searchInput);
-    setSearchInput('');
+    setQuery(removeCharacters(searchInput));
+  }
+
+  function removeCharacters(word?: string) {
+    if (!word) {
+      return '';
+    }
+    return word
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   }
 
   function filterContent(data: IrowData) {
     return [...data].filter((row) => {
       return (
-        row.category?.includes(query) ||
-        row.guide.includes(query) ||
-        row.shortDescription.includes(query)
+        removeCharacters(row.category).includes(query) ||
+        removeCharacters(row.guide).includes(query) ||
+        removeCharacters(row.shortDescription).includes(query)
       );
     });
   }

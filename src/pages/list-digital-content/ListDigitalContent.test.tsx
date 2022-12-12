@@ -7,7 +7,6 @@ import {
   getDigitalContent,
 } from '@services/digitalContent';
 import { AxiosResponse } from 'axios';
-import { userEvent } from '@testing-library/user-event/dist/types/setup';
 
 jest.mock('@services/digitalContent');
 

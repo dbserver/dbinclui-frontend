@@ -51,9 +51,9 @@ describe('Componente do Home', () => {
       title: 'teste',
       content: 'teste',
       filePaths: {
-        filePath: "a",
-        publicId: "b"
-      }
+        filePath: 'a',
+        publicId: 'b',
+      },
     };
     getGuidesMock.mockImplementation(
       async () =>

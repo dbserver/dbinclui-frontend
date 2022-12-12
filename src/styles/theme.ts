@@ -36,6 +36,7 @@ const theme = (themeMode: string) => {
           main: Colors.SECONDARY,
           contrastText: Colors.CONTENT_BORDER,
         },
+
         error: {
           contrastText: Colors.CONTENT_BORDER,
           main: Colors.DANGER,

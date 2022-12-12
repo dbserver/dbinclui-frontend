@@ -129,7 +129,7 @@ export const ListDigitalContent: React.FC<
           src={params.value}
           width={100}
           height={50}
-          alt="Imagem refente ao conteúdo digital."
+          alt="Imagem referente ao conteúdo digital."
         />
       ),
     },
@@ -146,6 +146,7 @@ export const ListDigitalContent: React.FC<
           href={params.value}
           startIcon={<VisibilityIcon />}
           sx={{ color: 'text.primary' }}
+          aria-label="visualizar"
         ></Button>
       ),
     },
@@ -270,6 +271,7 @@ export const ListDigitalContent: React.FC<
               disableExtendRowFullWidth={true}
               rows={rowData}
               columns={columns}
+              columnBuffer={columns.length}
               sx={styles.table}
               pageSize={10}
               rowsPerPageOptions={[10]}

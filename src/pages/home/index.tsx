@@ -13,9 +13,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [filteredCards, setFilteredCards] = useState<GuideInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  {
-    console.log(filteredCards);
-  }
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   async function getGuidesService() {

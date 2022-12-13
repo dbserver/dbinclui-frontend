@@ -12,7 +12,7 @@ function Mobile() {
   const [readMore, setReadMore] = useState(false);
   const extraContent = <div>
 
-    <Grid item md={12} py={'20px'} px={'20px'} justifyContent={'left'} className="extra-content" >
+    <Grid item md={12} py={'8px'} px={'20px'} justifyContent={'left'} className="extra-content" >
       <Grid maxWidth={'800px'} m="auto">
         <AccessibilityTypography tabIndex={0} textAlign={'left'}>
           O web app é destinado para todas as pessoas que desejam
@@ -113,14 +113,12 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
     <>
       <Container>
         <Grid container justifyContent={'center'}>
-          <SearchBar />
-          <Grid item md={12} py={'0px'} px={'7px'} justifyContent={'center'}>
           <SearchBar
             inputRef={searchInputRef}
             filterFunc={filterCards}
             handleEnterKey={handleEnterKey}
           />
-          <Grid item md={12} py={'20px'} px={'20px'} justifyContent={'center'}>
+          <Grid item md={12} py={'0px'} px={'14px'} justifyContent={'center'}>
             <Grid maxWidth={'800px'} m="auto">
               <AccessibilityTypography tabIndex={0} textAlign={'left'} justifyContent={'left'}>
                 Bem-vindo ao DB INCLUI, o DB INCLUI é um web app que dissemina a

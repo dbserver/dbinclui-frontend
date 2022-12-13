@@ -18,7 +18,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import { GuideInterface } from '@services/guides';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface CategoriesListProps {}
+export interface CategoriesListProps { }
 
 export const CategoriesList: React.FC<
   CategoriesListProps
@@ -121,7 +121,7 @@ export const CategoriesList: React.FC<
       renderCell: (params) => (
         <Button
           href={params.value}
-          startIcon={<CreateSharp />}
+          startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -141,7 +141,7 @@ export const CategoriesList: React.FC<
             setConfirmation(true);
             setId(params.value);
           }}
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
           data-testid="excluir"
         ></Button>

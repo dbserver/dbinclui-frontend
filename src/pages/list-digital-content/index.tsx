@@ -26,7 +26,8 @@ import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
+import { FormEvent, ChangeEvent } from 'react';
+import type { IrowData } from '@interfaces/IrowData';
 export interface DigitalContentInterfaceProps {}
 
 export const ListDigitalContent: React.FC<
@@ -144,7 +145,7 @@ export const ListDigitalContent: React.FC<
       renderCell: (params) => (
         <Button
           href={params.value}
-          startIcon={<VisibilityIcon />}
+          startIcon={<VisibilityIcon titleAccess="Botão de visualizar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -161,7 +162,7 @@ export const ListDigitalContent: React.FC<
       renderCell: (params) => (
         <Button
           href={params.value}
-          startIcon={<CreateSharp />}
+          startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -181,14 +182,14 @@ export const ListDigitalContent: React.FC<
             setConfirmation(true);
             setId(params.value);
           }}
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
     },
   ];
 
-  const rowData = digitalContents.map((card) => {
+  const rowData: IrowData = digitalContents.map((card) => {
     return {
       _id: card._id,
       guide:
@@ -209,7 +210,33 @@ export const ListDigitalContent: React.FC<
       delete: card._id,
     };
   });
+  const [searchInput, setSearchInput] = useState('');
+  const [query, setQuery] = useState('');
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setQuery(removeCharacters(searchInput));
+  }
+
+  function removeCharacters(word?: string) {
+    if (!word) {
+      return '';
+    }
+    return word
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+  }
+
+  function filterContent(data: IrowData) {
+    return [...data].filter((row) => {
+      return (
+        removeCharacters(row.category).includes(query) ||
+        removeCharacters(row.guide).includes(query) ||
+        removeCharacters(row.shortDescription).includes(query)
+      );
+    });
+  }
   return (
     <>
       {confirmation && (
@@ -226,7 +253,7 @@ export const ListDigitalContent: React.FC<
         LISTAGEM DE CONTEÚDO DIGITAL
       </AccessibilityTypography>
 
-      <Box component="form" onSubmit={() => console.log('submit efetivado')}>
+      <Box component="form" onSubmit={handleSubmit}>
         <Grid
           container
           direction={'row'}
@@ -237,9 +264,17 @@ export const ListDigitalContent: React.FC<
           <Grid item>
             <FormControl sx={styles.FormControl}>
               <TextField
+                placeholder="Pesquise sua Categoria..."
+                value={searchInput}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setSearchInput(event.target.value)
+                }
+                InputProps={{ disableUnderline: true }}
                 variant="standard"
                 sx={
                   context.colorAccessibility
+                    ? styles.TextFieldAccessibility
+                    : context.colorAccessibility
                     ? styles.TextFieldAccessibility
                     : styles.TextField
                 }
@@ -274,7 +309,7 @@ export const ListDigitalContent: React.FC<
               autoHeight
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
-              rows={rowData}
+              rows={filterContent(rowData)}
               columns={columns}
               sx={styles.table}
               pageSize={10}
@@ -284,6 +319,7 @@ export const ListDigitalContent: React.FC<
                 context.colorAccessibility ? 'accessColor' : 'defaultColor'
               }
             />
+
             <Box sx={styles.buttonBox}>
               <Button
                 data-testid="new"

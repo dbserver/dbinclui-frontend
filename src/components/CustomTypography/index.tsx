@@ -10,6 +10,9 @@ interface CustomTypographyProps {
   fontSize: number;
   fontWeight?: number;
   marginBottom?: number;
+  marginTop?: number;
+  color?: string;
+  textAlign?: 'right' | 'left' | 'inherit' | 'center' | 'justify' | undefined;
 }
 
 export const CustomTypography: React.FC<CustomTypographyProps> = ({
@@ -19,6 +22,9 @@ export const CustomTypography: React.FC<CustomTypographyProps> = ({
   fontSize,
   fontWeight,
   marginBottom,
+  marginTop,
+  color,
+  textAlign,
 }) => {
   const context = useContext(AccessibilityContext);
 
@@ -31,6 +37,9 @@ export const CustomTypography: React.FC<CustomTypographyProps> = ({
         fontSize: fontSize,
         fontWeight: fontWeight,
         marginBottom: marginBottom,
+        marginTop: marginTop,
+        color: color,
+        textAlign: textAlign,
       }}
     >
       {children}

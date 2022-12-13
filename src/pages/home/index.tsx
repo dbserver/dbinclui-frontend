@@ -4,15 +4,15 @@ import CardHome from '@components/CardHome';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
+import NoGuidesWarning from '@components/NoGuidesWarning';
 
-export interface HomeProps { }
+export interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [cards, setCards] = useState<GuideInterface[]>([]);
   const [filteredCards, setFilteredCards] = useState<GuideInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  { console.log(filteredCards) }
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   async function getGuidesService() {
@@ -93,7 +93,7 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                 <AccessibilityTypography variant="h1" className="error">
                   Desculpe, ocorreu um erro ao carregar a página!
                 </AccessibilityTypography>
-              ) : (
+              ) : filteredCards.length > 0 ? (
                 filteredCards.map((item, key) => (
                   <CardHome
                     guideId={item._id!}
@@ -104,6 +104,8 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                     tabIndex={key}
                   />
                 ))
+              ) : (
+                <NoGuidesWarning />
               )}
             </Grid>
           </Grid>

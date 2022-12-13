@@ -4,51 +4,72 @@ import CardHome from '@components/CardHome';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
-import { isMobile } from "react-device-detect";
+import { isMobile } from 'react-device-detect';
+import NoGuidesWarning from '@components/NoGuidesWarning';
 
-export interface HomeProps { }
+export interface HomeProps {}
 
 function Mobile() {
   const [readMore, setReadMore] = useState(false);
-  const extraContent = <div>
-
-    <Grid item md={12} py={'8px'} px={'20px'} justifyContent={'left'} className="extra-content" >
-      <Grid maxWidth={'800px'} m="auto">
-        <AccessibilityTypography tabIndex={0} textAlign={'left'}>
-          O web app é destinado para todas as pessoas que desejam
-          aprender LIBRAS e entender um pouco mais sobre Inclusão de
-          PCD&apos;s na sociedade. O web app aproveita o Guia de
-          Acessibilidade e a Apostila de Libras como fonte para informação
-          de inclusão, assim como, utiliza a API VLIBRAS para as
-          funcionalidades específicas.
-        </AccessibilityTypography>
+  const extraContent = (
+    <div>
+      <Grid
+        item
+        md={12}
+        py={'8px'}
+        px={'20px'}
+        justifyContent={'left'}
+        className="extra-content"
+      >
+        <Grid maxWidth={'800px'} m="auto">
+          <AccessibilityTypography tabIndex={0} textAlign={'left'}>
+            O web app é destinado para todas as pessoas que desejam aprender
+            LIBRAS e entender um pouco mais sobre Inclusão de PCD&apos;s na
+            sociedade. O web app aproveita o Guia de Acessibilidade e a Apostila
+            de Libras como fonte para informação de inclusão, assim como,
+            utiliza a API VLIBRAS para as funcionalidades específicas.
+          </AccessibilityTypography>
+        </Grid>
       </Grid>
-    </Grid>
-  </div>
+    </div>
+  );
 
-  const linkName = readMore ? 'Ver menos ' : 'Ver mais'
+  const linkName = readMore ? 'Ver menos ' : 'Ver mais';
 
   return (
     <>
-      {isMobile ?
-
-        <div className="Mobile" >
+      {isMobile ? (
+        <div className="Mobile">
           {readMore && extraContent}
-          <a className="read-more-link" onClick={() => { setReadMore(!readMore) }}><h4 style={{ textAlign: "center" }}>{linkName}</h4></a>
+          <a
+            className="read-more-link"
+            onClick={() => {
+              setReadMore(!readMore);
+            }}
+          >
+            <h4 style={{ textAlign: 'center' }}>{linkName}</h4>
+          </a>
         </div>
-        : <Grid item md={12} py={'20px'} px={'20px'} justifyContent={'center'} className="extra-content" >
+      ) : (
+        <Grid
+          item
+          md={12}
+          py={'20px'}
+          px={'20px'}
+          justifyContent={'center'}
+          className="extra-content"
+        >
           <Grid maxWidth={'800px'} m="auto">
-            <AccessibilityTypography tabIndex={0} textAlign={'left'}  >
-              O web app é destinado para todas as pessoas que desejam
-              aprender LIBRAS e entender um pouco mais sobre Inclusão de
-              PCD&apos;s na sociedade. O web app aproveita o Guia de
-              Acessibilidade e a Apostila de Libras como fonte para informação
-              de inclusão, assim como, utiliza a API VLIBRAS para as
-              funcionalidades específicas.
+            <AccessibilityTypography tabIndex={0} textAlign={'left'}>
+              O web app é destinado para todas as pessoas que desejam aprender
+              LIBRAS e entender um pouco mais sobre Inclusão de PCD&apos;s na
+              sociedade. O web app aproveita o Guia de Acessibilidade e a
+              Apostila de Libras como fonte para informação de inclusão, assim
+              como, utiliza a API VLIBRAS para as funcionalidades específicas.
             </AccessibilityTypography>
           </Grid>
         </Grid>
-      }
+      )}
     </>
   );
 }
@@ -58,8 +79,10 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [filteredCards, setFilteredCards] = useState<GuideInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const mobile = Mobile()
-  { console.log(filteredCards) }
+  const mobile = Mobile();
+  {
+    console.log(filteredCards);
+  }
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   async function getGuidesService() {
@@ -120,7 +143,11 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
           />
           <Grid item md={12} py={'0px'} px={'14px'} justifyContent={'center'}>
             <Grid maxWidth={'800px'} m="auto">
-              <AccessibilityTypography tabIndex={0} textAlign={'left'} justifyContent={'left'}>
+              <AccessibilityTypography
+                tabIndex={0}
+                textAlign={'left'}
+                justifyContent={'left'}
+              >
                 Bem-vindo ao DB INCLUI, o DB INCLUI é um web app que dissemina a
                 cultura de inclusão dentro da DBserver, com foco na cultura
                 surda.
@@ -136,7 +163,7 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                 <AccessibilityTypography variant="h1" className="error">
                   Desculpe, ocorreu um erro ao carregar a página!
                 </AccessibilityTypography>
-              ) : (
+              ) : filteredCards.length > 0 ? (
                 filteredCards.map((item, key) => (
                   <CardHome
                     guideId={item._id!}
@@ -147,6 +174,8 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                     tabIndex={key}
                   />
                 ))
+              ) : (
+                <NoGuidesWarning />
               )}
             </Grid>
           </Grid>

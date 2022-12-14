@@ -29,7 +29,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FormEvent, ChangeEvent } from 'react';
 import type { IrowData } from '@interfaces/IrowData';
 export interface DigitalContentInterfaceProps {}
-
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
 > = (): JSX.Element => {
@@ -265,7 +264,8 @@ export const ListDigitalContent: React.FC<
           <Grid item>
             <FormControl sx={styles.FormControl}>
               <TextField
-                placeholder="Pesquise sua Categoria..."
+                aria-label="Campo de Pesquisa"
+                placeholder="Pesquise seu Conteúdo..."
                 value={searchInput}
                 onChange={(event: ChangeEvent<HTMLInputElement>) =>
                   setSearchInput(event.target.value)

@@ -235,6 +235,7 @@ export const UpdateDigitalContent: React.FC<
                 {file.name}
               </CustomTypography>
               <Button
+                aria-label='botão excluir'
                 sx={styles.clearButton}
                 onClick={() => {
                   setFile({} as File);

@@ -48,12 +48,43 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Página de atualização de conteúdo', () => {
+
   const mockDigitalContent = {
     id: '1',
     guide: 'teste',
     category: 'teste',
     title: 'teste',
     content: 'teste',
+  };
+
+  const mockDigitalContent1 = {
+    _id: '1',
+    title: 'Titulo do conteúdo',
+    shortDescription: 'oi',
+    guide: {
+      _id: '6382b82611a630eb7bf0fb7e',
+      title: 'Guia de acessibilidade',
+      content: 'O guia acessível',
+      filePaths: {
+        filePath:
+          'https://res.cloudinary.com/duxvxgg4t/image/upload/v1669511299/uploads/d2cnonynuogw4b5z7xee.png',
+        publicId: 'uploads/d2cnonynuogw4b5z7xee',
+      },
+    },
+    category: {
+      _id: '6382b8be11a630eb7bf0fbaf',
+      title: 'Categoria de acessibilidade',
+      shortDescription: 'descrição da categoria de acessibilidade',
+      guide: '6382b82611a630eb7bf0fb7e',
+    },
+    filePaths: [
+      {
+        filePath:
+          'https://localhost/passarinho.png',
+        publicId: 'uploads/ra1saywtgnglipikof0p',
+        _id: '638e64ffb9180077c5c957f1',
+      },
+    ],
   };
 
   beforeEach(() => {
@@ -241,6 +272,8 @@ describe('Página de atualização de conteúdo', () => {
 
     render(<UpdateDigitalContent />);
 
+    global.URL.createObjectURL = jest.fn();
+
     const noFile = screen.getByText('Nenhum arquivo selecionado');
     expect(noFile).toBeVisible();
 
@@ -257,6 +290,69 @@ describe('Página de atualização de conteúdo', () => {
     const button = await screen.findByTestId('back');
 
     expect(button).toHaveAttribute('to', '/admin/listar-conteudo-digital');
+  });
+
+  test('Deve verificar se a mídia é visível e se o src da mídia seja o mesmo da entidade', async () => {
+    getDigitalContentByIdMock.mockClear()
+    getDigitalContentByIdMock.mockResolvedValue({
+      data: { data: mockDigitalContent1 },
+    } as any);
+
+    await act(() => {
+      render(<UpdateDigitalContent />);
+    });
+
+    const media = screen.getByRole('media');
+    const imageViewElement = screen.getByLabelText('media do conteúdo digital') as HTMLImageElement;
+
+    expect(media).toBeVisible();
+    expect(imageViewElement.src).toBe('https://localhost/passarinho.png');
+  });
+
+  test('Espera que ao inserir nova mídia o seu src seja o mesmo da entidade', async () => {
+    getDigitalContentByIdMock.mockClear()
+    getDigitalContentByIdMock.mockResolvedValue({
+      data: { data: mockDigitalContent1 },
+    } as any);
+
+    const file = new File(['hello'], 'hello.png', { type: 'image/png' });
+    global.URL.createObjectURL = jest.fn(() => 'blob:www.localhost/hello.png');
+
+    await act(() => {
+      render(<UpdateDigitalContent />);
+    });
+
+    const input = screen.getByTestId('inputFile') as HTMLInputElement;
+    await userEvent.upload(input, file);
+
+    const imageViewElement = screen.getByLabelText('media do conteúdo digital') as HTMLImageElement;
+
+    expect(imageViewElement.src).toBe('blob:www.localhost/hello.png')
+  });
+
+  test('Espera que o botão excluir mídia remova a nova mídia e exiba a mídia original', async () => {
+
+    getDigitalContentByIdMock.mockClear()
+    getDigitalContentByIdMock.mockResolvedValue({
+      data: { data: mockDigitalContent1 },
+    } as any);
+
+    const file = new File(['hello'], 'hello.png', { type: 'image/png' });
+    global.URL.createObjectURL = jest.fn(() => 'blob:www.localhost/hello.png');
+
+    await act(() => {
+      render(<UpdateDigitalContent />);
+    });
+
+    const input = screen.getByTestId('inputFile') as HTMLInputElement;
+    await userEvent.upload(input, file);
+
+    const button = screen.getByLabelText('botão excluir')
+    await userEvent.click(button);
+    const imageViewElement = screen.getByLabelText('media do conteúdo digital') as HTMLImageElement;
+
+    expect(imageViewElement.src).not.toBe('blob:www.localhost/hello.png')
+    expect(imageViewElement.src).toBe('https://localhost/passarinho.png')
   });
 
 });

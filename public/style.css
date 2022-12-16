@@ -1,0 +1,5 @@
+@media screen and (orientation: landscape) and (max-device-height: 480px) {
+  div[vw] {
+    top: 57% !important;
+  }
+}

@@ -39,6 +39,10 @@ export const MenuItems: MenuItemsInterface[] = [
     title: 'CONTATO',
     href: '/contato',
   },
+  {
+    title: 'ADMINISTRAÇÃO',
+    href: '/admin',
+  },
 ];
 
 export const Header: React.FC<HeaderProps> = (): JSX.Element => {
@@ -162,15 +166,15 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
             ))}
           </Box>
 
-          <Box className="box-admin" sx={{ flexGrow: 0, mr: '10px' }}>
+          <Box className="box-login" sx={{ flexGrow: 0, mr: '10px' }}>
             <Tooltip
-              title="Administrador"
+              title="Login"
               sx={{ width: '30px', height: '30px' }}
             >
               <IconButton
                 size="large"
                 sx={{ p: 0, m: '0 auto' }}
-                onClick={() => navigate('admin')}
+                onClick={() => navigate('')}
               >
                 <Avatar src="/broken-image.jpg" />
               </IconButton>

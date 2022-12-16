@@ -61,7 +61,7 @@ describe('Componente Header', () => {
     expect(button.getAttribute('to')).toBe(href);
     fireEvent.click(button);
   });
-
+/* Comentado temperariamente já que removemos sua funcionalidadeD
   test('Quando o avatar for clicado, o usuário deve ser levado para a página de administração', () => {
     render(
       <ThemeProvider theme={theme('default')}>
@@ -76,7 +76,7 @@ describe('Componente Header', () => {
     expect(mockedNavigate).toBeCalled();
     expect(mockedNavigate).toBeCalledWith('admin');
   });
-
+  */
   it('Exibir a logo default', () => {
     render(
       <ThemeProvider theme={theme('default')}>

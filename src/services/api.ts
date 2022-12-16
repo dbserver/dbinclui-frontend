@@ -13,7 +13,9 @@ export const handleAxiosError = (error: any) => {
 };
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL || 'https://passarinhosembraco.onrender.com/',
+  baseURL:
+    process.env.REACT_APP_BASE_URL ||
+    'https://passarinhosembraco.onrender.com/',
 });
 
 export default api;

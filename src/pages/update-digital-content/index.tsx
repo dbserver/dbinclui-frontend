@@ -29,7 +29,7 @@ import { Link, useParams } from 'react-router-dom';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface UpdateDigitalContentProps {}
+export interface UpdateDigitalContentProps { }
 
 export interface UpdateDigitalInterface {
   title?: string | undefined;
@@ -50,7 +50,10 @@ export const UpdateDigitalContent: React.FC<
 
   const [guideId, setGuideId] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
+  const [mediaURL, setMediaURL] = useState('');
+  const [previousMediaURL, setPreviousMediaURL] = useState('');
+  const [mediaType, setMediaType] = useState<'img' | 'video'>('img');
+  const [file, setFile] = useState<File>({} as File);
   const [guides, setGuides] = useState<GuideInterface[]>([]);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [error, setError] = useState(false);
@@ -72,6 +75,8 @@ export const UpdateDigitalContent: React.FC<
     let data: { data: DigitalContentInterface };
     try {
       data = (await getDigitalContentById(id)).data;
+      setMediaURL(data.data.filePaths[0].filePath);
+      mediaTyping(data.data.filePaths[0].filePath);
       setError(false);
       setGuideText(data!.data?.guide?.title);
       setCategoryText(data!.data.category?.title);
@@ -79,7 +84,7 @@ export const UpdateDigitalContent: React.FC<
       setGuideId(data.data.guide._id!);
     } catch (error: any) {
       setError(true);
-      setErrorMessage(error.response?.data.message ?? error.message);
+      setErrorMessage(error.response?.data.message[0].msg ?? error.message);
     } finally {
       title.current!.value = data!.data.title;
       shortDescription.current!.value = data!.data.shortDescription;
@@ -137,19 +142,35 @@ export const UpdateDigitalContent: React.FC<
       formData.append(key, cardBody[key]);
     });
 
-    files.forEach((file) => {
-      formData.append('files', file);
-    });
+    formData.append('files', file);
 
     try {
-      await validateInput({ ...cardBody, file: files } as InputInterfaceProps);
+      await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
       await putDigitalContent(id, formData);
       setSuccess(true);
     } catch (error: any) {
-      setErrorMessage(error.message);
+      console.log(error);
+      setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
     }
   }
+
+  const changeIMG = (event: any) => {
+    const fileTarget = event.target.files[0];
+    if (!previousMediaURL) setPreviousMediaURL(mediaURL);
+    setFile(fileTarget);
+    setMediaURL(URL.createObjectURL(fileTarget));
+    mediaTyping(fileTarget.name);
+  };
+
+  const mediaTyping = (fileExtension: string) => {
+    let media = fileExtension.split('.').pop();
+    let typeMatch: 'img' | 'video' = media?.match(/png|jpg|jpeg|gif/)
+      ? 'img'
+      : 'video';
+
+    setMediaType(typeMatch);
+  };
 
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} role="main">
@@ -167,6 +188,24 @@ export const UpdateDigitalContent: React.FC<
             context.colorAccessibility ? 'accessColor' : 'defaultColor'
           }
         >
+          <Grid item justifyContent={'center'} display="flex">
+            <Box
+              role="media"
+              aria-label={'media do conteúdo digital'}
+              tabIndex={1}
+              component={mediaType}
+              controls={mediaType === 'video'}
+              sx={{
+                minWidth: '15rem',
+                width: '80%',
+                maxHeight: '28rem',
+                borderRadius: '1.25rem',
+                mb: 2,
+                mt: '30px',
+              }}
+              src={mediaURL}
+            />
+          </Grid>
           <Button
             variant="contained"
             component="label"
@@ -182,32 +221,28 @@ export const UpdateDigitalContent: React.FC<
               type="file"
               hidden
               ref={fileRef}
-              multiple
-              onChange={(event: any) => {
-                setFiles([...files, ...event.target.files]);
-              }}
+              onChange={changeIMG}
             />
           </Button>
-          {files.map((file, index) => (
+          {file.name && (
             <Box
-              key={index}
               flexDirection={'row'}
               display={'flex'}
               alignItems={'center'}
+              justifyContent={'flex-end'}
             >
               <CustomTypography component="p" fontSize={16}>
                 {file.name}
               </CustomTypography>
               <Button
+                aria-label='botão excluir'
                 sx={styles.clearButton}
                 onClick={() => {
-                  const newFiles = files.filter((file2, index2) => {
-                    return index2 !== index;
-                  });
+                  setFile({} as File);
+                  setMediaURL(previousMediaURL);
+                  mediaTyping(previousMediaURL);
 
-                  setFiles([...newFiles]);
-
-                  if (!newFiles.length && fileRef.current !== undefined) {
+                  if (fileRef.current !== undefined) {
                     fileRef.current!.value = '';
                   }
                 }}
@@ -215,8 +250,8 @@ export const UpdateDigitalContent: React.FC<
                 <ClearIcon />{' '}
               </Button>
             </Box>
-          ))}
-          {!files.length && (
+          )}
+          {!file.name && (
             <AccessibilityTypography sx={styles.fileName}>
               Nenhum arquivo selecionado
             </AccessibilityTypography>
@@ -320,6 +355,7 @@ export const UpdateDigitalContent: React.FC<
               data-testid="titleTestId"
               aria-labelledby="titleLabel"
               sx={styles.input}
+              inputProps={{ minLength: 1, maxLength: 32 }}
             />
             <InputLabel
               htmlFor="description"

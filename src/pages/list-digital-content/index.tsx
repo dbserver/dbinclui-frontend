@@ -1,7 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
-import { Box, Button, CircularProgress, Grid } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  FormControl,
+  Grid,
+  IconButton,
+  TextField,
+} from '@mui/material';
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import styles from './styles';
 import './styles.css';
@@ -16,9 +25,10 @@ import DialogBoxConfirmation from '@components/DialogBox/DialogBoxConfirmation';
 import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { FormEvent, ChangeEvent } from 'react';
+import type { IrowData } from '@interfaces/IrowData';
 export interface DigitalContentInterfaceProps {}
-
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
 > = (): JSX.Element => {
@@ -119,8 +129,25 @@ export const ListDigitalContent: React.FC<
           src={params.value}
           width={100}
           height={50}
-          alt="Imagem refente ao conteúdo digital."
+          alt="Imagem referente ao conteúdo digital."
         />
+      ),
+    },
+    {
+      field: 'view',
+      width: 100,
+      renderHeader: () => (
+        <CustomTypography component={'p'} fontSize={14}>
+          Visualizar
+        </CustomTypography>
+      ),
+      renderCell: (params) => (
+        <Button
+          href={params.value}
+          startIcon={<VisibilityIcon titleAccess="Botão de visualizar" />}
+          sx={{ color: 'text.primary' }}
+          aria-label="visualizar"
+        ></Button>
       ),
     },
     {
@@ -135,7 +162,7 @@ export const ListDigitalContent: React.FC<
       renderCell: (params) => (
         <Button
           href={params.value}
-          startIcon={<CreateSharp />}
+          startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
@@ -155,14 +182,14 @@ export const ListDigitalContent: React.FC<
             setConfirmation(true);
             setId(params.value);
           }}
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
         ></Button>
       ),
     },
   ];
 
-  const rowData = digitalContents.map((card) => {
+  const rowData: IrowData = digitalContents.map((card) => {
     return {
       _id: card._id,
       guide:
@@ -178,11 +205,38 @@ export const ListDigitalContent: React.FC<
           ? card.shortDescription.substring(0, 30) + '...'
           : card.shortDescription,
       filePaths: card.filePaths[0].filePath,
+      view: '/admin/visualizar-conteudo-digital/' + card._id,
       edit: '/admin/atualizar-conteudo-digital/' + card._id,
       delete: card._id,
     };
   });
+  const [searchInput, setSearchInput] = useState('');
+  const [query, setQuery] = useState('');
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setQuery(removeCharacters(searchInput));
+  }
+
+  function removeCharacters(word?: string) {
+    if (!word) {
+      return '';
+    }
+    return word
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+  }
+
+  function filterContent(data: IrowData) {
+    return [...data].filter((row) => {
+      return (
+        removeCharacters(row.category).includes(query) ||
+        removeCharacters(row.guide).includes(query) ||
+        removeCharacters(row.shortDescription).includes(query)
+      );
+    });
+  }
   return (
     <>
       {confirmation && (
@@ -198,6 +252,46 @@ export const ListDigitalContent: React.FC<
       <AccessibilityTypography variant="h2" sx={styles.listTitle}>
         LISTAGEM DE CONTEÚDO DIGITAL
       </AccessibilityTypography>
+
+      <Box component="form" onSubmit={handleSubmit}>
+        <Grid
+          container
+          direction={'row'}
+          justifyContent="center"
+          alignItems="center"
+          margin={1}
+        >
+          <Grid item>
+            <FormControl sx={styles.FormControl}>
+              <TextField
+                aria-label="Campo de Pesquisa"
+                placeholder="Pesquise seu Conteúdo..."
+                value={searchInput}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setSearchInput(event.target.value)
+                }
+                InputProps={{ disableUnderline: true }}
+                variant="standard"
+                sx={
+                  context.colorAccessibility
+                    ? styles.TextFieldAccessibility
+                    : context.colorAccessibility
+                    ? styles.TextFieldAccessibility
+                    : styles.TextField
+                }
+              />
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <IconButton type="submit">
+              <SearchIcon
+                sx={context.colorAccessibility ? { color: '#fff000' } : null}
+              />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
+
       <Box>
         {loading ? (
           <Grid container justifyContent={'center'} marginTop={'20px'}>
@@ -216,8 +310,9 @@ export const ListDigitalContent: React.FC<
               autoHeight
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
-              rows={rowData}
+              rows={filterContent(rowData)}
               columns={columns}
+              columnBuffer={columns.length}
               sx={styles.table}
               pageSize={10}
               rowsPerPageOptions={[10]}
@@ -226,6 +321,7 @@ export const ListDigitalContent: React.FC<
                 context.colorAccessibility ? 'accessColor' : 'defaultColor'
               }
             />
+
             <Box sx={styles.buttonBox}>
               <Button
                 data-testid="new"

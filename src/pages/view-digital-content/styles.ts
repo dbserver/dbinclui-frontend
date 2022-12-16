@@ -29,7 +29,6 @@ const buttonDigitalContent: SxProps<Theme> = {
   mr: 0,
   ml: 'auto',
   mb: '0.8rem',
-  mt: '1.5rem',
   display: 'block',
   padding: '0.3rem 1rem',
   fontWeight: '700',
@@ -48,9 +47,9 @@ const labelInput: SxProps<Theme> = {
 const input: SxProps<Theme> = {
   width: '100%',
   border: '1px solid',
+  borderColor: (theme) => theme.palette.text.primary,
   backgroundColor: (theme) => theme.palette.background.default,
   borderRadius: '15px',
-  borderColor: 'secondary.primary',
   padding: '0.5rem 1rem',
   mb: '2.5rem',
 };

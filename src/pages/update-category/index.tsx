@@ -25,7 +25,7 @@ import {
 } from '@services/categories';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 
-export interface UpdateCategoryProps {}
+export interface UpdateCategoryProps { }
 
 export const UpdateCategory: React.FC<
   UpdateCategoryProps
@@ -68,15 +68,15 @@ export const UpdateCategory: React.FC<
       setGuideText((data!.data?.guide as GuideInterface)?.title);
     } catch (error: any) {
       setError(true);
-      setErrorMessage(error.message);
+      setErrorMessage(error.response?.data.message[0].msg ?? error.message);
     } finally {
       setLoading(false);
       title.current!.value = data!.data.title;
       shortDescription.current!.value = data!.data.shortDescription;
       setGuideId((data!.data.guide as GuideInterface)?._id!);
     }
-    }
-    
+  }
+
 
   useEffect(() => {
     getGuidesService();
@@ -186,6 +186,7 @@ export const UpdateCategory: React.FC<
               data-testid="categoryTestId"
               aria-labelledby="categoryLabel"
               sx={styles.input}
+              inputProps={{ minLength: 1, maxLength: 32 }}
             />
             <InputLabel
               htmlFor="description"

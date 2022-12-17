@@ -1,0 +1,45 @@
+@media screen and (orientation: landscape) and (max-device-height: 630px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 38% !important;
+  }
+  div[vw] [vw-plugin-wrapper].active {
+    height: 380px;
+  }
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px;
+    top: 12vh;
+  }
+  div[vw] [vp] [vp-controls] {
+    bottom: 15% !important;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-device-height: 560px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 33% !important;
+  }
+  div[vw] [vw-plugin-wrapper].active {
+    height: 480px;
+  }
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px;
+    top: 15vh;
+  }
+  div[vw] [vp] [vp-controls] {
+    bottom: 0% !important;
+  }
+}

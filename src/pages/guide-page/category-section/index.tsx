@@ -28,7 +28,6 @@ export const CategorySection: React.FC<CategorySectionProps> = ({
           >
             {category.title}
           </CustomTypography>
-
           <AccessibilityTypography component="h2" sx={styles.categoryContent}>
             {category.shortDescription}
           </AccessibilityTypography>

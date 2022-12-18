@@ -27,8 +27,9 @@ const headerContainer: SxProps<Theme> = {
 const description: SxProps<Theme> = {
   fontSize: '1rem',
   fontWeight: 400,
+  textAlign: 'left',
   m: '1rem',
-
+  whiteSpace: 'pre-wrap',
 };
 
 const imageWrapper: SxProps<Theme> = {

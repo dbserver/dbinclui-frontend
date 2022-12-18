@@ -82,10 +82,7 @@ export const GuidePage: React.FC<GuidePageProps> = (): JSX.Element => {
       {/* Conteúdo */}
       <Grid tabIndex={0} item md={8} width={'100%'}>
         <Grid tabIndex={0} item md={8}>
-          <Box
-            sx={{ maxWidth: '100%', wordWrap: 'break-word' }}
-            component="header"
-          >
+          <Box component="header">
             <CustomTypography
               component="h1"
               fontSize={32}
@@ -95,20 +92,13 @@ export const GuidePage: React.FC<GuidePageProps> = (): JSX.Element => {
               {guide?.title}
             </CustomTypography>
 
-            <Box
-              sx={{
-                maxWidth: '100%',
-                wordWrap: 'break-word',
-              }}
+            <AccessibilityTypography
+              component="h2"
+              sx={styles.guideContent}
+              id={guide?._id}
             >
-              <AccessibilityTypography
-                component="h2"
-                sx={styles.guideContent}
-                id={guide?._id}
-              >
-                {guide?.content}
-              </AccessibilityTypography>
-            </Box>
+              {guide?.content}
+            </AccessibilityTypography>
 
             {guide?.digitalContents && !!guide?.digitalContents.length && (
               <Box sx={styles.digitalContent}>

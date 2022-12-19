@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
 
           {/*MENU HAMBURGUER*/}
 
-          <Box sx={{ marginLeft: 2, flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ marginLeft: 2, flexGrow: 1, display: { xs: 'flex', lg: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -116,7 +116,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'block', lg: 'none' },
               }}
             >
               {MenuItems.map((item, key) => (
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           {/*MENU DESKTOP*/}
 
           <Box
-            sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}
+            sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' } }}
             className="box-links"
           >
             {MenuItems.map((item, key) => (

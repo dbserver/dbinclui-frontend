@@ -8,14 +8,17 @@
   div[vw] {
     top: 33% !important;
   }
+
   div[vw] [vw-plugin-wrapper].active {
     height: 450px;
   }
+
   [vw] [vw-access-button] .access-button {
     position: relative;
     left: 0px;
     top: 15vh;
   }
+  
   div[vw] [vp] [vp-controls] {
     bottom: 0% !important;
   }

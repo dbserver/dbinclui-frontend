@@ -89,7 +89,13 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
 
           {/*MENU HAMBURGUER*/}
 
-          <Box sx={{ marginLeft: 2, flexGrow: 1, display: { xs: 'flex', lg: 'none' } }}>
+          <Box
+            sx={{
+              marginLeft: 2,
+              flexGrow: 1,
+              display: { xs: 'flex', lg: 'none' },
+            }}
+          >
             <IconButton
               size="large"
               aria-label="account of current user"

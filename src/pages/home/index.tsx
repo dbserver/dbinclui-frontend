@@ -6,6 +6,7 @@ import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
 import { isMobile } from 'react-device-detect';
 import NoGuidesWarning from '@components/NoGuidesWarning';
+import CardTranslator from '@components/CardTranslator';
 
 export interface HomeProps {}
 
@@ -163,19 +164,27 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                 <AccessibilityTypography variant="h1" className="error">
                   Desculpe, ocorreu um erro ao carregar a página!
                 </AccessibilityTypography>
-              ) : filteredCards.length > 0 ? (
-                filteredCards.map((item, key) => (
-                  <CardHome
-                    guideId={item._id!}
-                    title={item.title}
-                    image={item.filePaths?.filePath}
-                    path={item.title.toLowerCase().replace(/[- ]+/g, '-')}
-                    key={key}
-                    tabIndex={key}
-                  />
-                ))
               ) : (
-                <NoGuidesWarning />
+                <>
+                  <CardTranslator
+                    title={'Tradutor de Libras'}
+                    path={'tradutor'}
+                  />
+                  {filteredCards.length > 0 ? (
+                    filteredCards.map((item, key) => (
+                      <CardHome
+                        guideId={item._id!}
+                        title={item.title}
+                        image={item.filePaths?.filePath}
+                        path={item.title.toLowerCase().replace(/[- ]+/g, '-')}
+                        key={key}
+                        tabIndex={key}
+                      />
+                    ))
+                  ) : (
+                    <NoGuidesWarning />
+                  )}
+                </>
               )}
             </Grid>
           </Grid>

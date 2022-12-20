@@ -61,7 +61,7 @@ describe('Componente Header', () => {
     expect(button.getAttribute('to')).toBe(href);
     fireEvent.click(button);
   });
-/* Comentado temperariamente já que removemos sua funcionalidadeD
+/* Comentado temporariamente já que removemos sua funcionalidade
   test('Quando o avatar for clicado, o usuário deve ser levado para a página de administração', () => {
     render(
       <ThemeProvider theme={theme('default')}>

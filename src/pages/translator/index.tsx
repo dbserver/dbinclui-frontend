@@ -94,19 +94,19 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
               </Box>
               <Box>
                 <IconButton
+                  onClick={saveExpressionDB}
+                  type="button"
+                  aria-label="savedb"
+                >
+                  <SaveDbIcon />
+                </IconButton>
+                <IconButton
                   onClick={saveExpression}
                   type="button"
                   aria-label="save"
                   sx={styles.saveButton}
                 >
                   <SaveIcon />
-                </IconButton>
-                <IconButton
-                  onClick={saveExpressionDB}
-                  type="button"
-                  aria-label="savedb"
-                >
-                  <SaveDbIcon />
                 </IconButton>
               </Box>
             </Paper>

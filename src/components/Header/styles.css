@@ -23,7 +23,7 @@
   margin: 1rem 0;
   max-width: 78%;
 }
-.box-admin {
+.box-login {
   display: flex;
   flex-flow: row nowrap;
   position: relative;

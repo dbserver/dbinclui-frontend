@@ -82,7 +82,10 @@ export const GuidePage: React.FC<GuidePageProps> = (): JSX.Element => {
       {/* Conteúdo */}
       <Grid tabIndex={0} item md={8} width={'100%'}>
         <Grid tabIndex={0} item md={8}>
-          <Box component="header">
+          <Box
+            component="header"
+            sx={{ maxWidth: '100%', wordWrap: 'break-word' }}
+          >
             <CustomTypography
               component="h1"
               fontSize={32}

@@ -75,21 +75,32 @@ export const ImageCarroussel: React.FC<ImageCarrousselProps> = ({
         elevation={0}
         sx={styles.headerContainer}
       >
-        <CustomTypography
-          component="p"
-          fontSize={22.4}
-          fontWeight={700}
-          marginBottom={2}
+        <Box sx={{ maxWidth: '100%', wordWrap: 'break-word' }}>
+          <CustomTypography
+            component="p"
+            fontSize={22.4}
+            fontWeight={700}
+            marginBottom={2}
+          >
+            {
+              contents[arrayOfContents[currentIndex]?.digitalContentIndex]
+                ?.title
+            }
+          </CustomTypography>
+        </Box>
+        <Box
+          sx={{
+            maxWidth: '100%',
+            wordWrap: 'break-word',
+          }}
         >
-          {contents[arrayOfContents[currentIndex]?.digitalContentIndex]?.title}
-        </CustomTypography>
-
-        <AccessibilityTypography sx={styles.description}>
-          {
-            contents[arrayOfContents[currentIndex]?.digitalContentIndex]
-              ?.shortDescription
-          }
-        </AccessibilityTypography>
+          <AccessibilityTypography sx={styles.description}>
+            {
+              contents[arrayOfContents[currentIndex]?.digitalContentIndex]
+                ?.shortDescription
+            }
+          </AccessibilityTypography>
+        </Box>
       </Paper>
 
       <SwipeableViews index={currentIndex} enableMouseEvents>

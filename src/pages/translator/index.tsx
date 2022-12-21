@@ -15,6 +15,9 @@ import { CustomTypography } from '@components/CustomTypography';
 import MicIcon from '@mui/icons-material/Mic';
 import SaveDbIcon from '@components/svgs/savedbIcon';
 import SaveIcon from '@components/svgs/saveIcon';
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from 'react-speech-recognition';
 
 export interface TranslatorProps {}
 
@@ -23,6 +26,31 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
   let click = new Event('click');
   let texto = document.querySelector('#texto');
   let btn = document.querySelector('#btn') as HTMLButtonElement;
+  const [valueInput, setValueInput] = useState('');
+
+  const {
+    transcript,
+    resetTranscript,
+    listening,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  const startListening = () => {
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: true });
+    if (!browserSupportsSpeechRecognition) {
+      return <span>Browser does not support speech recognition.</span>;
+    }
+  };
+
+  const stopListening = () => {
+    SpeechRecognition.stopListening();
+    setValueInput(transcript);
+    setExpression(transcript);
+    if (btn.disabled == true) {
+      activateButton();
+    }
+  };
 
   const saveExpression = () => {
     console.log('Saving expression');
@@ -32,32 +60,45 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
     console.log('Saving expressionDB');
   };
 
+  const disableButton = () => {
+    btn.classList.add('Mui-disabled');
+    btn.setAttribute('disabled', 'disabled');
+  };
+
+  const activateButton = () => {
+    btn.removeAttribute('disabled');
+    btn.classList.remove('Mui-disabled');
+  };
+
   const lerTexto = () => {
     if (texto?.firstChild) {
       texto.firstChild.dispatchEvent(click);
     }
   };
 
-  const traduzir = () => {
-    let btn = document.querySelector('#btn') as HTMLButtonElement;
+  async function handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setExpression(event.target.value);
+    setValueInput(event.target.value);
+    activateButton();
+  }
 
+  const traduzir = () => {
+    disableButton();
     let imgVlibras = document.querySelector('[vw] [vw-access-button]');
     if (expression)
       if (imgVlibras?.classList.value === 'active') {
         imgVlibras.dispatchEvent(click);
         setTimeout(() => {
           lerTexto();
-          btn.setAttribute('disabled', '');
         }, 10000);
-        setInterval(() => {}, 1000);
+        setInterval(() => {}, 2000);
       } else {
         imgVlibras?.dispatchEvent(click);
         if (texto) texto.textContent = expression;
         imgVlibras?.dispatchEvent(click);
-        btn.setAttribute('disabled', '');
         setTimeout(() => {
           lerTexto();
-        }, 1000);
+        }, 2000);
       }
   };
 
@@ -116,11 +157,17 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
               sx={styles.inputExpression}
               aria-label="Campo de Tradução"
               placeholder="Digite uma frase ou expressão..."
-              onChange={(event) => {
-                setExpression(event.target.value);
-              }}
+              id="inputExpression"
+              onChange={handleOnChange}
+              value={valueInput}
             />
-            <IconButton sx={styles.micButton}>
+            <IconButton
+              sx={styles.micButton}
+              onTouchStart={startListening}
+              onMouseDown={startListening}
+              onTouchEnd={stopListening}
+              onMouseUp={stopListening}
+            >
               <MicIcon color="primary" />
             </IconButton>
           </Box>

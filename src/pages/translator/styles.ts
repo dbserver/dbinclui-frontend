@@ -11,6 +11,9 @@ const micButton: SxProps<Theme> = {
   '&:hover': {
     backgroundColor: (theme) => theme.palette.secondary.contrastText,
   },
+  '&:active': {
+    backgroundColor: (theme) => theme.palette.error.main,
+  },
 };
 
 const input: SxProps<Theme> = {

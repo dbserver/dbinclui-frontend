@@ -6,7 +6,6 @@ import {
   Grid,
   IconButton,
   InputBase,
-  InputLabel,
   Paper,
 } from '@mui/material';
 import styles from './styles';
@@ -91,14 +90,14 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
         setTimeout(() => {
           lerTexto();
         }, 10000);
-        setInterval(() => {}, 2000);
+        setInterval(() => {}, 1000);
       } else {
         imgVlibras?.dispatchEvent(click);
         if (texto) texto.textContent = expression;
         imgVlibras?.dispatchEvent(click);
         setTimeout(() => {
           lerTexto();
-        }, 2000);
+        }, 1000);
       }
   };
 

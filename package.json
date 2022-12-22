@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.14",
     "@mui/styled-engine-sc": "^5.10.14",
+    "@mui/styles": "^5.11.1",
     "@mui/x-data-grid": "^5.17.11",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/user-event": "^14.4.3",

@@ -14,8 +14,7 @@ export const handleAxiosError = (error: any) => {
 
 const api = axios.create({
   baseURL:
-    process.env.REACT_APP_BASE_URL ||
-    'https://passarinhosembraco.onrender.com/',
+    process.env.REACT_APP_BASE_URL || 'https://dbincluitemporary.onrender.com/',
 });
 
 export default api;

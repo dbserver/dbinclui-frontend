@@ -3,7 +3,6 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
@@ -18,6 +17,12 @@ import AccessibilityTypography from '../../components/AccessibilityTypography';
 import { ColorsDefault } from '@styles/colors';
 import LogoAmarelo from '../svgs/logoAmarelo';
 import { useTheme } from '@emotion/react';
+import { useAuthContext } from '@contexts/AuthContext';
+import SignoutModal from '@components/SignOutModal';
+import { SignInModal } from '@components/SignInModal';
+import { CustomTypography } from '@components/CustomTypography';
+import AccessibilityContext from '@contexts/AccessibilityContext';
+import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
 
 export interface HeaderProps {}
 
@@ -50,7 +55,16 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
     null,
   );
 
+  const [anchorElSignInModal, setAnchorElSignInModal] =
+    React.useState<null | HTMLElement>(null);
+
+  const { user } = useAuthContext();
+  const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
+
   const navigate = useNavigate();
+
+  const isAccessibility =
+    React.useContext(AccessibilityContext).colorAccessibility;
 
   const handleChangePage = (
     target: React.MouseEvent<HTMLElement>['currentTarget'],
@@ -65,7 +79,16 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const handleOpenSignInModal = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElSignInModal(event.currentTarget);
+  };
+
   const theme: any = useTheme();
+
+  React.useEffect(() => {
+    verifyLogedGoogleUser();
+  }, []);
 
   return (
     <AppBar
@@ -79,7 +102,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           <Box
             component={Link}
             to="/"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ mr: 2, display: { xs: 'none', lg: 'flex' } }}
             title="Logo"
           >
             <Box sx={{ mt: '10px', mb: '10px' }}>
@@ -172,38 +195,60 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
             ))}
           </Box>
 
-          <Box className="box-login" sx={{ flexGrow: 0, mr: '10px' }}>
-            <Tooltip
-              title="Login"
-              sx={{ width: '30px', height: '30px' }}
-            >
-              <IconButton
-                size="large"
-                sx={{ p: 0, m: '0 auto' }}
-                onClick={() => navigate('')}
-              >
-                <Avatar src="/broken-image.jpg" />
-              </IconButton>
+          <Box
+            className="box-login"
+            sx={{
+              flexGrow: 0,
+              mr: '10px',
+              ml: '15px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              {user && (
+                <CustomTypography
+                  maxWidth="15ch"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  color={isAccessibility ? '#FFFF00' : '#221F52'}
+                  fontWeight={500}
+                  fontSize={18}
+                  component="p"
+                >
+                  {user?.displayName}
+                </CustomTypography>
+              )}
+            </Box>
+            <Tooltip title="Login" sx={{ width: '30px', height: '30px' }}>
+              <span>
+                <IconButton
+                  size="large"
+                  sx={{ p: 0, m: '0 auto' }}
+                  onClick={handleOpenSignInModal}
+                  disabled={loadingUser}
+                >
+                  <Avatar
+                    src={user ? user.photoURL! : '/broken-image.jpg'}
+                    imgProps={{ referrerPolicy: 'no-referrer' }}
+                  />
+                </IconButton>
+              </span>
             </Tooltip>
 
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={false}
-            >
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center"></Typography>
-              </MenuItem>
-            </Menu>
+            {user ? (
+              <SignoutModal
+                anchorElSignInModal={anchorElSignInModal}
+                setAnchorElSignInModal={setAnchorElSignInModal}
+              />
+            ) : (
+              <SignInModal
+                anchorElSignInModal={anchorElSignInModal}
+                setAnchorElSignInModal={setAnchorElSignInModal}
+              />
+            )}
           </Box>
         </Toolbar>
       </Container>

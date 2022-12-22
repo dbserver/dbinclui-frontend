@@ -41,14 +41,14 @@ function Mobile() {
       {isMobile ? (
         <div className="Mobile">
           {readMore && extraContent}
-          <a
+          <div
             className="read-more-link"
             onClick={() => {
               setReadMore(!readMore);
             }}
           >
             <h4 style={{ textAlign: 'center' }}>{linkName}</h4>
-          </a>
+          </div>
         </div>
       ) : (
         <Grid

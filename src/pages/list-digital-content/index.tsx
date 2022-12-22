@@ -28,7 +28,7 @@ import AccessibilityContext from '@contexts/AccessibilityContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FormEvent, ChangeEvent } from 'react';
 import type { IrowData } from '@interfaces/IrowData';
-export interface DigitalContentInterfaceProps {}
+export interface DigitalContentInterfaceProps { }
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
 > = (): JSX.Element => {
@@ -190,6 +190,15 @@ export const ListDigitalContent: React.FC<
   ];
 
   const rowData: IrowData = digitalContents.map((card) => {
+    let path = card.filePaths[0].filePath;
+    let extension = path.split('/').pop() ?? '';
+    extension = extension.indexOf('.') < 1 ? '' : extension.split('.').pop() ?? '';
+
+    if (!extension.match(/png|jpg|jpeg|gif|webp/)) {
+      const fileName = path.replace(/\.[^/.]+$/, "");
+      path = fileName + '.jpg';
+    }
+
     return {
       _id: card._id,
       guide:
@@ -204,7 +213,7 @@ export const ListDigitalContent: React.FC<
         card.shortDescription.length > 30
           ? card.shortDescription.substring(0, 30) + '...'
           : card.shortDescription,
-      filePaths: card.filePaths[0].filePath,
+      filePaths: path,
       view: '/admin/visualizar-conteudo-digital/' + card._id,
       edit: '/admin/atualizar-conteudo-digital/' + card._id,
       delete: card._id,
@@ -276,8 +285,8 @@ export const ListDigitalContent: React.FC<
                   context.colorAccessibility
                     ? styles.TextFieldAccessibility
                     : context.colorAccessibility
-                    ? styles.TextFieldAccessibility
-                    : styles.TextField
+                      ? styles.TextFieldAccessibility
+                      : styles.TextField
                 }
               />
             </FormControl>

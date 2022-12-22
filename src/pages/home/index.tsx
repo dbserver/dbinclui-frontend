@@ -159,23 +159,19 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                 <AccessibilityTypography variant="h1" className="error">
                   Desculpe, ocorreu um erro ao carregar a página!
                 </AccessibilityTypography>
+              ) : filteredCards.length > 0 ? (
+                filteredCards.map((item, key) => (
+                  <CardHome
+                    guideId={item._id!}
+                    title={item.title}
+                    image={item.filePaths?.filePath}
+                    path={item.title.toLowerCase().replace(/[- ]+/g, '-')}
+                    key={key}
+                    tabIndex={key}
+                  />
+                ))
               ) : (
-                <>
-                  {filteredCards.length > 0 ? (
-                    filteredCards.map((item, key) => (
-                      <CardHome
-                        guideId={item._id!}
-                        title={item.title}
-                        image={item.filePaths?.filePath}
-                        path={item.title.toLowerCase().replace(/[- ]+/g, '-')}
-                        key={key}
-                        tabIndex={key}
-                      />
-                    ))
-                  ) : (
-                    <NoGuidesWarning />
-                  )}
-                </>
+                <NoGuidesWarning />
               )}
             </Grid>
           </Grid>

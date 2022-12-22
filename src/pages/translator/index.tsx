@@ -24,7 +24,6 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
   const [expression, setExpression] = useState('');
   let click = new Event('click');
   let texto = document.querySelector('#texto');
-  let btn = document.querySelector('#btn') as HTMLButtonElement;
   const [valueInput, setValueInput] = useState('');
 
   const {
@@ -43,6 +42,8 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
   };
 
   const stopListening = () => {
+    let btn = document.querySelector('#btn') as HTMLButtonElement;
+
     SpeechRecognition.stopListening();
     setValueInput(transcript);
     setExpression(transcript);
@@ -60,11 +61,15 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
   };
 
   const disableButton = () => {
+    let btn = document.querySelector('#btn') as HTMLButtonElement;
+
     btn.classList.add('Mui-disabled');
     btn.setAttribute('disabled', 'disabled');
   };
 
   const activateButton = () => {
+    let btn = document.querySelector('#btn') as HTMLButtonElement;
+
     btn.removeAttribute('disabled');
     btn.classList.remove('Mui-disabled');
   };
@@ -157,6 +162,7 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
               aria-label="Campo de Tradução"
               placeholder="Digite uma frase ou expressão..."
               id="inputExpression"
+              data-testid="inputFile"
               onChange={handleOnChange}
               value={valueInput}
             />
@@ -176,6 +182,7 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
             aria-label="BOTÃO TRADUZIR"
             id="btn"
             onClick={traduzir}
+            data-testid="btn-traduzir"
           >
             Traduzir
           </Button>

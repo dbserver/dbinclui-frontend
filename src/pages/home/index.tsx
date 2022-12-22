@@ -6,7 +6,6 @@ import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
 import { isMobile } from 'react-device-detect';
 import NoGuidesWarning from '@components/NoGuidesWarning';
-import CardTranslator from '@components/CardTranslator';
 
 export interface HomeProps {}
 
@@ -81,9 +80,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const mobile = Mobile();
-  {
-    console.log(filteredCards);
-  }
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   async function getGuidesService() {
@@ -118,7 +114,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
         removeSpecialsCharacters(lowerQueryValue),
       );
     });
-
     setFilteredCards(currentFilteredCards);
   };
 
@@ -166,10 +161,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
                 </AccessibilityTypography>
               ) : (
                 <>
-                  <CardTranslator
-                    title={'Tradutor de Libras'}
-                    path={'tradutor'}
-                  />
                   {filteredCards.length > 0 ? (
                     filteredCards.map((item, key) => (
                       <CardHome

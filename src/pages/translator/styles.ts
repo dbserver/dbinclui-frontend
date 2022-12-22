@@ -48,8 +48,7 @@ const inputExpression: SxProps<Theme> = {
   },
   '@media (max-width:425px)': {
     'display': 'flex',
-    ' flex-direction': 'column',
-    'backgroundColor': 'red',
+    ' flexDirection': 'column',
   },
 };
 const inputLabel: SxProps<Theme> = {

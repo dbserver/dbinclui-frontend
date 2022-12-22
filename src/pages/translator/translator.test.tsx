@@ -23,5 +23,12 @@ describe('Página de tradutor de expressões', () => {
     expect(inputExpressionElement.value).toBe('Olá, como vai você?');
   });
 
+  it('Deve desativar botão Traduzir quando ele for clicado', async () => {
+    render(<Translator />);
 
+    const botaoTraduzir = screen.getByTestId('btn-traduzir');
+
+    await userEvent.click(botaoTraduzir);
+    expect(botaoTraduzir).toBeDisabled();
+  });
 });

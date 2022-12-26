@@ -114,7 +114,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
         removeSpecialsCharacters(lowerQueryValue),
       );
     });
-
     setFilteredCards(currentFilteredCards);
   };
 

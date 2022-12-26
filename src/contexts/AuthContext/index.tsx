@@ -4,7 +4,7 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { firebase } from '../../firebase/config';
+import firebase from 'firebase/compat';
 
 interface AuthContextProps {
   user: firebase.User | null;
@@ -16,7 +16,7 @@ const initialValue: AuthContextProps = {
   setUser: () => {},
 };
 
-const AuthContext = createContext<AuthContextProps>(initialValue);
+export const AuthContext = createContext<AuthContextProps>(initialValue);
 
 export const AuthContextProvider = (props: PropsWithChildren) => {
   const [user, setUser] = useState<firebase.User | null>(null);
@@ -26,8 +26,4 @@ export const AuthContextProvider = (props: PropsWithChildren) => {
       {props.children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuthContext = () => {
-  return useContext(AuthContext);
 };

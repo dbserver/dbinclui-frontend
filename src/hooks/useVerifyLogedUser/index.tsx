@@ -1,11 +1,13 @@
-import { useAuthContext } from '@contexts/AuthContext';
-import React, { useState } from 'react';
-import { auth } from '../../firebase/config';
+import { AuthContext } from '@contexts/AuthContext';
+import React, { useState, useContext } from 'react';
+import firebaseInitialize from '../../firebase/config';
 
 export const useVerifyLogedUser = () => {
-  const [loadingUser, setLoadingUser] = useState<boolean>(true);
+  const { auth } = firebaseInitialize();
 
-  const { setUser } = useAuthContext();
+  const { setUser } = useContext(AuthContext);
+
+  const [loadingUser, setLoadingUser] = useState<boolean>(true);
 
   const verifyLogedGoogleUser = () => {
     auth.onAuthStateChanged((user) => {

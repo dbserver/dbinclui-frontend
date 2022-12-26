@@ -17,7 +17,7 @@ import AccessibilityTypography from '../../components/AccessibilityTypography';
 import { ColorsDefault } from '@styles/colors';
 import LogoAmarelo from '../svgs/logoAmarelo';
 import { useTheme } from '@emotion/react';
-import { useAuthContext } from '@contexts/AuthContext';
+import { AuthContext } from '@contexts/AuthContext';
 import SignoutModal from '@components/SignOutModal';
 import { SignInModal } from '@components/SignInModal';
 import { CustomTypography } from '@components/CustomTypography';
@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   const [anchorElSignInModal, setAnchorElSignInModal] =
     React.useState<null | HTMLElement>(null);
 
-  const { user } = useAuthContext();
+  const { user } = React.useContext(AuthContext);
   const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
 
   const navigate = useNavigate();
@@ -102,7 +102,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           <Box
             component={Link}
             to="/"
-            sx={{ mr: 2, display: { xs: 'none', lg: 'flex' } }}
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
             title="Logo"
           >
             <Box sx={{ mt: '10px', mb: '10px' }}>

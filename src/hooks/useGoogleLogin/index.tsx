@@ -1,23 +1,30 @@
-import { useAuthContext } from '@contexts/AuthContext';
 import { createUser, validateUserExists } from '@services/users';
-import { auth, firebase } from '../../firebase/config';
+import firebaseInitialize from '../../firebase/config';
+import { useContext } from 'react';
+import { AuthContext } from '@contexts/AuthContext';
+import firebase from 'firebase/compat/app';
 
 export const useGoogleLogin = () => {
-  const { setUser, user } = useAuthContext();
+  const { auth, googleProvider } = firebaseInitialize();
+
+  const { user, setUser } = useContext(AuthContext);
 
   const signInWithGoogle = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const calledGoogleProvider = googleProvider();
 
-    const { user } = await auth.signInWithPopup(provider);
-    const token = await user?.getIdToken();
+    if (calledGoogleProvider) {
+      console.log('ENtreou');
+      const { user } = await auth.signInWithPopup(calledGoogleProvider);
+      const token = await user?.getIdToken();
 
-    const { data } = await validateUserExists(token!);
+      const result = await validateUserExists(token!);
 
-    if (!data) {
-      await createUser(token!);
+      if (!result.data) {
+        await createUser(token!);
+      }
+
+      setUser(auth.currentUser);
     }
-
-    setUser(auth.currentUser);
   };
 
   const signOutWithGoogle = async () => {

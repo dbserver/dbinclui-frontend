@@ -3,8 +3,8 @@ import { Box, ButtonBase, Menu } from '@mui/material';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { useStyles } from './styles';
-import { useAuthContext } from '@contexts/AuthContext';
 import useGoogleLogin from '@hooks/useGoogleLogin';
+import { AuthContext } from '@contexts/AuthContext';
 
 interface SignoutModalProps {
   anchorElSignInModal: null | HTMLElement;
@@ -15,7 +15,7 @@ export const SignoutModal = ({
   anchorElSignInModal,
   setAnchorElSignInModal,
 }: SignoutModalProps) => {
-  const { user } = useAuthContext();
+  const { user } = useContext(AuthContext);
   const { signOutWithGoogle } = useGoogleLogin();
 
   const isAccessibility = useContext(AccessibilityContext).colorAccessibility;

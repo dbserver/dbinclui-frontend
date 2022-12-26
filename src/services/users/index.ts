@@ -20,7 +20,6 @@ export const createUser = async (token: string) => {
       },
     });
   } catch (error) {
-    console.log('erro no create user');
     throw handleAxiosError(error);
   }
 };

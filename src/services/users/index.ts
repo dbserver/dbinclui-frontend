@@ -23,3 +23,15 @@ export const createUser = async (token: string) => {
     throw handleAxiosError(error);
   }
 };
+
+export const getUserById = async (token: string) => {
+  try {
+    return api.get('/users/', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+};

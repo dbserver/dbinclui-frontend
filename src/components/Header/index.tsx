@@ -61,7 +61,9 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   const { user } = React.useContext(AuthContext);
   const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
 
-  const navigate = useNavigate();
+  if (!user) {
+    console.log('');
+  }
 
   const isAccessibility =
     React.useContext(AccessibilityContext).colorAccessibility;
@@ -89,6 +91,8 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   React.useEffect(() => {
     verifyLogedGoogleUser();
   }, []);
+
+  console.log(user);
 
   return (
     <AppBar

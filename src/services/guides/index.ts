@@ -6,7 +6,7 @@ export interface GuideInterface {
   _id?: string;
   title: string;
   content: string;
-  filePaths:  {
+  filePaths: {
     filePath: string;
     publicId: string;
   };
@@ -27,14 +27,11 @@ export const getGuides = async () => {
 
 export const postGuides = async (cardBody: FormData) => {
   try {
-    return api.post<{ data: GuideInterface }>('/guides/', 
-      cardBody,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    return api.post<{ data: GuideInterface }>('/guides/', cardBody, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
       },
-    );
+    });
   } catch (error) {
     throw handleAxiosError(error);
   }
@@ -42,14 +39,11 @@ export const postGuides = async (cardBody: FormData) => {
 
 export const putGuides = async (id: string, cardBody: FormData) => {
   try {
-    return api.put(`/guides/${id}`,
-      cardBody,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    return api.put(`/guides/${id}`, cardBody, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
       },
-    );
+    });
   } catch {
     throw new Error('Serviço não disponível');
   }

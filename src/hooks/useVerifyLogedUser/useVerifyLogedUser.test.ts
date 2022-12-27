@@ -31,7 +31,7 @@ describe('useVerifyLogedUser', () => {
 
     const mockSetUser = jest.fn();
 
-    const mockOnAuthStateChanged = jest.fn();
+    const mockonIdTokenChanged = jest.fn();
 
     const mockSetLoadingUser = jest.fn();
     test('Deve verificar se já existe um usuário logado', () => {
@@ -47,7 +47,7 @@ describe('useVerifyLogedUser', () => {
         app: {} as any,
 
         auth: {
-          onAuthStateChanged: mockOnAuthStateChanged,
+          onIdTokenChanged: mockonIdTokenChanged,
         } as any,
         googleProvider: jest.fn().mockReturnValue(true),
       });
@@ -56,7 +56,7 @@ describe('useVerifyLogedUser', () => {
 
       verifyLogedGoogleUser();
 
-      expect(mockOnAuthStateChanged).toBeCalledTimes(1);
+      expect(mockonIdTokenChanged).toBeCalledTimes(1);
     });
   });
 });

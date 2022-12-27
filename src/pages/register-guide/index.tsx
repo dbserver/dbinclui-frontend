@@ -19,7 +19,7 @@ import './styles.css';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { CustomTypography } from '@components/CustomTypography';
 
-export interface RegisterGuideProps { }
+export interface RegisterGuideProps {}
 
 export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
   const title = useRef<HTMLInputElement>();

@@ -92,8 +92,6 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
     verifyLogedGoogleUser();
   }, []);
 
-  console.log(user);
-
   return (
     <AppBar
       role="header"

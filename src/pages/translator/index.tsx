@@ -22,6 +22,7 @@ import { AuthContext } from '@contexts/AuthContext';
 import { useContext } from 'react';
 import { postUserExpression } from '@services/userExpressions';
 import Notification from '@components/Notification';
+import { postDbExpression } from '@services/dbExpressions';
 export interface TranslatorProps {}
 
 export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
@@ -83,8 +84,24 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
     }
   };
 
-  const saveExpressionDB = () => {
-    console.log('Saving expressionDB');
+  const saveExpressionDB = async () => {
+    try {
+      if (!user) {
+        setError(true);
+        setErrorMessage(
+          'Você precisa efetuar o login para armazenar no dicionario DBInclui',
+        );
+        return;
+      }
+      if (!user?.token) {
+        throw new Error('Nenhum token foi enviado');
+      }
+      await postDbExpression(expression, user?.token);
+      setSuccess(true);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data.message ?? error.message);
+      setError(true);
+    }
   };
 
   const disableButton = () => {

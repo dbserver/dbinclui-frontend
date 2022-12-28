@@ -163,11 +163,13 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
                   {expression}
                 </AccessibilityTypography>
               </Box>
-              <Box>
+              <Box sx={styles.BoxBottons}>
                 <IconButton
                   onClick={saveExpressionDB}
                   type="button"
                   aria-label="savedb"
+                  sx={styles.saveButton}
+                  disabled={!expression}
                 >
                   <SaveDbIcon />
                 </IconButton>

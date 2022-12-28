@@ -37,17 +37,28 @@ export const getCategoriesById = async (id: string) => {
   }
 };
 
-export const postCategories = async (cardBody: CategoryInterface) => {
+export const postCategories = async (
+  cardBody: CategoryInterface,
+  token: string
+) => {
   try {
-    return api.post('/categories/', cardBody);
+    return api.post('/categories/', cardBody, {
+      headers: {
+        'Authorization' : `Bearer ${token}` 
+      }
+    });
   } catch (error) {
     throw handleAxiosError(error);
   }
 };
 
-export const deleteCategory = async (id: string) => {
+export const deleteCategory = async (id: string, token: string) => {
   try {
-    return api.delete<{ data: CategoryInterface }>(`categories/${id}`);
+    return api.delete<{ data: CategoryInterface }>(`categories/${id}`, {
+      headers: {
+        'Authorization' : `Bearer ${token}` 
+      }
+    });
   } catch (error) {
     throw handleAxiosError(error);
   }
@@ -55,10 +66,29 @@ export const deleteCategory = async (id: string) => {
 export const putCategories = async (
   id: string,
   cardBody: CategoryInterface,
+  token: string
 ) => {
   try {
-    return api.put(`/categories/${id}`, cardBody);
+    return api.put(`/categories/${id}`, cardBody, {
+      headers: {
+        'Authorization' : `Bearer ${token}` 
+      }
+    });
   } catch {
     throw new Error('Serviço não disponível');
   }
+};
+
+export const patchCategories = async (
+  id: string, token: string
+) => {
+  try {
+    return api.patch(`/categories/delete/${id}`, null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  } catch {
+    throw new Error('Serviço não disponível');
+  }  
 };

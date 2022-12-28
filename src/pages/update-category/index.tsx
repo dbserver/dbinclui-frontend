@@ -24,6 +24,7 @@ import {
   CategoryInterface,
 } from '@services/categories';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import { AuthContext } from '@contexts/AuthContext';
 
 export interface UpdateCategoryProps { }
 
@@ -47,6 +48,7 @@ export const UpdateCategory: React.FC<
   const [guideText, setGuideText] = useState<string | undefined>('');
   const [guideId, setGuideId] = useState('');
   const context = useContext(AccessibilityContext);
+  const { user } = useContext(AuthContext);
 
   async function getGuidesService() {
     try {
@@ -94,7 +96,7 @@ export const UpdateCategory: React.FC<
 
     try {
       await validateInput(cardBody);
-      await putCategories(id, cardBody);
+      await putCategories(id, cardBody, user!.token);
       setSuccess(true);
       title.current!.value = '';
       shortDescription.current!.value = '';

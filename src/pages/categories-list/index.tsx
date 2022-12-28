@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import {
   CategoryInterface,
   getCategories,
-  deleteCategory,
+  patchCategories,
 } from '@services/categories';
 import DialogBoxConfirmation from '@components/DialogBox/DialogBoxConfirmation';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,6 +17,7 @@ import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import { GuideInterface } from '@services/guides';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import { AuthContext } from '@contexts/AuthContext';
 
 export interface CategoriesListProps { }
 
@@ -33,6 +34,7 @@ export const CategoriesList: React.FC<
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const context = useContext(AccessibilityContext);
+  const { user } = useContext(AuthContext);
 
 
   async function getContentCategories() {
@@ -49,7 +51,7 @@ export const CategoriesList: React.FC<
   async function handleDelete(value: boolean) {
     if (value) {
       try {
-        await deleteCategory(id);
+        await patchCategories(id, user!.token);
         setSuccess(true);
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
@@ -66,7 +68,7 @@ export const CategoriesList: React.FC<
     { field: '_id', headerName: 'ID', width: 300, hide: true },
     {
       field: 'guide',
-      width: 250,
+      width: user ? 250 : 300,
       editable: false,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
@@ -81,7 +83,7 @@ export const CategoriesList: React.FC<
     },
     {
       field: 'title',
-      width: 200,
+      width: user ? 230 : 300,
       editable: false,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
@@ -96,7 +98,7 @@ export const CategoriesList: React.FC<
     },
     {
       field: 'shortDescription',
-      width: 300,
+      width: user ? 300 : 370,
       editable: false,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
@@ -113,6 +115,9 @@ export const CategoriesList: React.FC<
       field: 'edit',
       width: 100,
       sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hide: user ? false : true,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Editar
@@ -123,6 +128,7 @@ export const CategoriesList: React.FC<
           href={params.value}
           startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
+          data-testid="editar"
         ></Button>
       ),
     },
@@ -130,6 +136,9 @@ export const CategoriesList: React.FC<
       field: 'delete',
       width: 100,
       sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hide: user ? false : true,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Excluir
@@ -139,29 +148,44 @@ export const CategoriesList: React.FC<
         <Button
           onClick={() => {
             setConfirmation(true);
-            setId(params.value);
+            setId(params.value.categoryId);
           }}
           startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
           data-testid="excluir"
+          disabled={user!.admin ? false : user!.uid !== params.value.authorId}
         ></Button>
       ),
     },
   ];
 
-  const rowData = categories.map((category) => {
-    return {
-      _id: category._id,
-      guide: (category.guide as GuideInterface).title,
-      title: category.title,
-      shortDescription:
-        category.shortDescription.length >= 30
-          ? category.shortDescription.substring(0, 30) + '...'
-          : category.shortDescription,
-      edit: '/admin/atualizar-categoria/' + category._id,
-      delete: category._id,
-    };
-  });
+  const handleRowData = (categoryData: any) => {
+    let newRowData = [];
+    for(let i = 0; i < categoryData.length; i++){
+      if(!categoryData[i].deleted){
+        let category = categoryData[i];
+
+        newRowData.push(
+          {
+            _id: category._id,
+            guide: (category.guide as GuideInterface).title,
+            title: category.title,
+            shortDescription:
+              category.shortDescription.length >= 30
+                ? category.shortDescription.substring(0, 30) + '...'
+                : category.shortDescription,
+            edit: '/admin/atualizar-categoria/' + category._id,
+            delete: { categoryId: category._id, authorId: category.author.uid },
+          }
+        );
+
+      }
+    }
+
+    return newRowData;
+  }
+
+  const rowData = handleRowData(categories);
 
   return (
     <>
@@ -206,6 +230,7 @@ export const CategoriesList: React.FC<
               autoHeight
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
+              disableColumnSelector={true}
               rows={rowData}
               columns={columns}
               sx={styles.table}
@@ -217,7 +242,7 @@ export const CategoriesList: React.FC<
               }
             />
             <Box sx={styles.boxButton}>
-              <Button
+              {user && <Button
                 component={Link}
                 to="/admin/cadastrar-categoria"
                 sx={styles.button}
@@ -229,7 +254,7 @@ export const CategoriesList: React.FC<
                 data-testid="new"
               >
                 Novo
-              </Button>
+              </Button>}
 
               <Button
                 component={Link}

@@ -64,10 +64,10 @@ describe('Testando o serviço "postGuides"', () => {
     const pathExpect = '/digital-contents/';
     const resultExpect = true;
     apiMock.post.mockResolvedValue(resultExpect);
-    const result = await postDigitalContent(formDataTest);
+    const result = await postDigitalContent(formDataTest, "passandotoken");
     expect(result).toBe(resultExpect);
     expect(apiMock.post).toBeCalledWith(pathExpect, formDataTest, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Authorization': 'Bearer token' ,'Content-Type': 'multipart/form-data' },
     });
   });
 
@@ -93,7 +93,7 @@ describe('Testando o serviço "postGuides"', () => {
       throw throwError;
     });
     try {
-      await postDigitalContent(formDataTest);
+      await postDigitalContent(formDataTest, "passandotoken");
     } catch {}
     expect(apiMock.post).toBeCalledTimes(1);
     expect(apiMock.post).toThrow(Error);
@@ -186,10 +186,10 @@ describe('Testando o serviço "putDigitalContent"', () => {
     const resultExpect = true;
 
     apiMock.put.mockResolvedValue(resultExpect);
-    const result = await putDigitalContent(id, formDataTest);
+    const result = await putDigitalContent(id, formDataTest, "passandotoken");
     expect(result).toBe(resultExpect);
     expect(apiMock.put).toBeCalledWith(pathExpect, formDataTest, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Authorization': 'Bearer token' ,'Content-Type': 'multipart/form-data' },
     });
   });
 
@@ -216,7 +216,7 @@ describe('Testando o serviço "putDigitalContent"', () => {
       throw throwError;
     });
     try {
-      await putDigitalContent(id, formDataTest);
+      await putDigitalContent(id, formDataTest, "passandotoken");
     } catch {}
     expect(apiMock.put).toBeCalledTimes(1);
     expect(apiMock.put).toThrow(Error);

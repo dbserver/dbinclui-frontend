@@ -132,7 +132,6 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
         }, 1000);
       }
   };
-
   return (
     <>
       <Container>

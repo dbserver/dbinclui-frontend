@@ -41,14 +41,14 @@ function Mobile() {
       {isMobile ? (
         <div className="Mobile">
           {readMore && extraContent}
-          <a
+          <div
             className="read-more-link"
             onClick={() => {
               setReadMore(!readMore);
             }}
           >
             <h4 style={{ textAlign: 'center' }}>{linkName}</h4>
-          </a>
+          </div>
         </div>
       ) : (
         <Grid
@@ -80,9 +80,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const mobile = Mobile();
-  {
-    console.log(filteredCards);
-  }
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   async function getGuidesService() {
@@ -117,7 +114,6 @@ export const Home: React.FC<HomeProps> = (): JSX.Element => {
         removeSpecialsCharacters(lowerQueryValue),
       );
     });
-
     setFilteredCards(currentFilteredCards);
   };
 

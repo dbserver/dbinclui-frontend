@@ -1,0 +1,134 @@
+@media screen and (orientation: landscape) and (max-device-height: 630px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 33% !important;
+  }
+
+  div[vw] [vw-plugin-wrapper].active {
+    height: 450px;
+  }
+
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px;
+    top: 15vh;
+  }
+  
+  div[vw] [vp] [vp-controls] {
+    bottom: 0% !important;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-device-height: 560px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 33% !important;
+  }
+  div[vw] [vw-plugin-wrapper].active {
+    height: 450px;
+  }
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px;
+    top: 15vh;
+  }
+  div[vw] [vp] [vp-controls] {
+    bottom: 0% !important;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-device-height: 480px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 33% !important;
+  }
+  div[vw] [vw-plugin-wrapper].active {
+    height: 400px;
+  }
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px;
+    top: 15vh;
+  }
+  div[vw] [vp] [vp-controls] {
+    bottom: 10% !important;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-device-height: 400px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 33% !important;
+  }
+  div[vw] [vw-plugin-wrapper].active {
+    height: 340px;
+  }
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px;
+    top: 12vh;
+  }
+  div[vw] [vp] [vp-controls] {
+    bottom: 24% !important;
+  }
+
+  div[vw] #gameContainer {
+    top: -81px !important;
+    margin: auto !important;
+    width: 70% !important;
+    height: 50% !important;
+    overflow: hidden;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-device-height: 340px) {
+  [vw] [vw-access-button] .access-button {
+    position: relative;
+    left: 0px !important;
+    top: 30vh !important;
+  }
+
+  div[vw] {
+    top: 33% !important;
+  }
+
+  div[vw] [vw-plugin-wrapper].active {
+    height: 318px;
+  }
+
+  div[vw] [vp] [vp-controls] {
+    bottom: 28% !important;
+  }
+
+  [vp] .vpw-controls {
+    height: 45px !important;
+  }
+
+  div[vw] #gameContainer {
+    top: -81px !important;
+    margin: auto !important;
+    width: 70% !important;
+    height: 50% !important;
+    overflow: hidden;
+  }
+}

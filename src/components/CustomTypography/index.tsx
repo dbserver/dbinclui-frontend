@@ -13,6 +13,16 @@ interface CustomTypographyProps {
   marginTop?: number;
   color?: string;
   textAlign?: 'right' | 'left' | 'inherit' | 'center' | 'justify' | undefined;
+  maxWidth?: string;
+  overflow?: string;
+  textOverflow?: string;
+  whiteSpace?:
+    | 'normal'
+    | 'pre'
+    | 'nowrap'
+    | 'pre-wrap'
+    | 'pre-line'
+    | 'break-spaces';
 }
 
 export const CustomTypography: React.FC<CustomTypographyProps> = ({
@@ -25,6 +35,10 @@ export const CustomTypography: React.FC<CustomTypographyProps> = ({
   marginTop,
   color,
   textAlign,
+  maxWidth,
+  overflow,
+  textOverflow,
+  whiteSpace,
 }) => {
   const context = useContext(AccessibilityContext);
 
@@ -40,6 +54,10 @@ export const CustomTypography: React.FC<CustomTypographyProps> = ({
         marginTop: marginTop,
         color: color,
         textAlign: textAlign,
+        maxWidth: maxWidth,
+        overflow: overflow,
+        textOverflow: textOverflow,
+        whiteSpace: whiteSpace,
       }}
     >
       {children}

@@ -8,7 +8,7 @@ export const config = async (): Promise<Config.InitialOptions> => ({
     '<rootDir>/src/**/*.{tsx,jsx,ts,js}',
     '!/node_modules/**',
   ],
-  collectCoverage: true,
+  collectCoverage: false,
   coverageDirectory: 'coverage',
   modulePaths: ['<rootDir>/src', 'node_modules'],
   passWithNoTests: true,
@@ -25,7 +25,7 @@ export const config = async (): Promise<Config.InitialOptions> => ({
     '@styles/(.*)': ['<rootDir>/src/styles/$1'],
     '@tests/(.*)': ['<rootDir>/src/tests/$1'],
   },
-  transformIgnorePatterns: ['/node_modules/(?!axios)']
+  transformIgnorePatterns: ['/node_modules/(?!axios)'],
 });
 
 export default config;

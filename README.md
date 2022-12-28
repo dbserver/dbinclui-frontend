@@ -110,8 +110,10 @@ $ git flow feature publish DBI-01 <- Número do card no Trello.
 $ git pull
 $ git checkout feature/DBI-01 <- Número do card da tarefa no Trello.
 Switched to a new branch 'feature/DBI-01'
-```
-### Para finalizar a branch referente à tarefa: 
+``` 
+
+## ⚠ Após a criação e code review, deve-se passar para o quadro de "Aguardando Merge" e as pessoas responsáveis irão seguir o seguinte passo: 
+### Para finalizar a branch referente à tarefa:
 
 ```
 $ git flow feature finish DBI-01
@@ -160,3 +162,5 @@ export const Footer: React.FC<FooterProps> = (): JSX.Element => {
           <FacebookIcon color="secondary" style={{ fontSize: '32px' }} />
         </a>
 ```
+
+

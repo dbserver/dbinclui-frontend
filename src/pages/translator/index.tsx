@@ -18,21 +18,27 @@ import SaveIcon from '@components/svgs/saveIcon';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
-
+import { AuthContext } from '@contexts/AuthContext';
+import { useContext } from 'react';
+import { postUserExpression } from '@services/userExpressions';
+import Notification from '@components/Notification';
 export interface TranslatorProps {}
 
 export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
   const [expression, setExpression] = useState('');
-  let click = new Event('click');
-  let texto = document.querySelector('#texto');
   const [valueInput, setValueInput] = useState('');
 
-  const {
-    transcript,
-    resetTranscript,
-    listening,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const { user } = useContext(AuthContext);
+
+  let click = new Event('click');
+  let texto = document.querySelector('#texto');
+
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   const startListening = () => {
     resetTranscript();
@@ -48,13 +54,33 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
     SpeechRecognition.stopListening();
     setValueInput(transcript);
     setExpression(transcript);
-    if (btn.disabled == true) {
+    if (btn.disabled === true) {
       activateButton();
     }
   };
 
-  const saveExpression = () => {
-    console.log('Saving expression');
+  const userLogout = () => {
+    setError(true);
+    setErrorMessage(
+      'Você precisa efetuar o login para armazenar no seu dicionario pessoal',
+    );
+  };
+
+  const saveExpression = async () => {
+    try {
+      if (!user) {
+        userLogout();
+        return;
+      }
+      if (!user?.token) {
+        throw new Error('Nenhum token foi enviado');
+      }
+      await postUserExpression(expression, user?.token);
+      setSuccess(true);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data.message ?? error.message);
+      setError(true);
+    }
   };
 
   const saveExpressionDB = () => {
@@ -106,7 +132,6 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
         }, 1000);
       }
   };
-
   return (
     <>
       <Container>
@@ -146,11 +171,13 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
                 >
                   <SaveDbIcon />
                 </IconButton>
+
                 <IconButton
                   onClick={saveExpression}
                   type="button"
                   aria-label="save"
                   sx={styles.saveButton}
+                  disabled={!expression}
                 >
                   <SaveIcon />
                 </IconButton>
@@ -189,6 +216,27 @@ export const Translator: React.FC<TranslatorProps> = (): JSX.Element => {
           </Button>
         </Grid>
       </Container>
+      <Grid>
+        {error && (
+          <Notification
+            message={`${errorMessage} 🤔`}
+            variant="error"
+            onClose={() => {
+              setError(false);
+              setErrorMessage('');
+            }}
+          />
+        )}
+        {success && (
+          <Notification
+            message="Cadastro realizado com sucesso! ✔"
+            variant="success"
+            onClose={() => {
+              setSuccess(false);
+            }}
+          />
+        )}
+      </Grid>
     </>
   );
 };

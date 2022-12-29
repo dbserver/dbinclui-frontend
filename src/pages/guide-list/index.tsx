@@ -223,6 +223,7 @@ export const GuideList: React.FC<
             <DataGrid
               data-testid="dataGrid"
               autoHeight
+              columnBuffer={4}
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
               disableColumnSelector={true}

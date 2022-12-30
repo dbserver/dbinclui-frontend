@@ -19,7 +19,7 @@ import { GuideInterface } from '@services/guides';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { AuthContext } from '@contexts/AuthContext';
 
-export interface CategoriesListProps { }
+export interface CategoriesListProps {}
 
 export const CategoriesList: React.FC<
   CategoriesListProps
@@ -35,7 +35,6 @@ export const CategoriesList: React.FC<
   const [errorMessage, setErrorMessage] = useState('');
   const context = useContext(AccessibilityContext);
   const { user } = useContext(AuthContext);
-
 
   async function getContentCategories() {
     try {
@@ -128,7 +127,7 @@ export const CategoriesList: React.FC<
           href={params.value}
           startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
-          data-testid="editar"
+          data-testid="edit"
         ></Button>
       ),
     },
@@ -152,7 +151,7 @@ export const CategoriesList: React.FC<
           }}
           startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
-          data-testid="excluir"
+          data-testid="delete"
           disabled={user!.admin ? false : user!.uid !== params.value.authorId}
         ></Button>
       ),
@@ -161,29 +160,26 @@ export const CategoriesList: React.FC<
 
   const handleRowData = (categoryData: any) => {
     let newRowData = [];
-    for(let i = 0; i < categoryData.length; i++){
-      if(!categoryData[i].deleted){
+    for (let i = 0; i < categoryData.length; i++) {
+      if (!categoryData[i].deleted) {
         let category = categoryData[i];
 
-        newRowData.push(
-          {
-            _id: category._id,
-            guide: (category.guide as GuideInterface).title,
-            title: category.title,
-            shortDescription:
-              category.shortDescription.length >= 30
-                ? category.shortDescription.substring(0, 30) + '...'
-                : category.shortDescription,
-            edit: '/admin/atualizar-categoria/' + category._id,
-            delete: { categoryId: category._id, authorId: category.author.uid },
-          }
-        );
-
+        newRowData.push({
+          _id: category._id,
+          guide: (category.guide as GuideInterface).title,
+          title: category.title,
+          shortDescription:
+            category.shortDescription.length >= 30
+              ? category.shortDescription.substring(0, 30) + '...'
+              : category.shortDescription,
+          edit: '/admin/atualizar-categoria/' + category._id,
+          delete: { categoryId: category._id, authorId: category.author.uid },
+        });
       }
     }
 
     return newRowData;
-  }
+  };
 
   const rowData = handleRowData(categories);
 
@@ -228,6 +224,8 @@ export const CategoriesList: React.FC<
             <DataGrid
               data-testid="dataGrid"
               autoHeight
+              columnBuffer={7}
+              rowBuffer={10}
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
               disableColumnSelector={true}
@@ -235,26 +233,28 @@ export const CategoriesList: React.FC<
               columns={columns}
               sx={styles.table}
               pageSize={10}
-              rowsPerPageOptions={[4]}
+              rowsPerPageOptions={[10]}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
               className={
                 context.colorAccessibility ? 'accessColor' : 'defaultColor'
               }
             />
             <Box sx={styles.boxButton}>
-              {user && <Button
-                component={Link}
-                to="/admin/cadastrar-categoria"
-                sx={styles.button}
-                variant="contained"
-                type="submit"
-                role="button"
-                aria-label="BOTÃO NOVO"
-                tabIndex={16}
-                data-testid="new"
-              >
-                Novo
-              </Button>}
+              {user && (
+                <Button
+                  component={Link}
+                  to="/admin/cadastrar-categoria"
+                  sx={styles.button}
+                  variant="contained"
+                  type="submit"
+                  role="button"
+                  aria-label="BOTÃO NOVO"
+                  tabIndex={16}
+                  data-testid="new"
+                >
+                  Novo
+                </Button>
+              )}
 
               <Button
                 component={Link}

@@ -29,7 +29,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FormEvent, ChangeEvent } from 'react';
 import type { IrowData } from '@interfaces/IrowData';
 import { AuthContext } from '@contexts/AuthContext';
-export interface DigitalContentInterfaceProps { }
+export interface DigitalContentInterfaceProps {}
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
 > = (): JSX.Element => {
@@ -149,6 +149,7 @@ export const ListDigitalContent: React.FC<
           startIcon={<VisibilityIcon titleAccess="Botão de visualizar" />}
           sx={{ color: 'text.primary' }}
           aria-label="visualizar"
+          data-testid="view"
         ></Button>
       ),
     },
@@ -169,6 +170,7 @@ export const ListDigitalContent: React.FC<
           href={params.value}
           startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
+          data-testid="edit"
         ></Button>
       ),
     },
@@ -193,6 +195,7 @@ export const ListDigitalContent: React.FC<
           startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
           disabled={user!.admin ? false : user!.uid !== params.value.authorId}
+          data-testid="delete"
         ></Button>
       ),
     },
@@ -200,44 +203,43 @@ export const ListDigitalContent: React.FC<
 
   const handleRowData = (digitalContentData: any) => {
     let newRowData = [];
-    for(let i = 0; i < digitalContentData.length; i++){
-      if(!digitalContentData[i].deleted){
+    for (let i = 0; i < digitalContentData.length; i++) {
+      if (!digitalContentData[i].deleted) {
         let row = digitalContentData[i];
 
         let path = row.filePaths[0].filePath;
         let extension = path.split('/').pop() ?? '';
-        extension = extension.indexOf('.') < 1 ? '' : extension.split('.').pop() ?? '';
+        extension =
+          extension.indexOf('.') < 1 ? '' : extension.split('.').pop() ?? '';
 
         if (!extension.match(/png|jpg|jpeg|gif|webp/)) {
-          const fileName = path.replace(/\.[^/.]+$/, "");
+          const fileName = path.replace(/\.[^/.]+$/, '');
           path = fileName + '.jpg';
         }
 
-        newRowData.push(
-          {
-            _id: row._id,
-            guide:
-              row.guide.title.length > 30
-                ? row.guide.title.substring(0, 30) + '...'
-                : row.guide.title,
-            category:
-              row.category?.title.length! > 30
-                ? row.category?.title.substring(0, 30) + '...'
-                : row.category?.title,
-            shortDescription:
-              row.shortDescription.length > 30
-                ? row.shortDescription.substring(0, 30) + '...'
-                : row.shortDescription,
-            filePaths: path,
-            view: '/admin/visualizar-conteudo-digital/' + row._id,
-            edit: '/admin/atualizar-conteudo-digital/' + row._id,
-            delete: { authorId: row.author.uid , digitalContentId: row._id },
-          }
-        )
+        newRowData.push({
+          _id: row._id,
+          guide:
+            row.guide.title.length > 30
+              ? row.guide.title.substring(0, 30) + '...'
+              : row.guide.title,
+          category:
+            row.category?.title.length! > 30
+              ? row.category?.title.substring(0, 30) + '...'
+              : row.category?.title,
+          shortDescription:
+            row.shortDescription.length > 30
+              ? row.shortDescription.substring(0, 30) + '...'
+              : row.shortDescription,
+          filePaths: path,
+          view: '/admin/visualizar-conteudo-digital/' + row._id,
+          edit: '/admin/atualizar-conteudo-digital/' + row._id,
+          delete: { authorId: row.author.uid, digitalContentId: row._id },
+        });
       }
     }
     return newRowData;
-  }
+  };
 
   const rowData: IrowData = handleRowData(digitalContents);
 
@@ -307,8 +309,8 @@ export const ListDigitalContent: React.FC<
                   context.colorAccessibility
                     ? styles.TextFieldAccessibility
                     : context.colorAccessibility
-                      ? styles.TextFieldAccessibility
-                      : styles.TextField
+                    ? styles.TextFieldAccessibility
+                    : styles.TextField
                 }
               />
             </FormControl>
@@ -344,7 +346,8 @@ export const ListDigitalContent: React.FC<
               disableColumnSelector={true}
               rows={filterContent(rowData)}
               columns={columns}
-              columnBuffer={columns.length}
+              columnBuffer={columns.length + 1}
+              rowBuffer={15}
               sx={styles.table}
               pageSize={10}
               rowsPerPageOptions={[10]}
@@ -355,19 +358,21 @@ export const ListDigitalContent: React.FC<
             />
 
             <Box sx={styles.buttonBox}>
-              {user && <Button
-                data-testid="new"
-                component={Link}
-                to="/admin/cadastrar-conteudo-digital"
-                sx={styles.button}
-                variant="contained"
-                type="submit"
-                role="button"
-                aria-label="BOTÃO NOVO"
-                tabIndex={16}
-              >
-                Novo
-              </Button>}
+              {user && (
+                <Button
+                  data-testid="new"
+                  component={Link}
+                  to="/admin/cadastrar-conteudo-digital"
+                  sx={styles.button}
+                  variant="contained"
+                  type="submit"
+                  role="button"
+                  aria-label="BOTÃO NOVO"
+                  tabIndex={16}
+                >
+                  Novo
+                </Button>
+              )}
 
               <Button
                 data-testid="back"

@@ -14,8 +14,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { AuthContext } from '@contexts/AuthContext';
 
-
-export interface GuideListPropsInterfaceProps { }
+export interface GuideListPropsInterfaceProps {}
 
 export const GuideList: React.FC<
   GuideListPropsInterfaceProps
@@ -31,7 +30,6 @@ export const GuideList: React.FC<
   const [errorMessage, setErrorMessage] = useState('');
   const context = useContext(AccessibilityContext);
   const { user } = useContext(AuthContext);
-
 
   async function getGuideListService() {
     try {
@@ -156,28 +154,25 @@ export const GuideList: React.FC<
 
   const handleRowData = (guideData: any) => {
     let newRowData = [];
-    for(let i = 0; i < guideData.length; i++){
-      if(!guideData[i].deleted){
+    for (let i = 0; i < guideData.length; i++) {
+      if (!guideData[i].deleted) {
         let guide = guideData[i];
 
-        newRowData.push(
-          {
-            _id: guide._id,
-            guide: guide.title,
-            content:
-              guide.content.length > 65
-                ? guide.content.substring(0, 65) + '...'
-                : guide.content,
-            image: guide.filePaths.filePath,
-            edit: '/admin/atualizar-guia/' + guide._id,
-            delete: { authorId: guide.author.uid, guideId: guide._id }
-          }
-        )
-
+        newRowData.push({
+          _id: guide._id,
+          guide: guide.title,
+          content:
+            guide.content.length > 65
+              ? guide.content.substring(0, 65) + '...'
+              : guide.content,
+          image: guide.filePaths.filePath,
+          edit: '/admin/atualizar-guia/' + guide._id,
+          delete: { authorId: guide.author.uid, guideId: guide._id },
+        });
       }
     }
     return newRowData;
-  }
+  };
 
   const rowData = handleRowData(guideList);
 
@@ -239,19 +234,21 @@ export const GuideList: React.FC<
               }
             />
             <Box sx={styles.boxButton}>
-              {user && <Button
-                data-testid="new"
-                component={Link}
-                to="/admin/cadastrar-guia"
-                sx={styles.button}
-                variant="contained"
-                type="submit"
-                role="button"
-                aria-label="BOTÃO NOVO"
-                tabIndex={3}
-              >
-                Novo
-              </Button>}
+              {user && (
+                <Button
+                  data-testid="new"
+                  component={Link}
+                  to="/admin/cadastrar-guia"
+                  sx={styles.button}
+                  variant="contained"
+                  type="submit"
+                  role="button"
+                  aria-label="BOTÃO NOVO"
+                  tabIndex={3}
+                >
+                  Novo
+                </Button>
+              )}
 
               <Button
                 sx={styles.button}

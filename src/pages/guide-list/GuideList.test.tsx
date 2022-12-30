@@ -22,12 +22,13 @@ jest.mock('react-router-dom', () => {
 
 describe('Teste da página de listagem de guias', () => {
   const guideDataMock = {
-    _id: "1", title: "Titulo",
-    content: "Conteudo",
-    author: {uid: "1"},
+    _id: '1',
+    title: 'Titulo',
+    content: 'Conteudo',
+    author: { uid: '1' },
     filePaths: {
-      filePath: "image/path"
-    }
+      filePath: 'image/path',
+    },
   };
 
   beforeEach(() => {
@@ -55,15 +56,15 @@ describe('Teste da página de listagem de guias', () => {
     expect(title).toBeInTheDocument();
   });
 
-  test('O botão "Novo" deve ser visível para os usuários logados', async() => {
+  test('O botão "Novo" deve ser visível para os usuários logados', async () => {
     const user = {
-      _id: "1",
-      uid: "1",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: false 
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
     };
 
     getGuidesMock.mockImplementation(
@@ -72,18 +73,18 @@ describe('Teste da página de listagem de guias', () => {
           data: { data: [guideDataMock] },
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
-  
+
     await render(
       <AuthContext.Provider value={{ user, setUser }}>
         <GuideList />
-      </AuthContext.Provider>
+      </AuthContext.Provider>,
     );
-    
+
     const button = await screen.findByText('Novo');
     expect(button).toBeVisible();
   });
 
-  test('O botão "Novo" não deve ser visível para os usuários sem login', async() => {
+  test('O botão "Novo" não deve ser visível para os usuários sem login', async () => {
     const user = null;
     getGuidesMock.mockImplementation(
       async () =>
@@ -95,21 +96,21 @@ describe('Teste da página de listagem de guias', () => {
     await render(
       <AuthContext.Provider value={{ user, setUser }}>
         <GuideList />
-      </AuthContext.Provider>
+      </AuthContext.Provider>,
     );
-  
+
     expect(screen.queryByText('Novo')).not.toBeInTheDocument();
   });
 
-  test('O botão "Excluir" deve ser habilitado para o usuário criador do guia', async() => {
+  test('O botão "Excluir" deve ser habilitado para o usuário criador do guia', async () => {
     const user = {
-      _id: "1",
-      uid: "1",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: false 
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
     };
     getGuidesMock.mockImplementation(
       async () =>
@@ -121,7 +122,7 @@ describe('Teste da página de listagem de guias', () => {
     await render(
       <AuthContext.Provider value={{ user, setUser }}>
         <GuideList />
-      </AuthContext.Provider>
+      </AuthContext.Provider>,
     );
 
     const button = await screen.findByTestId('delete');
@@ -130,15 +131,15 @@ describe('Teste da página de listagem de guias', () => {
     expect(button).toBeEnabled();
   });
 
-  test('O botão "Excluir" deve ser desabilitado para o usuário que não criou o guia', async() => {
+  test('O botão "Excluir" deve ser desabilitado para o usuário que não criou o guia', async () => {
     const user = {
-      _id: "2",
-      uid: "2",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: false 
+      _id: '2',
+      uid: '2',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
     };
     getGuidesMock.mockImplementation(
       async () =>
@@ -150,7 +151,7 @@ describe('Teste da página de listagem de guias', () => {
     await render(
       <AuthContext.Provider value={{ user, setUser }}>
         <GuideList />
-      </AuthContext.Provider>
+      </AuthContext.Provider>,
     );
 
     const button = await screen.findByTestId('delete');
@@ -159,15 +160,15 @@ describe('Teste da página de listagem de guias', () => {
     expect(button).toBeDisabled();
   });
 
-  test('O botão "Excluir" deve ser habilitado para o usuário adm que não criou o guia', async() => {
+  test('O botão "Excluir" deve ser habilitado para o usuário adm que não criou o guia', async () => {
     const user = {
-      _id: "2",
-      uid: "2",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: false 
+      _id: '2',
+      uid: '2',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
     };
     getGuidesMock.mockImplementation(
       async () =>
@@ -179,7 +180,7 @@ describe('Teste da página de listagem de guias', () => {
     await render(
       <AuthContext.Provider value={{ user, setUser }}>
         <GuideList />
-      </AuthContext.Provider>
+      </AuthContext.Provider>,
     );
 
     const button = await screen.findByTestId('delete');

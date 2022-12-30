@@ -35,7 +35,7 @@ export const DialogBoxConfirmation: React.FC<ConfirmationProps> = (
         aria-describedby="alert-dialog-description"
         data-testid="dialog"
       >
-        <AccessibilityTypography role="message" tabIndex={1}>
+        <AccessibilityTypography component="span" role="message" tabIndex={1}>
           <DialogTitle id="alert-dialog-title" sx={styles.listTitle}>
             {'Mensagem de Exclusão'}
           </DialogTitle>
@@ -44,6 +44,7 @@ export const DialogBoxConfirmation: React.FC<ConfirmationProps> = (
           <DialogContentText
             id="alert-dialog-description"
             sx={styles.listTitle}
+            component="span"
           >
             <AccessibilityTypography role="message" tabIndex={1}>
               {props.title}

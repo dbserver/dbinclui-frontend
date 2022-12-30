@@ -14,6 +14,9 @@ const micButton: SxProps<Theme> = {
   '&:active': {
     backgroundColor: (theme) => theme.palette.error.main,
   },
+  '@media (max-width:425px)': {
+    ml: '100%',
+  },
 };
 
 const input: SxProps<Theme> = {
@@ -43,12 +46,9 @@ const inputExpression: SxProps<Theme> = {
   'border': 'solid 1px',
   'borderColor': (theme) => theme.palette.text.primary,
   'backgroundColor': (theme) => theme.palette.primary.contrastText,
-  '@media (max-width:320px)': {
-    borderRadius: '30px',
-  },
   '@media (max-width:425px)': {
-    'display': 'flex',
-    ' flexDirection': 'column',
+    borderRadius: '30px',
+    mb: '10px',
   },
 };
 const inputLabel: SxProps<Theme> = {
@@ -63,11 +63,14 @@ const BoxFormControl: SxProps<Theme> = {
 };
 
 const FormControl: SxProps<Theme> = {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  width: '54vw',
-  alignItems: 'start',
+  'display': 'flex',
+  'flexDirection': 'row',
+  'justifyContent': 'space-between',
+  'width': '54vw',
+  'alignItems': 'start',
+  '@media (max-width:425px)': {
+    flexDirection: 'column',
+  },
 };
 
 const button: SxProps<Theme> = {
@@ -92,13 +95,13 @@ const button: SxProps<Theme> = {
 
 const BoxBottons: SxProps<Theme> = {
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   maxWidth: '50%',
-  backgroundColor: 'blue',
 };
 
 const saveButton: SxProps<Theme> = {
   p: '10px',
+  width: '2.5rem',
   color: (theme) => theme.palette.text.primary,
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, getByTestId, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import GuideList from './index';
 import { AuthContext } from '@contexts/AuthContext';
 import { GuideInterface, getGuides } from '@services/guides';
@@ -188,16 +188,6 @@ describe('Teste da página de listagem de guias', () => {
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
 
-    
-
-    await act(async() => {
-      render(
-        <AuthContext.Provider value={{ user, setUser }}>
-          <GuideList />
-        </AuthContext.Provider>
-      );
-    })
-
     await act(async() => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
@@ -207,15 +197,8 @@ describe('Teste da página de listagem de guias', () => {
     })
 
     const button = await screen.findByTestId('delete');
-    await act(async()=>{
-      await userEvent.click(button);
-    })
-    
-    
-    const dialogBox = screen.getByText('Sim');
-    
-    expect(dialogBox).toBeInTheDocument();
-    
+    expect(button).toBeInTheDocument();
+    expect(button).toBeEnabled();
   });
 
   test('O botão "Editar" do guia não deve ser visível para usuário sem login', async() => {
@@ -267,5 +250,48 @@ describe('Teste da página de listagem de guias', () => {
 
     expect(button).toBeInTheDocument();
     expect(button).toBeEnabled();   
+  });
+
+  test('Deve chamar a função de deletar ao confirmar', async() => {
+    const user = {
+      _id: "2",
+      uid: "2",
+      photoURL: "photo/URL",
+      displayName: "user",
+      email: "user@email",
+      token: "token",
+      admin: true 
+    };
+    const handleDelete = jest.fn();
+    getGuidesMock.mockImplementation(
+      async () =>
+        ({
+          data: { data: [guideDataMock] },
+        } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
+    );
+
+    await act(async() => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <GuideList />
+        </AuthContext.Provider>
+      );
+    })
+
+    const button = await screen.findByTestId('delete');
+    expect(button).toBeInTheDocument();
+    expect(button).toBeEnabled();
+
+    await act(async()=>{
+      await userEvent.click(button);
+    })
+    
+    const confirm = screen.getByText('Sim');    
+    expect(confirm).toBeInTheDocument();
+
+    await act(async()=>{
+      await userEvent.click(confirm);
+      expect(handleDelete).toBeCalled();
+    })
   });
 });

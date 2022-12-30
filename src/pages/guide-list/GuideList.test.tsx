@@ -1,15 +1,17 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import GuideList from './index';
 import { AuthContext } from '@contexts/AuthContext';
 import { GuideInterface, getGuides } from '@services/guides';
 import { AxiosResponse } from 'axios';
 import '@testing-library/jest-dom';
-import  userEvent  from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
+import { patchGuide } from '@services/guides';
 
 jest.mock('@services/guides');
 
 const getGuidesMock = getGuides as jest.MockedFunction<typeof getGuides>;
+const mockPatchGuide = patchGuide as jest.MockedFunction<typeof patchGuide>;
 const setUser = jest.fn();
 
 const mockedNavigate = jest.fn();
@@ -44,7 +46,7 @@ describe('Teste da página de listagem de guias', () => {
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
 
-    await act(async() => {
+    await act(async () => {
       render(<GuideList />);
     });
 
@@ -52,7 +54,7 @@ describe('Teste da página de listagem de guias', () => {
   });
 
   test('Deve ler o título da página', async () => {
-    await act(async() => {
+    await act(async () => {
       render(<GuideList />);
     });
     const title = screen.getByText('LISTAGEM DE GUIAS');
@@ -76,15 +78,15 @@ describe('Teste da página de listagem de guias', () => {
           data: { data: [guideDataMock] },
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
-    
-    await act(async() => {
+
+    await act(async () => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
           <GuideList />
-        </AuthContext.Provider>
+        </AuthContext.Provider>,
       );
-    })
-    
+    });
+
     const button = await screen.findByText('Novo');
     expect(button).toBeVisible();
   });
@@ -98,14 +100,14 @@ describe('Teste da página de listagem de guias', () => {
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
 
-    await act(async() => {
+    await act(async () => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
           <GuideList />
-        </AuthContext.Provider>
+        </AuthContext.Provider>,
       );
-    })
-  
+    });
+
     expect(screen.queryByText('Novo')).not.toBeInTheDocument();
   });
 
@@ -126,11 +128,11 @@ describe('Teste da página de listagem de guias', () => {
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
 
-    await act(async() => {
+    await act(async () => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
           <GuideList />
-        </AuthContext.Provider>
+        </AuthContext.Provider>,
       );
     });
 
@@ -157,11 +159,11 @@ describe('Teste da página de listagem de guias', () => {
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
 
-    await act(async() => {
+    await act(async () => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
           <GuideList />
-        </AuthContext.Provider>
+        </AuthContext.Provider>,
       );
     });
 
@@ -171,65 +173,15 @@ describe('Teste da página de listagem de guias', () => {
     expect(button).toBeDisabled();
   });
 
-  test('O botão "Excluir" do guia deve ser habilitado para o usuário administrador com ID diferente do autor', async() => {
+  test('O botão "Excluir" do guia deve ser habilitado para o usuário administrador com ID diferente do autor', async () => {
     const user = {
-      _id: "2",
-      uid: "2",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: true 
-    };
-    getGuidesMock.mockImplementation(
-      async () =>
-        ({
-          data: { data: [guideDataMock] },
-        } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
-    );
-
-    await act(async() => {
-      render(
-        <AuthContext.Provider value={{ user, setUser }}>
-          <GuideList />
-        </AuthContext.Provider>
-      );
-    })
-
-    const button = await screen.findByTestId('delete');
-    expect(button).toBeInTheDocument();
-    expect(button).toBeEnabled();
-  });
-
-  test('O botão "Editar" do guia não deve ser visível para usuário sem login', async() => {
-    const user = null;
-    getGuidesMock.mockImplementation(
-      async () =>
-        ({
-          data: { data: [guideDataMock] },
-        } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
-    );
-
-    await act(async() => {
-      render(
-        <AuthContext.Provider value={{ user, setUser }}>
-          <GuideList />
-        </AuthContext.Provider>
-      );
-    })
-
-    expect(screen.queryByTestId('edit')).not.toBeInTheDocument();   
-  });
-
-  test('O botão "Editar" deve ser visível para usuário logado', async() => {
-    const user = {
-      _id: "1",
-      uid: "1",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: false
+      _id: '2',
+      uid: '2',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: true,
     };
     getGuidesMock.mockImplementation(
       async () =>
@@ -242,27 +194,17 @@ describe('Teste da página de listagem de guias', () => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
           <GuideList />
-        </AuthContext.Provider>
+        </AuthContext.Provider>,
       );
-    })
+    });
 
-    const button = await screen.findByTestId('edit');
-
+    const button = await screen.findByTestId('delete');
     expect(button).toBeInTheDocument();
-    expect(button).toBeEnabled();   
+    expect(button).toBeEnabled();
   });
 
-  test('Deve chamar a função de deletar ao confirmar', async() => {
-    const user = {
-      _id: "2",
-      uid: "2",
-      photoURL: "photo/URL",
-      displayName: "user",
-      email: "user@email",
-      token: "token",
-      admin: true 
-    };
-    const handleDelete = jest.fn();
+  test('O botão "Editar" do guia não deve ser visível para usuário sem login', async () => {
+    const user = null;
     getGuidesMock.mockImplementation(
       async () =>
         ({
@@ -270,28 +212,91 @@ describe('Teste da página de listagem de guias', () => {
         } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
     );
 
-    await act(async() => {
+    await act(async () => {
       render(
         <AuthContext.Provider value={{ user, setUser }}>
           <GuideList />
-        </AuthContext.Provider>
+        </AuthContext.Provider>,
       );
-    })
+    });
+
+    expect(screen.queryByTestId('edit')).not.toBeInTheDocument();
+  });
+
+  test('O botão "Editar" deve ser visível para usuário logado', async () => {
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    getGuidesMock.mockImplementation(
+      async () =>
+        ({
+          data: { data: [guideDataMock] },
+        } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
+    );
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <GuideList />
+        </AuthContext.Provider>,
+      );
+    });
+
+    const button = await screen.findByTestId('edit');
+
+    expect(button).toBeInTheDocument();
+    expect(button).toBeEnabled();
+  });
+
+  test('Deve chamar a função de deletar ao confirmar', async () => {
+    const user = {
+      _id: '2',
+      uid: '2',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: true,
+    };
+
+    getGuidesMock.mockImplementation(
+      async () =>
+        ({
+          data: { data: [guideDataMock] },
+        } as unknown as Promise<AxiosResponse<{ data: GuideInterface[] }>>),
+    );
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <GuideList />
+        </AuthContext.Provider>,
+      );
+    });
 
     const button = await screen.findByTestId('delete');
+
     expect(button).toBeInTheDocument();
     expect(button).toBeEnabled();
 
-    await act(async()=>{
+    await act(async () => {
       await userEvent.click(button);
-    })
-    
-    const confirm = screen.getByText('Sim');    
-    expect(confirm).toBeInTheDocument();
+    });
 
-    await act(async()=>{
-      await userEvent.click(confirm);
-      expect(handleDelete).toBeCalled();
-    })
+    const confirm = screen.getByText('Sim');
+
+    await waitFor(() => {
+      expect(confirm).toBeInTheDocument();
+    });
+
+    await userEvent.click(confirm);
+
+    expect(mockPatchGuide).toBeCalledTimes(1);
   });
 });

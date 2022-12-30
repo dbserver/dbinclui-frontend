@@ -103,11 +103,11 @@ export const ListDigitalContent: React.FC<
       ),
     },
     {
-      field: 'shortDescription',
+      field: 'title',
       width: 280,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
-          Descrição
+          Título
         </CustomTypography>
       ),
       renderCell: (params) => (

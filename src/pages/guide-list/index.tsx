@@ -187,6 +187,7 @@ export const GuideList: React.FC<
         <Box>
           <DialogBoxConfirmation
             title="Deseja excluir esse guia?"
+            data-testid="confirmation"
             confirmation={confirmation}
             setConfirmation={setConfirmation}
             onClose={handleDelete}

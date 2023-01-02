@@ -135,9 +135,9 @@ export const ImageCarroussel: React.FC<ImageCarrousselProps> = ({
       </SwipeableViews>
 
       <MobileStepper
-        variant="text"
+        variant="dots"
         sx={styles.stepper}
-        steps={arrayOfContents.length}
+        steps={0}
         position="static"
         activeStep={currentIndex}
         nextButton={
@@ -147,7 +147,10 @@ export const ImageCarroussel: React.FC<ImageCarrousselProps> = ({
             disabled={currentIndex === arrayOfContents.length - 1}
             sx={styles.nextButton}
           >
-            Próximo
+            <CustomTypography fontWeight={400} component="p" fontSize={14}>
+              Próximo
+            </CustomTypography>
+
             <KeyboardArrowRight />
           </Button>
         }
@@ -159,7 +162,9 @@ export const ImageCarroussel: React.FC<ImageCarrousselProps> = ({
             sx={styles.nextButton}
           >
             <KeyboardArrowLeft />
-            Anterior
+            <CustomTypography fontWeight={400} component="p" fontSize={14}>
+              Anterior
+            </CustomTypography>
           </Button>
         }
       />

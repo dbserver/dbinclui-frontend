@@ -2,7 +2,7 @@ export type IrowData ={
     _id: string | undefined;
     guide: string;
     category: string | undefined;
-    shortDescription: string;
+    title: string;
     filePaths: string;
     view: string;
     edit: string;

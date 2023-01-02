@@ -103,11 +103,11 @@ export const ListDigitalContent: React.FC<
       ),
     },
     {
-      field: 'shortDescription',
+      field: 'title',
       width: 280,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
-          Descrição
+          Título
         </CustomTypography>
       ),
       renderCell: (params) => (
@@ -209,10 +209,10 @@ export const ListDigitalContent: React.FC<
         card.category?.title.length! > 30
           ? card.category?.title.substring(0, 30) + '...'
           : card.category?.title,
-      shortDescription:
-        card.shortDescription.length > 30
-          ? card.shortDescription.substring(0, 30) + '...'
-          : card.shortDescription,
+      title:
+        card.title.length > 30
+          ? card.title.substring(0, 30) + '...'
+          : card.title,
       filePaths: path,
       view: '/admin/visualizar-conteudo-digital/' + card._id,
       edit: '/admin/atualizar-conteudo-digital/' + card._id,
@@ -242,7 +242,7 @@ export const ListDigitalContent: React.FC<
       return (
         removeCharacters(row.category).includes(query) ||
         removeCharacters(row.guide).includes(query) ||
-        removeCharacters(row.shortDescription).includes(query)
+        removeCharacters(row.title).includes(query)
       );
     });
   }

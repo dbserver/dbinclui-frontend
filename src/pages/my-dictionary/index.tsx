@@ -1,13 +1,16 @@
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { CardDictionaryDbInclui } from '@components/CardDictionaryDBInclui';
-import { ExpressionInterface, getUsersExpressions } from '@services/userExpressions';
+import { Protected } from '@components/Protected';
+import {
+  ExpressionInterface,
+  getUsersExpressions,
+} from '@services/userExpressions';
 import React, { useState } from 'react';
 import styles from './styles';
 
-export interface MyDictionaryProps { }
+export interface MyDictionaryProps {}
 
 export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
-
   const [expressions, setExpressions] = useState<ExpressionInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -25,7 +28,7 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
   }
 
   return (
-    <>
+    <Protected>
       <AccessibilityTypography sx={styles.headingDictionaryDBInclui}>
         Meu Dicionário
       </AccessibilityTypography>
@@ -46,7 +49,7 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
           'Expression 12',
         ]}
       />
-    </>
+    </Protected>
   );
 };
 

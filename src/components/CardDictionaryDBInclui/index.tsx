@@ -7,6 +7,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import { AuthContext } from '@contexts/AuthContext';
@@ -31,7 +32,7 @@ export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
     if (favorite) {
       console.log('Essa expressão foi salva no seu dicionario pessoal!');
     } else {
-      console.log('Essa expressão foi removida do seu dicinário pessoal');
+      console.log('Essa expressão foi removida do seu dicionário pessoal');
     }
   };
   return (
@@ -60,7 +61,11 @@ export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
                   favoriteExpression();
                 }}
               >
-                <FavoriteIcon sx={{ color: 'red' }} />
+                {
+                  favorite
+                    ? <FavoriteIcon sx={{ color: 'red' }} />
+                    : <FavoriteBorderIcon sx={{ color: 'grey' }} />
+                }
               </IconButton>
               <IconButton
                 onClick={() => {

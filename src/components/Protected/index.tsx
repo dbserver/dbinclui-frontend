@@ -1,5 +1,6 @@
 import { AuthContext } from '@contexts/AuthContext';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import Notification from '@components/Notification';
 import { Navigate } from 'react-router-dom';
 
 type Props = {
@@ -7,12 +8,25 @@ type Props = {
 };
 
 export const Protected = ({ children }: Props) => {
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { user } = useContext(AuthContext);
 
-  if (!user) {
-    console.log('teste');
-    return <Navigate to="/" />;
-  }
+  // if(!user){
+  //   return(
+  //     {error && (
+  //       <Notification
+  //       message="Testando"
+  //       variant="error"
+  //       onClose={() => {
+  //         setError(false);
+  //         setErrorMessage('');
+  //       }}
+  //     />
+  //     )}
+  //   )
+  // }
 
   return <>{children}</>;
 };

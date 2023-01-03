@@ -28,28 +28,30 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
   }
 
   return (
-    <Protected>
-      <AccessibilityTypography sx={styles.headingDictionaryDBInclui}>
-        Meu Dicionário
-      </AccessibilityTypography>
+    <>
+      <Protected>
+        <AccessibilityTypography sx={styles.headingDictionaryDBInclui}>
+          Meu Dicionário
+        </AccessibilityTypography>
 
-      <CardDictionaryDbInclui
-        expression={[
-          'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
-          'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
-          'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
-          'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
-          'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
-          'Expression 6',
-          'Expression 7',
-          'Expression 8',
-          'Expression 9',
-          'Expression 10',
-          'Expression 11',
-          'Expression 12',
-        ]}
-      />
-    </Protected>
+        <CardDictionaryDbInclui
+          expression={[
+            'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
+            'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
+            'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
+            'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
+            'Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor Lorem Ipsum dolor',
+            'Expression 6',
+            'Expression 7',
+            'Expression 8',
+            'Expression 9',
+            'Expression 10',
+            'Expression 11',
+            'Expression 12',
+          ]}
+        />
+      </Protected>
+    </>
   );
 };
 

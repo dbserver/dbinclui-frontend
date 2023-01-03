@@ -49,13 +49,14 @@ export const getDigitalContentById = async (id: string) => {
   }
 };
 
-export const postDigitalContent = async (cardBody: FormData) => {
+export const postDigitalContent = async (cardBody: FormData, token: string) => {
   try {
     return api.post<{ data: DigitalContentInterface[] }>(
       `/digital-contents/`,
       cardBody,
       {
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       },
@@ -65,13 +66,18 @@ export const postDigitalContent = async (cardBody: FormData) => {
   }
 };
 
-export const putDigitalContent  = async (id: string, cardBody: FormData) => {
+export const putDigitalContent  = async (
+  id: string,
+  cardBody: FormData,
+  token: string
+) => {
   try {
     return api.put<{ data: DigitalContentInterface[] }>(
       `/digital-contents/${id}`,
       cardBody,
       {
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       },
@@ -81,11 +87,29 @@ export const putDigitalContent  = async (id: string, cardBody: FormData) => {
   }
 };
 
-export const deleteDigitalContent = async (_id: string) => {
+export const deleteDigitalContent = async (_id: string, token: string) => {
   try {
-    return api.delete<{ data: DigitalContentInterface }>(`digital-contents/${_id}`);
+    return api.delete<{ data: DigitalContentInterface }>(`digital-contents/${_id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    });
   } catch(error){
     throw handleAxiosError(error);
   }
 }
+
+export const patchDigitalContent = async (
+  id: string, token: string
+) => {
+  try {
+    return api.patch(`/digital-contents/delete/${id}`, null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  } catch {
+    throw new Error('Serviço não disponível');
+  }  
+};
 

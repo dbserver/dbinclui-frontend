@@ -18,6 +18,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import './styles.css';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { CustomTypography } from '@components/CustomTypography';
+import { AuthContext } from '@contexts/AuthContext';
 
 export interface RegisterGuideProps {}
 
@@ -30,6 +31,7 @@ export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const context = useContext(AccessibilityContext);
+  const { user } = useContext(AuthContext);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -49,7 +51,7 @@ export const RegisterGuide: React.FC<RegisterGuideProps> = (): JSX.Element => {
 
     try {
       await validateInput({ ...cardBody, file: file } as InputInterface);
-      await postGuides(formData);
+      await postGuides(formData, user!.token);
       setSuccess(true);
       setFile({} as File);
     } catch (error: any) {

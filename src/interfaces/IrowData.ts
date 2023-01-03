@@ -6,5 +6,5 @@ export type IrowData ={
     filePaths: string;
     view: string;
     edit: string;
-    delete: string | undefined
+    delete: string | undefined | object
 }[]

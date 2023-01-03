@@ -9,7 +9,7 @@ export interface GuideInterface {
   filePaths: {
     filePath: string;
     publicId: string;
-  };
+  }; 
 }
 
 export interface GuideContent extends GuideInterface {
@@ -25,25 +25,37 @@ export const getGuides = async () => {
   }
 };
 
-export const postGuides = async (cardBody: FormData) => {
+export const postGuides = async (cardBody: FormData, token: string) => {
   try {
-    return api.post<{ data: GuideInterface }>('/guides/', cardBody, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    return api.post<{ data: GuideInterface }>('/guides/', 
+      cardBody,
+      {
+        headers: {
+          'Authorization' : `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
   } catch (error) {
     throw handleAxiosError(error);
   }
 };
 
-export const putGuides = async (id: string, cardBody: FormData) => {
+export const putGuides = async (
+  id: string,
+  cardBody: FormData,
+  token: string
+) => {
   try {
-    return api.put(`/guides/${id}`, cardBody, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    return api.put(`/guides/${id}`,
+      cardBody,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
   } catch {
     throw new Error('Serviço não disponível');
   }
@@ -65,10 +77,28 @@ export const getGuideWithCategoriesAndContent = async (id: string) => {
   }
 };
 
-export const deleteGuide = async (id: string) => {
+export const deleteGuide = async (id: string, token: string) => {
   try {
-    return api.delete<{ data: GuideContent }>(`guides/${id}`);
+    return api.delete<{ data: GuideContent }>(`guides/${id}` , {
+      headers : {
+        'Authorization': `Bearer ${token}`
+      }
+    });
   } catch (error) {
     throw handleAxiosError(error);
   }
+};
+
+export const patchGuide = async (
+  id: string, token: string
+) => {
+  try {
+    return api.patch(`/guides/delete/${id}`, null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  } catch {
+    throw new Error('Serviço não disponível');
+  }  
 };

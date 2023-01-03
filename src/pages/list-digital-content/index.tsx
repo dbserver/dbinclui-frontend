@@ -105,7 +105,7 @@ export const ListDigitalContent: React.FC<
       ),
     },
     {
-      field: 'shortDescription',
+      field: 'title',
       width: user ? 280 : 370,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
@@ -213,30 +213,35 @@ export const ListDigitalContent: React.FC<
           extension.indexOf('.') < 1 ? '' : extension.split('.').pop() ?? '';
 
         if (!extension.match(/png|jpg|jpeg|gif|webp/)) {
-          const fileName = path.replace(/\.[^/.]+$/, '');
+          const fileName = path.replace(/.[^/.]+$/, '');
           path = fileName + '.jpg';
         }
 
-    return {
-      _id: card._id,
-      guide:
-        card.guide.title.length > 30
-          ? card.guide.title.substring(0, 30) + '...'
-          : card.guide.title,
-      category:
-        card.category?.title.length! > 30
-          ? card.category?.title.substring(0, 30) + '...'
-          : card.category?.title,
-      title:
-        card.title.length > 30
-          ? card.title.substring(0, 30) + '...'
-          : card.title,
-      filePaths: path,
-      view: '/admin/visualizar-conteudo-digital/' + card._id,
-      edit: '/admin/atualizar-conteudo-digital/' + card._id,
-      delete: card._id,
-    };
-  });
+        newRowData.push({
+          _id: row._id,
+          guide:
+            row.guide.title.length > 30
+              ? row.guide.title.substring(0, 30) + '...'
+              : row.guide.title,
+          category:
+            row.category?.title.length! > 30
+              ? row.category?.title.substring(0, 30) + '...'
+              : row.category?.title,
+          title:
+            row.title.length > 30
+              ? row.title.substring(0, 30) + '...'
+              : row.title,
+          filePaths: path,
+          view: '/admin/visualizar-conteudo-digital/' + row._id,
+          edit: '/admin/atualizar-conteudo-digital/' + row._id,
+          delete: { authorId: row.author.uid, digitalContentId: row._id },
+        });
+      }
+    }
+    return newRowData;
+  };
+
+  const rowData: IrowData = handleRowData(digitalContents);
   const [searchInput, setSearchInput] = useState('');
   const [query, setQuery] = useState('');
 

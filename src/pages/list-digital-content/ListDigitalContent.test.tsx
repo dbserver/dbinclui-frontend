@@ -349,7 +349,6 @@ describe('Teste do componente', () => {
     expect(searchInput).toHaveValue('Titulo3');
 
     expect('Titulo3').toBeInTheDocument;
-
   });
 
   test('Se o usuário digitar uma descrição inexistente, não deve retornar nenhum conteúdo digital', async () => {
@@ -581,6 +580,11 @@ describe('Teste do componente', () => {
     const newDigitalContentButton = await screen.findByTestId('new');
 
     expect(newDigitalContentButton).toBeInTheDocument();
+
+    expect(newDigitalContentButton).toHaveAttribute(
+      'to',
+      '/admin/cadastrar-conteudo-digital',
+    );
   });
 
   test('O botão "Novo" não deve ser renderizado caso o usuário não esteja logado', async () => {
@@ -611,121 +615,10 @@ describe('Teste do componente', () => {
   });
 
   test('Se o usuário digitar um Título inexistente, não deve retornar nenhum conteúdo digital', async () => {
-    const dataMockDigitalContent = [
-      {
-        _id: 'a1',
-        shortDescription: 'Categoria1',
-        title: 'Titulo1',
-        guide: {
-          _id: 'a1',
-          content: 'Teste',
-          title: 'Teste',
-          filePaths: {
-            filePath: 'www.qualquercoisa.com',
-            publicId: 'qualquercoisa',
-          },
-        },
-        category: {
-          _id: 'a1',
-          title: 'Categoria',
-          shortDescription: 'Categoria',
-          guide: {
-            _id: 'a1',
-            content: 'Teste',
-            title: 'Maçã1',
-            filePaths: {
-              filePath: 'www.qualquercoisa.com',
-              publicId: 'qualquercoisa',
-            },
-          },
-        },
-        filePaths: [
-          {
-            filePath:
-              'https://res.cloudinary.com/duxvxgg4t/image/upload/v1669992224/uploads/ytk8mbjdaptazismwx12.jpg',
-            publicId: 'uploads/ytk8mbjdaptazismwx12',
-            _id: 'a1',
-          },
-        ],
-      },
-      {
-        _id: 'a2',
-        shortDescription: 'Categoria2',
-        title: 'Titulo2',
-        guide: {
-          _id: 'a2',
-          content: 'Teste',
-          title: 'Teste',
-          filePaths: {
-            filePath: 'www.qualquercoisa.com',
-            publicId: 'qualquercoisa',
-          },
-        },
-        category: {
-          _id: 'a1',
-          title: 'Categoria',
-          shortDescription: 'Categoria',
-          guide: {
-            _id: 'a1',
-            content: 'Teste',
-            title: 'Maçã1',
-            filePaths: {
-              filePath: 'www.qualquercoisa.com',
-              publicId: 'qualquercoisa',
-            },
-          },
-        },
-        filePaths: [
-          {
-            filePath:
-              'https://res.cloudinary.com/duxvxgg4t/image/upload/v1669992224/uploads/ytk8mbjdaptazismwx12.jpg',
-            publicId: 'uploads/ytk8mbjdaptazismwx12',
-            _id: 'a1',
-          },
-        ],
-      },
-      {
-        _id: 'a3',
-        shortDescription: 'Descrição3',
-        title: 'Titulo3',
-        guide: {
-          _id: 'a3',
-          content: 'Teste',
-          title: 'Teste',
-          filePaths: {
-            filePath: 'www.qualquercoisa.com',
-            publicId: 'qualquercoisa',
-          },
-        },
-        category: {
-          _id: 'a3',
-          title: 'Categoria3',
-          shortDescription: 'Categoria3',
-          guide: {
-            _id: 'a3',
-            content: 'Teste3',
-            title: 'Maçã3',
-            filePaths: {
-              filePath: 'www.qualquercoisa.com',
-              publicId: 'qualquercoisa',
-            },
-          },
-        },
-        filePaths: [
-          {
-            filePath:
-              'https://res.cloudinary.com/duxvxgg4t/image/upload/v1669992224/uploads/ytk8mbjdaptazismwx12.jpg',
-            publicId: 'uploads/ytk8mbjdaptazismwx12',
-            _id: 'a3',
-          },
-        ],
-      },
-    ];
-
     getDigitalContentMock.mockImplementation(
       async () =>
         ({
-          data: { data: dataMockDigitalContent },
+          data: { data: [dataMockDigitalContent[0]] },
         } as unknown as Promise<
           AxiosResponse<{ data: DigitalContentInterface[] }>
         >),
@@ -741,15 +634,5 @@ describe('Teste do componente', () => {
     expect(searchInput).toHaveValue('Título Inexistente');
 
     expect('Qualquer coisa').not.toBeInTheDocument;
-
-  });
-
-
-    const newDigitalContentButton = await screen.findByTestId('new');
-
-    expect(newDigitalContentButton).toHaveAttribute(
-      'to',
-      '/admin/cadastrar-conteudo-digital',
-    );
   });
 });

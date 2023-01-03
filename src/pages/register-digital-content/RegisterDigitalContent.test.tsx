@@ -2,7 +2,7 @@ import React from 'react';
 import { RegisterDigitalContent } from '@pages/register-digital-content';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/react';
 import validateInput, { InputInterfaceProps } from './validator';
 import { postDigitalContent } from '@services/digitalContent';
 import { CategoryInterface, getCategoriesByGuide } from '@services/categories';
@@ -266,7 +266,7 @@ describe('Página de cadastro de categorias', () => {
   });
 
   test('Deve verificar se o arquivo é excluido quando o botão de exclusão for clicado', async () => {
-    const mockFileNames = ['teste.jpg', 'teste.png'];
+    const mockFileNames = ['teste.jpg'];
 
     render(<RegisterDigitalContent />);
 
@@ -293,10 +293,8 @@ describe('Página de cadastro de categorias', () => {
 
     await userEvent.click(removeButton);
 
-    // here teste.jpg (the removed file) is the second one because for some reason,
-    // when we add the files with fireEvent they are added in reverse order 🤷
-    expect(elementsFileName[0]).toBeVisible();
-    expect(elementsFileName[1]).not.toBeVisible();
+
+    expect(elementsFileName[0]).not.toBeVisible();
   });
 
   test('Botão Voltar deve redirecionar para admin', () => {

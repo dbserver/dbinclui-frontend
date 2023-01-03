@@ -96,7 +96,7 @@ describe('Página de atualização de guia', () => {
       selector: 'textarea',
     });
 
-    const inputText = ' Esse é o texto presente no elemento input';
+    const inputText = 'Texto presente no Input';
     const textAreaText =
       ' Esse é o texto presente no elemento textarea\n Ele aceita novas linhas';
 

@@ -160,6 +160,7 @@ export const ImageCarroussel: React.FC<ImageCarrousselProps> = ({
             onClick={handleBack}
             disabled={currentIndex === 0}
             sx={styles.nextButton}
+            data-testid="beforeButton"
           >
             <KeyboardArrowLeft />
             <CustomTypography fontWeight={400} component="p" fontSize={14}>

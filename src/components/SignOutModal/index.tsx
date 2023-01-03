@@ -5,6 +5,7 @@ import AccessibilityContext from '@contexts/AccessibilityContext';
 import { useStyles } from './styles';
 import useGoogleLogin from '@hooks/useGoogleLogin';
 import { AuthContext } from '@contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface SignoutModalProps {
   anchorElSignInModal: null | HTMLElement;
@@ -24,6 +25,8 @@ export const SignoutModal = ({
   const handleCloseSigninModal = () => {
     setAnchorElSignInModal(null);
   };
+
+  const navigate = useNavigate();
 
   return (
     <Menu
@@ -72,9 +75,34 @@ export const SignoutModal = ({
         </CustomTypography>
         <ButtonBase
           sx={{
-            'p': '14px 94px',
+            'p': '10px 12px',
+            'width': '200px',
             'borderRadius': '10px',
-            'boxShadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
+            'transition': 'all 0.3s',
+            'display': 'flex',
+            'gap': '14px',
+            ':hover': {
+              backgroundColor: '#EFF0F6',
+            },
+          }}
+          onClick={() => {
+            navigate('meu-dicionario');
+          }}
+        >
+          <CustomTypography
+            fontSize={16}
+            component="p"
+            color={isAccessibility ? '#000' : '#909090'}
+          >
+            Meu dicionário
+          </CustomTypography>
+        </ButtonBase>
+
+        <ButtonBase
+          sx={{
+            'p': '10px 12px',
+            'width': '200px',
+            'borderRadius': '10px',
             'transition': 'all 0.3s',
             'display': 'flex',
             'gap': '14px',

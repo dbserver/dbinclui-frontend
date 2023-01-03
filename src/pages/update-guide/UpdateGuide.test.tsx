@@ -33,15 +33,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Página de atualização de guia', () => {
-  const mockGuide = {
-    id: '1',
-    title: 'teste',
-    content: 'teste',
-  };
-
-  beforeEach(() => {
-    getGuideByIdMock.mockResolvedValue({ data: { data: mockGuide } } as any);
-  });
+ 
   test('Deve mostrar um formulário', async () => {
     render(<UpdateGuide />);
 

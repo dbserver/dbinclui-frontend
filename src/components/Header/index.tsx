@@ -24,7 +24,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
 
-export interface HeaderProps {}
+export interface HeaderProps { }
 
 export interface MenuItemsInterface {
   title: string;
@@ -37,15 +37,15 @@ export const MenuItems: MenuItemsInterface[] = [
     href: '/',
   },
   {
-    title: 'SOBRE',
-    href: '/sobre',
+    title: 'TRADUTOR DE LIBRAS',
+    href: '/tradutor-de-libras',
   },
   {
-    title: 'CONTATO',
-    href: '/contato',
+    title: 'DICIONÁRIO DBINCLUI',
+    href: '/',
   },
   {
-    title: 'ADMINISTRAÇÃO',
+    title: 'MANTER CONTEÚDOS',
     href: '/admin',
   },
 ];
@@ -176,7 +176,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           {/*MENU DESKTOP*/}
 
           <Box
-            sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' } }}
+            sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center' }}
             className="box-links"
           >
             {MenuItems.map((item, key) => (
@@ -208,23 +208,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
               gap: '8px',
             }}
           >
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              {user && (
-                <CustomTypography
-                  maxWidth="15ch"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  color={isAccessibility ? '#FFFF00' : '#221F52'}
-                  fontWeight={500}
-                  fontSize={18}
-                  component="p"
-                >
-                  {user?.displayName}
-                </CustomTypography>
-              )}
-            </Box>
-            <Tooltip title="Login" sx={{ width: '30px', height: '30px' }}>
+            <Tooltip title="Menu de Usuário" sx={{ width: '30px', height: '30px' }}>
               <span>
                 <IconButton
                   size="large"

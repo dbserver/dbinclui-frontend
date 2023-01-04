@@ -10,7 +10,7 @@ import firebase from 'firebase/compat/app';
 
 
 
-//firebase mock
+//firebase mock (Provedor, Inicializador)
 jest.mock('../../firebase/config');
 const mockGoogleProviderFunc = googleProviderFunc as jest.MockedFunction<
   typeof googleProviderFunc
@@ -45,6 +45,7 @@ describe('Componente Header', () => {
 
   test('Abrir/Fechar menu mobile', () => {
     
+    //mocking user auth in firebase
     mockGoogleProviderFunc.mockImplementation(() => {
       return {} as firebase.auth.GoogleAuthProvider;
     });

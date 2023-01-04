@@ -1,18 +1,22 @@
 import AccessibilityTypography from '@components/AccessibilityTypography';
 import { CardDictionaryDbInclui } from '@components/CardDictionaryDBInclui';
+import { AuthContext } from '@contexts/AuthContext';
 import {
   ExpressionInterface,
   getUsersExpressions,
 } from '@services/userExpressions';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import styles from './styles';
 
-export interface MyDictionaryProps { }
+export interface MyDictionaryProps {}
 
 export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
   const [expressions, setExpressions] = useState<ExpressionInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const { user } = useContext(AuthContext);
 
   async function getUsersExpressionsService() {
     try {
@@ -26,6 +30,9 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
     }
   }
 
+  if (!user) {
+    return <Navigate to="/"></Navigate>;
+  }
   return (
     <>
       <AccessibilityTypography sx={styles.headingDictionaryDBInclui}>

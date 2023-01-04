@@ -23,6 +23,8 @@ import { SignInModal } from '@components/SignInModal';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
+import { HelpIcon } from '@components/svgs/HelpIcon';
+import { HelpOutline } from '@mui/icons-material';
 
 export interface HeaderProps { }
 
@@ -208,6 +210,18 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
               gap: '8px',
             }}
           >
+
+            <Tooltip title="Ajuda" sx={{ width: '28px', height: '28px' }}>
+              <span>
+                <IconButton
+                  size="small"
+                  sx={{ p: 0, m: '0 auto' }}
+                >
+                  <HelpOutline htmlColor='#2C3382'/>
+                </IconButton>
+              </span>
+            </Tooltip>
+
             <Tooltip title="Menu de Usuário" sx={{ width: '30px', height: '30px' }}>
               <span>
                 <IconButton

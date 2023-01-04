@@ -210,8 +210,8 @@ export const ListDigitalContent: React.FC<
           ? card.category?.title.substring(0, 30) + '...'
           : card.category?.title,
       title:
-        card.title.length > 30
-          ? card.title.substring(0, 30) + '...'
+        card.title?.length > 32
+          ? card.title.substring(0, 32) + '...'
           : card.title,
       filePaths: path,
       view: '/admin/visualizar-conteudo-digital/' + card._id,

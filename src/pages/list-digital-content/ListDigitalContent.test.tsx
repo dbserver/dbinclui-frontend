@@ -175,13 +175,15 @@ describe('Teste do componente', () => {
 
   test('Verificar se a barra de pesquisa está recebendo o que usuário digita', async () => {
 
-    render(<ListDigitalContent />);
+    await act(async () => {
+      render(<ListDigitalContent />);
+    });
 
-    const searchInput = screen.getByRole('textbox');
-
-    await userEvent.type(searchInput, 'Descrição3');
-
-    expect(searchInput).toHaveValue('Descrição3');
+    const searchInput = screen.getByPlaceholderText('Pesquise seu Conteúdo...');
+    
+    const description = 'Descrição3'
+    await userEvent.type(searchInput, description);
+    expect(searchInput).toHaveValue(description);
 
   });
 

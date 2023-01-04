@@ -15,6 +15,7 @@ import {
 import { AxiosResponse } from 'axios';
 import userEvent from '@testing-library/user-event';
 import { AuthContext } from '@contexts/AuthContext';
+import React from 'react';
 
 jest.mock('@services/digitalContent');
 
@@ -306,11 +307,11 @@ describe('Teste do componente', () => {
       );
     });
 
-    const searchInput = screen.getByRole('textbox');
+    const searchInput = screen.getByPlaceholderText('Pesquise seu Conteúdo...');
 
-    await userEvent.type(searchInput, 'Descrição3');
-
-    expect(searchInput).toHaveValue('Descrição3');
+    const description = 'Descrição3';
+    await userEvent.type(searchInput, description);
+    expect(searchInput).toHaveValue(description);
   });
 
   test('Verifica se o componente digitado na barra de busca está sendo exibido na listagem corretamente', async () => {
@@ -348,7 +349,7 @@ describe('Teste do componente', () => {
 
     expect(searchInput).toHaveValue('Titulo3');
 
-    expect('Titulo3').toBeInTheDocument;
+    expect('Titulo3').toBeInTheDocument();
   });
 
   test('Se o usuário digitar uma descrição inexistente, não deve retornar nenhum conteúdo digital', async () => {
@@ -386,7 +387,7 @@ describe('Teste do componente', () => {
 
     expect(searchInput).toHaveValue('Inexistente');
 
-    expect('Qualquer coisa').not.toBeInTheDocument;
+    expect('Qualquer coisa').not.toBeInTheDocument();
   });
 
   test('O botão de deletar deve ser rederizado caso o usuário esteja logado', async () => {
@@ -633,6 +634,6 @@ describe('Teste do componente', () => {
 
     expect(searchInput).toHaveValue('Título Inexistente');
 
-    expect('Qualquer coisa').not.toBeInTheDocument;
+    expect('Qualquer coisa').not.toBeInTheDocument();
   });
 });

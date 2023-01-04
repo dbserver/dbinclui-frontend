@@ -66,7 +66,7 @@ describe('Página de cadastro de nova guia', () => {
       selector: 'textarea',
     });
 
-    const inputText = 'Esse é o texto presente no elemento input';
+    const inputText = 'Esse é o texto no elemento input';
     const textAreaText =
       'Esse é o texto presente no elemento textarea\n Ele aceita novas linhas';
 

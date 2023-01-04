@@ -33,15 +33,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Página de atualização de guia', () => {
-  const mockGuide = {
-    id: '1',
-    title: 'teste',
-    content: 'teste',
-  };
-
-  beforeEach(() => {
-    getGuideByIdMock.mockResolvedValue({ data: { data: mockGuide } } as any);
-  });
+ 
   test('Deve mostrar um formulário', async () => {
     render(<UpdateGuide />);
 
@@ -104,7 +96,7 @@ describe('Página de atualização de guia', () => {
       selector: 'textarea',
     });
 
-    const inputText = ' Esse é o texto presente no elemento input';
+    const inputText = 'Texto presente no Input';
     const textAreaText =
       ' Esse é o texto presente no elemento textarea\n Ele aceita novas linhas';
 

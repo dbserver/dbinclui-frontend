@@ -4,9 +4,9 @@ const mockFiles = Object.create(null);
 describe('Função de validação de dados', () => {
   test('Deve validar corretamente os dados sem erros', async () => {
     const data = {
-      title: 'Categoria do Guia de Acessibilidade',
-      guide: 'Guia de Acessibilidade',
-      shortDescription: 'Essa é a categoria do guia de acessibilidade',
+      title: 'Categoria de Teste',
+      guide: 'Guia de Teste',
+      shortDescription: 'Essa é a categoria do guia de Teste',
       file: mockFiles,
     };
 
@@ -15,8 +15,8 @@ describe('Função de validação de dados', () => {
 
   test('Deve apontar erro na ausência da descrição', async () => {
     const data = {
-      title: 'Categoria do Guia de Acessibilidade',
-      guide: 'Guia de Acessibilidade',
+      title: 'Categoria de Teste',
+      guide: 'Guia de Teste',
       shortDescription: '',
       file: mockFiles,
     };
@@ -29,8 +29,8 @@ describe('Função de validação de dados', () => {
   test('Deve apontar erro na ausência de título', async () => {
     const data = {
       title: '',
-      guide: 'Guia de Acessibilidade',
-      shortDescription: 'Essa é a categoria do guia de acessibilidade',
+      guide: 'Guia de Teste',
+      shortDescription: 'Essa é a categoria do guia de Teste',
       file: mockFiles,
     };
 
@@ -41,9 +41,9 @@ describe('Função de validação de dados', () => {
 
   test('Deve apontar erro na ausência do guia', async () => {
     const data = {
-      title: 'Categoria do Guia de Acessibilidade',
+      title: 'Categoria do Guia de Teste',
       guide: '',
-      shortDescription: 'Essa é a categoria do guia de acessibilidade',
+      shortDescription: 'Essa é a categoria do guia de Teste',
       file: mockFiles,
     };
 
@@ -52,9 +52,9 @@ describe('Função de validação de dados', () => {
 
   test('Deve apontar erro na ausência do arquivo', async () => {
     const data = {
-      title: 'Categoria do Guia de Acessibilidade',
-      guide: 'Guia de Acessibilidade',
-      shortDescription: 'Essa é a categoria do guia de acessibilidade',
+      title: 'Categoria de Teste',
+      guide: 'Guia de Teste',
+      shortDescription: 'Essa é a categoria do guia de Teste',
       file: mockFiles.null,
     };
 

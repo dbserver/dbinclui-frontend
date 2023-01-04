@@ -1,10 +1,4 @@
-import React, {
-  KeyboardEvent,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { Container, Grid, CircularProgress } from '@mui/material';
 import CardHome from '@components/CardHome';
 import AccessibilityTypography from '@components/AccessibilityTypography';
@@ -12,9 +6,8 @@ import { GuideInterface, getGuides } from '@services/guides';
 import { SearchBar } from '@components/SearchBar';
 import { isMobile } from 'react-device-detect';
 import NoGuidesWarning from '@components/NoGuidesWarning';
-import { AuthContext } from '@contexts/AuthContext';
 
-export interface HomeProps { }
+export interface HomeProps {}
 
 function Mobile() {
   const [readMore, setReadMore] = useState(false);

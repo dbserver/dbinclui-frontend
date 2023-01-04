@@ -4,6 +4,28 @@ import Header, { MenuItems } from './index';
 import '@testing-library/jest-dom/extend-expect';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '@styles/theme';
+import {GlobalContext} from '../../contexts/index'
+import { googleProviderFunc, firebaseInitialize } from '../../firebase/config';
+import firebase from 'firebase/compat/app';
+
+
+
+//firebase mock
+jest.mock('../../firebase/config');
+const mockGoogleProviderFunc = googleProviderFunc as jest.MockedFunction<
+  typeof googleProviderFunc
+>;
+
+const mockFirebaseInitialize = firebaseInitialize as jest.MockedFunction<
+  typeof firebaseInitialize
+>;
+
+jest.mock('firebase/compat/app', () => ({
+  initializeApp: jest.fn(),
+  apps: ['app'],
+}));
+
+
 
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
@@ -14,16 +36,32 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+
 describe('Componente Header', () => {
+  
   test('deve mostrar o header', () => {
     expect(Header).toBeTruthy();
   });
 
   test('Abrir/Fechar menu mobile', () => {
+    
+    mockGoogleProviderFunc.mockImplementation(() => {
+      return {} as firebase.auth.GoogleAuthProvider;
+    });
+    mockFirebaseInitialize.mockReturnValue({
+      app: {} as any,
+      auth: {
+        onIdTokenChanged: jest.fn(),
+      } as any,
+      googleProvider: jest.fn().mockReturnValue(true),
+    });
+
     render(
+      <GlobalContext>
       <ThemeProvider theme={theme('default')}>
         <Header />
       </ThemeProvider>,
+      </GlobalContext>
     );
 
     const menuMobile = screen.getByTestId('MenuIcon');
@@ -35,6 +73,17 @@ describe('Componente Header', () => {
   });
 
   test.each(MenuItems)('Desktop menu itens: $title', ({ title, href }) => {
+    mockGoogleProviderFunc.mockImplementation(() => {
+      return {} as firebase.auth.GoogleAuthProvider;
+    });
+    mockFirebaseInitialize.mockReturnValue({
+      app: {} as any,
+      auth: {
+        onIdTokenChanged: jest.fn(),
+      } as any,
+      googleProvider: jest.fn().mockReturnValue(true),
+    });
+
     render(
       <ThemeProvider theme={theme('default')}>
         <Header />
@@ -49,6 +98,16 @@ describe('Componente Header', () => {
   });
 
   test.each(MenuItems)('Mobile item menu: $title', ({ title, href }) => {
+  
+
+    mockFirebaseInitialize.mockReturnValue({
+      app: {} as any,
+      auth: {
+        onIdTokenChanged: jest.fn(),
+      } as any,
+      googleProvider: jest.fn().mockReturnValue(true),
+    });
+
     render(
       <ThemeProvider theme={theme('default')}>
         <Header />
@@ -61,6 +120,7 @@ describe('Componente Header', () => {
     expect(button.getAttribute('to')).toBe(href);
     fireEvent.click(button);
   });
+
 /* Comentado temporariamente já que removemos sua funcionalidade
   test('Quando o avatar for clicado, o usuário deve ser levado para a página de administração', () => {
     render(
@@ -77,7 +137,19 @@ describe('Componente Header', () => {
     expect(mockedNavigate).toBeCalledWith('admin');
   });
   */
+
   it('Exibir a logo default', () => {
+    mockGoogleProviderFunc.mockImplementation(() => {
+      return {} as firebase.auth.GoogleAuthProvider;
+    });
+    mockFirebaseInitialize.mockReturnValue({
+      app: {} as any,
+      auth: {
+        onIdTokenChanged: jest.fn(),
+      } as any,
+      googleProvider: jest.fn().mockReturnValue(true),
+    });
+
     render(
       <ThemeProvider theme={theme('default')}>
         <Header />
@@ -88,6 +160,17 @@ describe('Componente Header', () => {
   });
 
   it('Exibir a logo com contrast', () => {
+    mockGoogleProviderFunc.mockImplementation(() => {
+      return {} as firebase.auth.GoogleAuthProvider;
+    });
+    mockFirebaseInitialize.mockReturnValue({
+      app: {} as any,
+      auth: {
+        onIdTokenChanged: jest.fn(),
+      } as any,
+      googleProvider: jest.fn().mockReturnValue(true),
+    });
+    
     render(
       <ThemeProvider theme={theme('contrast')}>
         <Header />

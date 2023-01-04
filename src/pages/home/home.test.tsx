@@ -19,9 +19,9 @@ const getGuidesMock = getGuides as jest.MockedFunction<typeof getGuides>;
 describe('Componente do Home', () => {
   test('deve existir um parágrafo na Home', () => {
     render(<Home />);
-
+    
     const HomeDescription = screen.getByText(
-      "Bem-vindo ao DB INCLUI, o DB INCLUI é um web app que dissemina a cultura de inclusão dentro da DBserver, com foco na cultura surda. O web app é destinado para todas as pessoas que desejam aprender LIBRAS e entender um pouco mais sobre Inclusão de PCD's na sociedade. O web app aproveita o Guia de Acessibilidade e a Apostila de Libras como fonte para informação de inclusão, assim como, utiliza a API VLIBRAS para as funcionalidades específicas.",
+      "Bem-vindo ao DB INCLUI, o DB INCLUI é um web app que dissemina a cultura de inclusão dentro da DBserver, com foco na cultura surda.",
     );
     expect(HomeDescription).toBeInTheDocument();
   });

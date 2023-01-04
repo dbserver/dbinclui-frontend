@@ -18,7 +18,7 @@ import CategoriesList from '@pages/categories-list';
 import ViewDigitalContent from '@pages/view-digital-content';
 import Translator from '@pages/translator';
 
-export interface RoutersProps {}
+export interface RoutersProps { }
 
 export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
   return (
@@ -28,7 +28,7 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="sobre" element={<About />} />
-            <Route path="guia/tradutor-de-libras" element={<Translator />} />
+            <Route path="tradutor-de-libras" element={<Translator />} />
             <Route path="guia/:title" element={<GuidePage />} />
             <Route path="admin" element={<Admin />} />
             <Route path="admin/cadastrar-guia" element={<RegisterGuide />} />
@@ -66,7 +66,7 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
 
             <Route
               path="admin/excluir-conteudo-digital/:id"
-              // element={<DeleteDigitalContent />}
+            // element={<DeleteDigitalContent />}
             />
             <Route path="testeGuide" element={<GuidePage />} />
             <Route path="*" element={<Error />} />

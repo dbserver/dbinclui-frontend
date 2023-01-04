@@ -5,7 +5,7 @@ const input: SxProps<Theme> = {
     'p': '2px 4px',
     'display': 'flex',
     'alignItems': 'center',
-    'width': 900,
+    'width': 825,
     'minWidth': 250,
     'borderRadius': '15px',
     'border': 'solid 1px',

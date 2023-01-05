@@ -26,7 +26,7 @@ import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
 import { HelpIcon } from '@components/svgs/HelpIcon';
 import { HelpOutline } from '@mui/icons-material';
 
-export interface HeaderProps { }
+export interface HeaderProps {}
 
 export interface MenuItemsInterface {
   title: string;
@@ -178,7 +178,11 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           {/*MENU DESKTOP*/}
 
           <Box
-            sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center' }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', lg: 'flex' },
+              justifyContent: 'center',
+            }}
             className="box-links"
           >
             {MenuItems.map((item, key) => (
@@ -210,19 +214,18 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
               gap: '8px',
             }}
           >
-
             <Tooltip title="Ajuda" sx={{ width: '28px', height: '28px' }}>
               <span>
-                <IconButton
-                  size="small"
-                  sx={{ p: 0, m: '0 auto' }}
-                >
-                  <HelpOutline htmlColor='#2C3382'/>
+                <IconButton size="small" sx={{ p: 0, m: '0 auto' }}>
+                  <HelpOutline htmlColor="#565C9B" />
                 </IconButton>
               </span>
             </Tooltip>
 
-            <Tooltip title="Menu de Usuário" sx={{ width: '30px', height: '30px' }}>
+            <Tooltip
+              title="Menu de Usuário"
+              sx={{ width: '30px', height: '30px' }}
+            >
               <span>
                 <IconButton
                   size="large"

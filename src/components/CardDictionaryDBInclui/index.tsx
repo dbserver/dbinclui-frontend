@@ -15,28 +15,59 @@ import { useContext } from 'react';
 import styles from './styles';
 import { Box } from '@mui/system';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import { deleteUserExpression, ExpressionInterface, favoriteUserExpression } from '@services/userExpressions';
+import Notification from '@components/Notification';
 
 export type Props = {
-  expression: String[];
+  expression: ExpressionInterface[];
 };
 
 export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
-  const [favorite, setFavorite] = useState(false);
   const { user } = useContext(AuthContext);
   const { colorAccessibility } = useContext(AccessibilityContext);
-  const deleteExpression = (index: number) => {
-    console.log(`cliquei no item de index ${index}, e removi!`);
-  };
-  const favoriteExpression = () => {
-    setFavorite((prev) => !prev);
-    if (favorite) {
-      console.log('Essa expressão foi salva no seu dicionario pessoal!');
-    } else {
-      console.log('Essa expressão foi removida do seu dicionário pessoal');
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  async function deleteExpression(id: string) {
+    try {
+      if (!user?.token) {
+        throw new Error('Nenhum token foi enviado');
+      }
+
+      await deleteUserExpression(user?.token, id);
+      setError(false);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data.message ?? error.message);
+      setError(true);
     }
   };
+
+  async function favoriteExpression(id: string) {
+    try {
+      if (!user?.token) {
+        throw new Error('Nenhum token foi enviado');
+      }
+
+      await favoriteUserExpression(user?.token, id);
+      setError(false);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data.message ?? error.message);
+      setError(true);
+    }
+  };
+
   return (
     <Container sx={styles.container}>
+      {error && (
+        <Notification
+          message={`${errorMessage} 🤔`}
+          variant="error"
+          onClose={() => {
+            setError(false);
+            setErrorMessage('');
+          }}
+        />
+      )}
       <List sx={styles.list}>
         {props.expression.map((item, index) => (
           <ListItem
@@ -47,22 +78,19 @@ export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
             }
             key={index}
           >
-            <ListItemText primary={item} />
+            <ListItemText primary={item.expression} />
             <Box sx={styles.BoxIcon}>
               <IconButton
                 onClick={() => {
                   if (user) {
-                    favoriteExpression();
+                    favoriteExpression(item._id);
                   } else if (!user) {
-                    console.log(
-                      'você precisa estar logado para adicionar ao seu dicionário pessoal',
-                    );
+                    setErrorMessage('Você precisa estar logado para adicionar ao seu dicionário pessoal');
                   }
-                  favoriteExpression();
                 }}
               >
                 {
-                  favorite
+                  item.favorite
                     ? <FavoriteIcon sx={{ color: 'red' }} />
                     : <FavoriteBorderIcon sx={{ color: 'grey' }} />
                 }
@@ -70,11 +98,9 @@ export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
               <IconButton
                 onClick={() => {
                   if (user) {
-                    deleteExpression(index);
+                    deleteExpression(item._id);
                   } else if (!user) {
-                    console.log(
-                      'Você precisa estar logado para deletar uma expression',
-                    );
+                    setErrorMessage('Você precisa estar logado para deletar uma expression');
                   }
                 }}
               >

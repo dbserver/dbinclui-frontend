@@ -15,11 +15,13 @@ import { useContext } from 'react';
 import styles from './styles';
 import { Box } from '@mui/system';
 import AccessibilityContext from '@contexts/AccessibilityContext';
-import { deleteUserExpression, ExpressionInterface, favoriteUserExpression } from '@services/userExpressions';
+import { ExpressionInterface } from '@services/userExpressions';
 import Notification from '@components/Notification';
 
 export type Props = {
   expression: ExpressionInterface[];
+  functionFavoriteExpression: (id: string) => void;
+  functionDeleteExpression: (id: string) => void;
 };
 
 export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
@@ -27,34 +29,6 @@ export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
   const { colorAccessibility } = useContext(AccessibilityContext);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  async function deleteExpression(id: string) {
-    try {
-      if (!user?.token) {
-        throw new Error('Nenhum token foi enviado');
-      }
-
-      await deleteUserExpression(user?.token, id);
-      setError(false);
-    } catch (error: any) {
-      setErrorMessage(error.response?.data.message ?? error.message);
-      setError(true);
-    }
-  };
-
-  async function favoriteExpression(id: string) {
-    try {
-      if (!user?.token) {
-        throw new Error('Nenhum token foi enviado');
-      }
-
-      await favoriteUserExpression(user?.token, id);
-      setError(false);
-    } catch (error: any) {
-      setErrorMessage(error.response?.data.message ?? error.message);
-      setError(true);
-    }
-  };
 
   return (
     <Container sx={styles.container}>
@@ -83,24 +57,28 @@ export const CardDictionaryDbInclui = (props: Props): JSX.Element => {
               <IconButton
                 onClick={() => {
                   if (user) {
-                    favoriteExpression(item._id);
+                    props.functionFavoriteExpression(item._id);
                   } else if (!user) {
-                    setErrorMessage('Você precisa estar logado para adicionar ao seu dicionário pessoal');
+                    setErrorMessage(
+                      'Você precisa estar logado para adicionar ao seu dicionário pessoal',
+                    );
                   }
                 }}
               >
-                {
-                  item.favorite
-                    ? <FavoriteIcon sx={{ color: 'red' }} />
-                    : <FavoriteBorderIcon sx={{ color: 'grey' }} />
-                }
+                {item.favorite ? (
+                  <FavoriteIcon sx={{ color: 'red' }} />
+                ) : (
+                  <FavoriteBorderIcon sx={{ color: 'grey' }} />
+                )}
               </IconButton>
               <IconButton
                 onClick={() => {
                   if (user) {
-                    deleteExpression(item._id);
+                    props.functionDeleteExpression(item._id);
                   } else if (!user) {
-                    setErrorMessage('Você precisa estar logado para deletar uma expression');
+                    setErrorMessage(
+                      'Você precisa estar logado para deletar uma expression',
+                    );
                   }
                 }}
               >

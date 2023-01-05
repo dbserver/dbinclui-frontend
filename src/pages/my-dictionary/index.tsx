@@ -3,7 +3,9 @@ import { CardDictionaryDbInclui } from '@components/CardDictionaryDBInclui';
 import { AuthContext } from '@contexts/AuthContext';
 import { CircularProgress, Grid } from '@mui/material';
 import {
+  deleteUserExpression,
   ExpressionInterface,
+  favoriteUserExpression,
   getUsersExpressions,
 } from '@services/userExpressions';
 import Notification from '@components/Notification';
@@ -11,7 +13,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import styles from './styles';
 
-export interface MyDictionaryProps { }
+export interface MyDictionaryProps {}
 
 export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
   const [expressions, setExpressions] = useState<ExpressionInterface[]>([]);
@@ -59,6 +61,34 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
     return <Navigate to="/"></Navigate>;
   }
 
+  async function favoriteExpression(id: string) {
+    try {
+      if (!user?.token) {
+        throw new Error('Nenhum token foi enviado');
+      }
+
+      await favoriteUserExpression(user?.token, id);
+      setError(false);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data.message ?? error.message);
+      setError(true);
+    }
+  }
+
+  async function deleteExpression(id: string) {
+    try {
+      if (!user?.token) {
+        throw new Error('Nenhum token foi enviado');
+      }
+
+      await deleteUserExpression(user?.token, id);
+      setError(false);
+    } catch (error: any) {
+      setErrorMessage(error.response?.data.message ?? error.message);
+      setError(true);
+    }
+  }
+
   return (
     <>
       <AccessibilityTypography sx={styles.headingDictionaryDBInclui}>
@@ -81,6 +111,8 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
             <CircularProgress color="secondary" />
           ) : expressions.length > 0 ? (
             <CardDictionaryDbInclui
+              functionDeleteExpression={deleteExpression}
+              functionFavoriteExpression={favoriteExpression}
               expression={expressions}
             />
           ) : (

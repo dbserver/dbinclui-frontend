@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Header, { MenuItems } from './index';
 import '@testing-library/jest-dom/extend-expect';
 import { ThemeProvider } from '@mui/material/styles';
@@ -7,6 +7,7 @@ import theme from '@styles/theme';
 import { GlobalContext } from '../../contexts/index';
 import { googleProviderFunc, firebaseInitialize } from '../../firebase/config';
 import firebase from 'firebase/compat/app';
+import { act } from 'react-dom/test-utils';
 
 //firebase mock (Provedor, Inicializador)
 jest.mock('../../firebase/config');
@@ -154,5 +155,41 @@ describe('Componente Header', () => {
     );
 
     expect(screen.getByTitle('Logo')).toBeInTheDocument();
+  });
+
+  test('Botão de ajuda deve ser renderizado', () => {
+    render(
+      <ThemeProvider theme={theme('contrast')}>
+        <Header />
+      </ThemeProvider>,
+    );
+
+    const helpButton = screen.getByRole('button', {
+      name: /botão de ajuda/i,
+    });
+
+    expect(helpButton).toBeInTheDocument();
+  });
+
+  test('Ao clicar no botão de ajuda, deve abir o modal de ajuda', async () => {
+    render(
+      <ThemeProvider theme={theme('contrast')}>
+        <Header />
+      </ThemeProvider>,
+    );
+
+    const helpButton = screen.getByRole('button', {
+      name: /botão de ajuda/i,
+    });
+
+    await act(async () => {
+      fireEvent.click(helpButton);
+    });
+
+    const helpModal = screen.getByTestId('help-modal');
+
+    await waitFor(() => {
+      expect(helpModal).toBeInTheDocument();
+    });
   });
 });

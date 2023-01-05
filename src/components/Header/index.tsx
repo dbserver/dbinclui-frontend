@@ -24,7 +24,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
 
-export interface HeaderProps { }
+export interface HeaderProps {}
 
 export interface MenuItemsInterface {
   title: string;
@@ -176,7 +176,11 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           {/*MENU DESKTOP*/}
 
           <Box
-            sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center' }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', lg: 'flex' },
+              justifyContent: 'center',
+            }}
             className="box-links"
           >
             {MenuItems.map((item, key) => (
@@ -208,7 +212,10 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
               gap: '8px',
             }}
           >
-            <Tooltip title="Menu de Usuário" sx={{ width: '30px', height: '30px' }}>
+            <Tooltip
+              title="Menu de Usuário"
+              sx={{ width: '30px', height: '30px' }}
+            >
               <span>
                 <IconButton
                   size="large"

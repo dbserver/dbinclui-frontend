@@ -23,8 +23,8 @@ import { SignInModal } from '@components/SignInModal';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
-import { HelpIcon } from '@components/svgs/HelpIcon';
 import { HelpOutline } from '@mui/icons-material';
+import HelpModal from '@components/HelpModal';
 
 export interface HeaderProps {}
 
@@ -60,6 +60,9 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   const [anchorElSignInModal, setAnchorElSignInModal] =
     React.useState<null | HTMLElement>(null);
 
+  const [anchorElHelpModal, setAnchorElHelpModal] =
+    React.useState<null | HTMLElement>(null);
+
   const { user } = React.useContext(AuthContext);
   const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
 
@@ -86,6 +89,10 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
 
   const handleOpenSignInModal = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElSignInModal(event.currentTarget);
+  };
+
+  const handleOpenHelpModal = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElHelpModal(event.currentTarget);
   };
 
   const theme: any = useTheme();
@@ -216,11 +223,22 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           >
             <Tooltip title="Ajuda" sx={{ width: '28px', height: '28px' }}>
               <span>
-                <IconButton size="small" sx={{ p: 0, m: '0 auto' }}>
-                  <HelpOutline htmlColor="#565C9B" />
+                <IconButton
+                  size="small"
+                  sx={{ p: 0, m: '0 auto' }}
+                  onClick={handleOpenHelpModal}
+                >
+                  <HelpOutline
+                    htmlColor={isAccessibility ? '#FFFF00' : '#565C9B'}
+                  />
                 </IconButton>
               </span>
             </Tooltip>
+
+            <HelpModal
+              anchorElHelpModal={anchorElHelpModal}
+              setAnchorElHelpModal={setAnchorElHelpModal}
+            />
 
             <Tooltip
               title="Menu de Usuário"

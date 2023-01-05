@@ -10,7 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Logo from '../svgs/logo';
 import './styles.css';
 import AccessibilityTypography from '../../components/AccessibilityTypography';
@@ -20,7 +20,6 @@ import { useTheme } from '@emotion/react';
 import { AuthContext } from '@contexts/AuthContext';
 import SignoutModal from '@components/SignOutModal';
 import { SignInModal } from '@components/SignInModal';
-import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
 import { HelpOutline } from '@mui/icons-material';
@@ -65,10 +64,6 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
 
   const { user } = React.useContext(AuthContext);
   const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
-
-  if (!user) {
-    console.log('');
-  }
 
   const isAccessibility =
     React.useContext(AccessibilityContext).colorAccessibility;

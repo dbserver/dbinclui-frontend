@@ -4,11 +4,9 @@ import Header, { MenuItems } from './index';
 import '@testing-library/jest-dom/extend-expect';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '@styles/theme';
-import {GlobalContext} from '../../contexts/index'
+import { GlobalContext } from '../../contexts/index';
 import { googleProviderFunc, firebaseInitialize } from '../../firebase/config';
 import firebase from 'firebase/compat/app';
-
-
 
 //firebase mock (Provedor, Inicializador)
 jest.mock('../../firebase/config');
@@ -25,8 +23,6 @@ jest.mock('firebase/compat/app', () => ({
   apps: ['app'],
 }));
 
-
-
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
   const useHref = jest.fn();
@@ -36,15 +32,12 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-
 describe('Componente Header', () => {
-  
   test('deve mostrar o header', () => {
     expect(Header).toBeTruthy();
   });
 
   test('Abrir/Fechar menu mobile', () => {
-    
     //mocking user auth in firebase
     mockGoogleProviderFunc.mockImplementation(() => {
       return {} as firebase.auth.GoogleAuthProvider;
@@ -59,10 +52,11 @@ describe('Componente Header', () => {
 
     render(
       <GlobalContext>
-      <ThemeProvider theme={theme('default')}>
-        <Header />
-      </ThemeProvider>,
-      </GlobalContext>
+        <ThemeProvider theme={theme('default')}>
+          <Header />
+        </ThemeProvider>
+        ,
+      </GlobalContext>,
     );
 
     const menuMobile = screen.getByTestId('MenuIcon');
@@ -99,8 +93,6 @@ describe('Componente Header', () => {
   });
 
   test.each(MenuItems)('Mobile item menu: $title', ({ title, href }) => {
-  
-
     mockFirebaseInitialize.mockReturnValue({
       app: {} as any,
       auth: {
@@ -121,23 +113,6 @@ describe('Componente Header', () => {
     expect(button.getAttribute('to')).toBe(href);
     fireEvent.click(button);
   });
-
-/* Comentado temporariamente já que removemos sua funcionalidade
-  test('Quando o avatar for clicado, o usuário deve ser levado para a página de administração', () => {
-    render(
-      <ThemeProvider theme={theme('default')}>
-        <Header />
-      </ThemeProvider>,
-    );
-
-    const button = screen.getByLabelText('Administrador');
-
-    fireEvent.click(button);
-
-    expect(mockedNavigate).toBeCalled();
-    expect(mockedNavigate).toBeCalledWith('admin');
-  });
-  */
 
   it('Exibir a logo default', () => {
     mockGoogleProviderFunc.mockImplementation(() => {
@@ -171,7 +146,7 @@ describe('Componente Header', () => {
       } as any,
       googleProvider: jest.fn().mockReturnValue(true),
     });
-    
+
     render(
       <ThemeProvider theme={theme('contrast')}>
         <Header />

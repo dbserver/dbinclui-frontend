@@ -25,6 +25,7 @@ export const HelpModal = ({
   return (
     <Menu
       id="help-modal"
+      aria-label='Modal de ajuda'
       className={
         isAccessibility ? classes.helpModalContrast : classes.helpModal
       }
@@ -56,6 +57,7 @@ export const HelpModal = ({
         }}
       >
         <ButtonBase
+          aria-label='Botão de contato'
           sx={{
             'p': '8px 38px',
             'borderRadius': '10px',
@@ -80,6 +82,7 @@ export const HelpModal = ({
           </CustomTypography>
         </ButtonBase>
         <ButtonBase
+          aria-label='Botão sobre'
           sx={{
             'p': '8px 38px',
             'borderRadius': '10px',

@@ -215,6 +215,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
             <Tooltip title="Ajuda" sx={{ width: '28px', height: '28px' }}>
               <span>
                 <IconButton
+                  aria-label='Botão de ajuda'
                   size="small"
                   sx={{ p: 0, m: '0 auto' }}
                   onClick={handleOpenHelpModal}

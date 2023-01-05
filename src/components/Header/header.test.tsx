@@ -115,7 +115,7 @@ describe('Componente Header', () => {
     fireEvent.click(button);
   });
 
-  test('Quando o Manter Conteúdos for clicado, o usuário deve ser levado para a página de administração', async () => {
+  test('Verificar se o Manter Conteúdo tem o atributo para redirecionar e o path para página de administrador', async () => {
     act(() => {
       render(
         <ThemeProvider theme={theme('default')}>
@@ -126,9 +126,7 @@ describe('Componente Header', () => {
     const button = screen.getByTestId(
       'menu-item-desktop-testid:MANTER CONTEÚDOS',
     );
-    fireEvent.click(button);
-    expect(mockedNavigate).toBeCalled();
-    expect(mockedNavigate).toBeCalledWith('/admin');
+    expect(button).toHaveAttribute('to', '/admin');
   });
 
   it('Exibir a logo default', () => {

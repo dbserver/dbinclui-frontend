@@ -73,12 +73,6 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   const isAccessibility =
     React.useContext(AccessibilityContext).colorAccessibility;
 
-  const handleChangePage = (
-    target: React.MouseEvent<HTMLElement>['currentTarget'],
-  ) => {
-    setAnchorElNav(target);
-  };
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -146,7 +140,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
             </IconButton>
             <Menu
               id="menu-appbar"
-              disableScrollLock={true}
+              disableScrollLock={false}
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
@@ -199,9 +193,6 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
                 data-testid={`menu-item-desktop-testid:${item.title}`}
                 component={Link}
                 to={item.href}
-                onClick={({ currentTarget }: React.MouseEvent<HTMLElement>) =>
-                  handleChangePage(currentTarget)
-                }
               >
                 <AccessibilityTypography color="secondary">
                   {item.title}

@@ -1,10 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Box, ButtonBase, Menu } from '@mui/material';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { useStyles } from './styles';
-import { AuthContext } from '@contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface HelpModalProps {
   anchorElHelpModal: null | HTMLElement;
@@ -15,8 +14,6 @@ export const HelpModal = ({
   anchorElHelpModal,
   setAnchorElHelpModal,
 }: HelpModalProps) => {
-  const { user } = useContext(AuthContext);
-
   const isAccessibility = useContext(AccessibilityContext).colorAccessibility;
   const classes = useStyles();
   const navigate = useNavigate();

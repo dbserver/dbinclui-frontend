@@ -34,7 +34,7 @@ export const SignoutModal = ({
       className={
         isAccessibility ? classes.logInModalContrast : classes.logInModal
       }
-      disableScrollLock={true}
+      disableScrollLock={false}
       anchorEl={anchorElSignInModal}
       anchorOrigin={{
         vertical: 'bottom',

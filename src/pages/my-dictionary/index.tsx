@@ -25,6 +25,7 @@ export const MyDictionaryPage: React.FC<
   const [errorMessage, setErrorMessage] = useState('');
 
   const { user } = useContext(AuthContext);
+  console.log(expressions.);
 
   const getUsersExpressionsService = useCallback(async () => {
     try {

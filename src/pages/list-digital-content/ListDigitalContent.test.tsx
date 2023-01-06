@@ -174,7 +174,6 @@ describe('Teste do componente', () => {
   });
 
   test('Verificar se a barra de pesquisa está recebendo o que usuário digita', async () => {
-
     render(<ListDigitalContent />);
 
     const searchInput = screen.getByRole('textbox');
@@ -182,7 +181,6 @@ describe('Teste do componente', () => {
     await userEvent.type(searchInput, 'Descrição3');
 
     expect(searchInput).toHaveValue('Descrição3');
-
   });
 
   test('Verica se o componente digitado na barra de busca está sendo exibido na listagem corretamente', async () => {
@@ -316,9 +314,7 @@ describe('Teste do componente', () => {
     expect(searchInput).toHaveValue('Descrição3');
 
     expect('Descrição3').toBeInTheDocument;
-
   });
-
 
   test('Se o usuário digitar uma descrição inexistente, não deve retornar nenhum conteúdo digital', async () => {
     const dataMockDigitalContent = [
@@ -451,9 +447,5 @@ describe('Teste do componente', () => {
     expect(searchInput).toHaveValue('Inexistente');
 
     expect('Qualquer coisa').not.toBeInTheDocument;
-
   });
-
-
-
 });

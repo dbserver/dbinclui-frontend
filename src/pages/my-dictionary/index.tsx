@@ -20,14 +20,15 @@ export const MyDictionaryPage: React.FC<
   MyDictionaryProps
 > = (): JSX.Element => {
   const [expressions, setExpressions] = useState<ExpressionInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   const { user } = useContext(AuthContext);
 
   const getUsersExpressionsService = useCallback(async () => {
     try {
+      setLoading(true);
       if (!user?.token) {
         throw new Error('Nenhum token foi enviado');
       }
@@ -36,10 +37,10 @@ export const MyDictionaryPage: React.FC<
 
       setExpressions(data?.data);
       setError(false);
+      setLoading(false);
     } catch (error: any) {
       setErrorMessage(error.response?.data.message ?? error.message);
       setError(true);
-    } finally {
       setLoading(false);
     }
   }, [user?.token]);

@@ -118,35 +118,36 @@ describe('Teste do MyDictionary', () => {
     });
   });
 
-  // it('teste', async () => {
-  //   const dataMockGetUsersExpressions: ExpressionInterface[] = [
-  //     {
-  //       _id: '123',
-  //       expression: 'Expressão teste',
-  //       favorite: false,
-  //     },
-  //   ];
+  it('teste', async () => {
+    // const dataMockGetUsersExpressions: ExpressionInterface[] = [
+    //   {
+    //     _id: '123',
+    //     expression: 'Expressão teste',
+    //     favorite: false,
+    //   },
+    // ];
 
-  //   mockGetUsersExpressions.mockImplementation(
-  //     async () =>
-  //       ({
-  //         data: { data: dataMockGetUsersExpressions },
-  //       } as unknown as Promise<
-  //         AxiosResponse<{ data: ExpressionInterface[] }>
-  //       >),
-  //   );
+    mockGetUsersExpressions.mockImplementation(
+      async () =>
+        ({
+          data: { data: [] },
+        } as unknown as Promise<
+          AxiosResponse<{ data: ExpressionInterface[] }>
+        >),
+    );
 
-  //   await act(async () => {
-  //     render(
-  //       <AuthContext.Provider value={{ user, setUser }}>
-  //         <MyDictionary />
-  //       </AuthContext.Provider>,
-  //     );
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <MyDictionary />
+        </AuthContext.Provider>,
+      );
+    });
 
-  //     // const textTitle = screen.getByText('Expressão teste');
-  //     // expect(textTitle).toBeVisible();
-  //     screen.logTestingPlaygroundURL();
-  //     // expect(screen.getAllByRole('span', { name: /title/i })).toHaveLength(3); //Elemento de title
-  //   });
-  // });
+    const noExpressionsAlert = screen.getByText(
+      'Nenhuma expressão encontrada!',
+    );
+
+    expect(noExpressionsAlert).toBeInTheDocument();
+  });
 });

@@ -257,6 +257,9 @@ export const RegisterDigitalContent: React.FC<
                 aria-labelledby="categoryLabel"
                 name="category"
                 id="category"
+                MenuProps={{
+                  disableScrollLock: false,
+                }}
                 sx={[styles.input, styles.select]}
                 onChange={(event) => {
                   setCategory(event.target.value);

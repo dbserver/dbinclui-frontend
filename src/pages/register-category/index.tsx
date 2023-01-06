@@ -114,6 +114,9 @@ export const RegisterCategory: React.FC<
                 aria-labelledby="guideLabel"
                 name="guide"
                 id="guide"
+                MenuProps={{
+                  disableScrollLock: false,
+                }}
                 sx={[styles.input, styles.select]}
                 onChange={(event) => {
                   setGuide(event.target.value);

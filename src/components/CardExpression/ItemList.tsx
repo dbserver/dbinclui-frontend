@@ -22,16 +22,22 @@ export const ItemList = (props: ItemProps) => {
     <ListItem
       sx={!colorAccessibility ? styles.listItem : styles.listItemAccessibility}
     >
-      <ListItemText primary={props.title} />
+      <ListItemText aria-label="expressionList" primary={props.title} />
       <Box sx={styles.BoxIcon}>
-        <IconButton onClick={props.handleFavoriteExpression}>
+        <IconButton
+          aria-label="favoriteButton"
+          onClick={props.handleFavoriteExpression}
+        >
           {props.isFavorite ? (
             <FavoriteIcon sx={{ color: 'red' }} />
           ) : (
             <FavoriteBorderIcon sx={{ color: 'grey' }} />
           )}
         </IconButton>
-        <IconButton onClick={props.handleDeleteExpression}>
+        <IconButton
+          aria-label="deleteButton"
+          onClick={props.handleDeleteExpression}
+        >
           <DeleteIcon
             sx={colorAccessibility ? { color: 'white' } : { color: 'black' }}
           />

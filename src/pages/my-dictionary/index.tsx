@@ -1,5 +1,5 @@
 import AccessibilityTypography from '@components/AccessibilityTypography';
-import { CardDictionaryDbInclui } from '@components/CardDictionaryDBInclui';
+import { CardExpression } from '@components/CardExpression';
 import { AuthContext } from '@contexts/AuthContext';
 import { CircularProgress, Grid } from '@mui/material';
 import {
@@ -9,13 +9,16 @@ import {
   getUsersExpressions,
 } from '@services/userExpressions';
 import Notification from '@components/Notification';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
 import styles from './styles';
+import { ItemList } from '@components/CardExpression/ItemList';
 
 export interface MyDictionaryProps {}
 
-export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
+export const MyDictionaryPage: React.FC<
+  MyDictionaryProps
+> = (): JSX.Element => {
   const [expressions, setExpressions] = useState<ExpressionInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -23,20 +26,8 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
 
   const { user } = useContext(AuthContext);
 
-  const userLogout = () => {
-    setError(true);
-    setErrorMessage(
-      'Você precisa efetuar o login para armazenar no seu dicionario pessoal',
-    );
-  };
-
-  async function getUsersExpressionsService() {
+  const getUsersExpressionsService = useCallback(async () => {
     try {
-      if (!user) {
-        userLogout();
-        return;
-      }
-
       if (!user?.token) {
         throw new Error('Nenhum token foi enviado');
       }
@@ -51,14 +42,16 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
     } finally {
       setLoading(false);
     }
-  }
+  }, [user?.token]);
 
   useEffect(() => {
-    getUsersExpressionsService();
-  }, []);
+    return () => {
+      getUsersExpressionsService();
+    };
+  }, [getUsersExpressionsService]);
 
   if (!user) {
-    return <Navigate to="/"></Navigate>;
+    return <Navigate to="/" />;
   }
 
   async function favoriteExpression(id: string) {
@@ -66,8 +59,8 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
       if (!user?.token) {
         throw new Error('Nenhum token foi enviado');
       }
-
       await favoriteUserExpression(user?.token, id);
+      getUsersExpressionsService();
       setError(false);
     } catch (error: any) {
       setErrorMessage(error.response?.data.message ?? error.message);
@@ -82,6 +75,8 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
       }
 
       await deleteUserExpression(user?.token, id);
+      getUsersExpressionsService();
+
       setError(false);
     } catch (error: any) {
       setErrorMessage(error.response?.data.message ?? error.message);
@@ -110,10 +105,22 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
           {loading ? (
             <CircularProgress color="secondary" />
           ) : expressions.length > 0 ? (
-            <CardDictionaryDbInclui
-              functionDeleteExpression={deleteExpression}
-              functionFavoriteExpression={favoriteExpression}
-              expression={expressions}
+            <CardExpression
+              items={expressions.map((expression, key) => {
+                return (
+                  <ItemList
+                    key={key}
+                    title={expression.expression}
+                    isFavorite={expression.favorite}
+                    handleFavoriteExpression={() =>
+                      favoriteExpression(expression._id)
+                    }
+                    handleDeleteExpression={() =>
+                      deleteExpression(expression._id)
+                    }
+                  />
+                );
+              })}
             />
           ) : (
             <AccessibilityTypography variant="h1" className="error">
@@ -126,4 +133,4 @@ export const MyDictionary: React.FC<MyDictionaryProps> = (): JSX.Element => {
   );
 };
 
-export default MyDictionary;
+export default MyDictionaryPage;

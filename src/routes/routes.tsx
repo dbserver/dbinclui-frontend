@@ -17,8 +17,8 @@ import UpdateDigitalContent from '@pages/update-digital-content';
 import CategoriesList from '@pages/categories-list';
 import ViewDigitalContent from '@pages/view-digital-content';
 import Translator from '@pages/translator';
-
-export interface RoutersProps { }
+import { DictionaryDbinclui } from '@pages/dictionaryDbinclui';
+export interface RoutersProps {}
 
 export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
   return (
@@ -63,10 +63,11 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
               path="admin/atualizar-conteudo-digital/:id"
               element={<UpdateDigitalContent />}
             />
+            <Route path="dictionaryDbInclui" element={<DictionaryDbinclui />} />
 
             <Route
               path="admin/excluir-conteudo-digital/:id"
-            // element={<DeleteDigitalContent />}
+              // element={<DeleteDigitalContent />}
             />
             <Route path="testeGuide" element={<GuidePage />} />
             <Route path="*" element={<Error />} />

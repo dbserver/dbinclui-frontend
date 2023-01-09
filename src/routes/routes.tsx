@@ -29,7 +29,7 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="sobre" element={<About />} />
-            <Route path="guia/tradutor-de-libras" element={<Translator />} />
+            <Route path="tradutor-de-libras" element={<Translator />} />
             <Route path="meu-dicionario" element={<MyExpressions />} />
             <Route path="guia/:title" element={<GuidePage />} />
             <Route path="admin" element={<Admin />} />

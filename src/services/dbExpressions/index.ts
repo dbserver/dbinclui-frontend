@@ -25,7 +25,21 @@ export const deleteExpression = async (id: string, token: string) => {
     throw handleAxiosError(error);
   }
 };
-
+export const favoriteExpression = async (id: string, token: string) => {
+  try {
+    return api.patch<{ data: IDBExpression }>(
+      `dbExpressions/favorite/${id}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  } catch (error) {
+    throw handleAxiosError(error);
+  }
+};
 export const postDbExpression = async (expression: string, token: string) => {
   try {
     return api.post<{ data: IuserExpression }>(

@@ -12,7 +12,7 @@ export const CardExpression = (props: CardProps): JSX.Element => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const items: any = [];
+  const items = [];
   const expressionFavorites = props.items.filter(
     (item) => item.props.isFavorite === true,
   );

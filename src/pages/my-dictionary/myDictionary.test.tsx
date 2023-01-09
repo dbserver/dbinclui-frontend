@@ -118,15 +118,7 @@ describe('Teste do MyDictionary', () => {
     });
   });
 
-  it('teste', async () => {
-    // const dataMockGetUsersExpressions: ExpressionInterface[] = [
-    //   {
-    //     _id: '123',
-    //     expression: 'Expressão teste',
-    //     favorite: false,
-    //   },
-    // ];
-
+  it('Deve aparecer a mensagem "nenhuma expressão encontrada" se não tiver expressões salvas.', async () => {
     mockGetUsersExpressions.mockImplementation(
       async () =>
         ({

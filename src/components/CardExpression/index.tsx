@@ -23,7 +23,7 @@ export const CardExpression = (props: CardProps): JSX.Element => {
   items.push(expressionsNotFavorites);
 
   return (
-    <Container sx={styles.container} aria-label="OLHA EU AQUI">
+    <Container sx={styles.container}>
       {error && (
         <Notification
           message={`${errorMessage} 🤔`}
@@ -34,9 +34,7 @@ export const CardExpression = (props: CardProps): JSX.Element => {
           }}
         />
       )}
-      <List sx={styles.list} aria-label="listExpressions">
-        {items}
-      </List>
+      <List sx={styles.list}>{items}</List>
     </Container>
   );
 };

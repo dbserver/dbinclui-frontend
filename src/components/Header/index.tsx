@@ -24,7 +24,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
 
-export interface HeaderProps {}
+export interface HeaderProps { }
 
 export interface MenuItemsInterface {
   title: string;
@@ -60,10 +60,6 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
 
   const { user } = React.useContext(AuthContext);
   const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
-
-  if (!user) {
-    console.log('');
-  }
 
   const isAccessibility =
     React.useContext(AccessibilityContext).colorAccessibility;

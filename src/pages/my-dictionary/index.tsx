@@ -14,14 +14,14 @@ import { Navigate } from 'react-router-dom';
 import styles from './styles';
 import { ItemList } from '@components/CardExpression/ItemList';
 
-export interface MyDictionaryProps {}
+export interface MyDictionaryProps { }
 
 export const MyDictionaryPage: React.FC<
   MyDictionaryProps
 > = (): JSX.Element => {
   const [expressions, setExpressions] = useState<ExpressionInterface[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const { user } = useContext(AuthContext);

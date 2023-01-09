@@ -142,4 +142,35 @@ describe('Teste do MyDictionary', () => {
 
     expect(noExpressionsAlert).toBeInTheDocument();
   });
+
+  // it('Deve aparecer as expressões se tiver expressões salvas.', async () => {
+  //   const expressionsMock: ExpressionInterface = {
+  //     _id: '123',
+  //     expression: 'teste',
+  //     favorite: true,
+  //   };
+
+  //   mockGetUsersExpressions.mockImplementation(
+  //     async () =>
+  //       ({
+  //         data: { data: [expressionsMock] },
+  //       } as unknown as Promise<
+  //         AxiosResponse<{ data: ExpressionInterface[] }>
+  //       >),
+  //   );
+
+  //   await act(async () => {
+  //     render(
+  //       <AuthContext.Provider value={{ user, setUser }}>
+  //         <MyDictionary />
+  //       </AuthContext.Provider>,
+  //     );
+  //   });
+
+  //   const noExpressionsAlert = screen.getByText(
+  //     'Nenhuma expressão encontrada!',
+  //   );
+
+  //   expect(noExpressionsAlert).toBeInTheDocument();
+  // });
 });

@@ -14,7 +14,7 @@ import { Navigate } from 'react-router-dom';
 import styles from './styles';
 import { ItemList } from '@components/CardExpression/ItemList';
 
-export interface MyDictionaryProps { }
+export interface MyDictionaryProps {}
 
 export const MyDictionaryPage: React.FC<
   MyDictionaryProps
@@ -46,9 +46,7 @@ export const MyDictionaryPage: React.FC<
   }, [user?.token]);
 
   useEffect(() => {
-    return () => {
-      getUsersExpressionsService();
-    };
+    getUsersExpressionsService();
   }, [getUsersExpressionsService]);
 
   if (!user) {

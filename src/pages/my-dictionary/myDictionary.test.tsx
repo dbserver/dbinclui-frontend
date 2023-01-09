@@ -143,34 +143,39 @@ describe('Teste do MyDictionary', () => {
     expect(noExpressionsAlert).toBeInTheDocument();
   });
 
-  // it('Deve aparecer as expressões se tiver expressões salvas.', async () => {
-  //   const expressionsMock: ExpressionInterface = {
-  //     _id: '123',
-  //     expression: 'teste',
-  //     favorite: true,
-  //   };
+  it('Deve aparecer as expressões se tiver expressões salvas.', async () => {
+    const expressionsMock: ExpressionInterface[] = [
+      {
+        _id: '123',
+        expression: 'teste',
+        favorite: true,
+      },
+      {
+        _id: '1234',
+        expression: 'teste 2',
+        favorite: true,
+      },
+    ];
 
-  //   mockGetUsersExpressions.mockImplementation(
-  //     async () =>
-  //       ({
-  //         data: { data: [expressionsMock] },
-  //       } as unknown as Promise<
-  //         AxiosResponse<{ data: ExpressionInterface[] }>
-  //       >),
-  //   );
+    mockGetUsersExpressions.mockImplementation(
+      async () =>
+        ({
+          data: { data: expressionsMock },
+        } as unknown as Promise<
+          AxiosResponse<{ data: ExpressionInterface[] }>
+        >),
+    );
 
-  //   await act(async () => {
-  //     render(
-  //       <AuthContext.Provider value={{ user, setUser }}>
-  //         <MyDictionary />
-  //       </AuthContext.Provider>,
-  //     );
-  //   });
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <MyDictionary />
+        </AuthContext.Provider>,
+      );
+    });
 
-  //   const noExpressionsAlert = screen.getByText(
-  //     'Nenhuma expressão encontrada!',
-  //   );
+    const noExpressionsAlert = screen.getByText('teste');
 
-  //   expect(noExpressionsAlert).toBeInTheDocument();
-  // });
+    expect(noExpressionsAlert).toBeInTheDocument();
+  });
 });

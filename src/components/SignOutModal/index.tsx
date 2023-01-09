@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { Box, ButtonBase, Menu } from '@mui/material';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
-import { useStyles } from './styles';
+import { useStyles, styles } from './styles';
 import useGoogleLogin from '@hooks/useGoogleLogin';
 import { AuthContext } from '@contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface SignoutModalProps {
   anchorElSignInModal: null | HTMLElement;
@@ -25,13 +26,15 @@ export const SignoutModal = ({
     setAnchorElSignInModal(null);
   };
 
+  const navigate = useNavigate();
+
   return (
     <Menu
       id="logout-modal"
       className={
         isAccessibility ? classes.logInModalContrast : classes.logInModal
       }
-      disableScrollLock={true}
+      disableScrollLock={false}
       anchorEl={anchorElSignInModal}
       anchorOrigin={{
         vertical: 'bottom',
@@ -49,17 +52,7 @@ export const SignoutModal = ({
         top: 4,
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          p: '24px 46px',
-          gap: '18px',
-          wordBreak: 'break-word',
-        }}
-      >
+      <Box sx={styles.boxStyles}>
         <CustomTypography
           color={isAccessibility ? '#000' : '#221F52'}
           fontWeight={500}
@@ -71,17 +64,23 @@ export const SignoutModal = ({
           Olá, {user?.displayName}!
         </CustomTypography>
         <ButtonBase
-          sx={{
-            'p': '14px 94px',
-            'borderRadius': '10px',
-            'boxShadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
-            'transition': 'all 0.3s',
-            'display': 'flex',
-            'gap': '14px',
-            ':hover': {
-              backgroundColor: '#EFF0F6',
-            },
+          sx={styles.button}
+          onClick={() => {
+            navigate('meu-dicionario');
           }}
+        >
+          <CustomTypography
+            fontSize={18}
+            component="p"
+            color={isAccessibility ? '#000' : '#909090'}
+            fontWeight={500}
+          >
+            Meu dicionário
+          </CustomTypography>
+        </ButtonBase>
+
+        <ButtonBase
+          sx={styles.button}
           onClick={() => {
             signOutWithGoogle();
             handleCloseSigninModal();

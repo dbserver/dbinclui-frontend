@@ -26,7 +26,6 @@ import { HelpOutline } from '@mui/icons-material';
 import HelpModal from '@components/HelpModal';
 
 export interface HeaderProps {}
-export interface HeaderProps {}
 
 export interface MenuItemsInterface {
   title: string;

@@ -30,7 +30,7 @@ import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import { AuthContext } from '@contexts/AuthContext';
 
-export interface UpdateDigitalContentProps { }
+export interface UpdateDigitalContentProps {}
 
 export interface UpdateDigitalInterface {
   title?: string | undefined;
@@ -237,7 +237,7 @@ export const UpdateDigitalContent: React.FC<
                 {file.name}
               </CustomTypography>
               <Button
-                aria-label='botão excluir'
+                aria-label="botão excluir"
                 sx={styles.clearButton}
                 onClick={() => {
                   setFile({} as File);

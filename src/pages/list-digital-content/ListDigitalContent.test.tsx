@@ -1,10 +1,4 @@
-import {
-  render,
-  screen,
-  act,
-  waitFor,
-  findByTestId,
-} from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ListDigitalContent } from './index';
 import '@testing-library/jest-dom/extend-expect';
@@ -287,6 +281,7 @@ describe('Teste do componente', () => {
   });
 
   test('Verificar se a barra de pesquisa está recebendo o que usuário digita', async () => {
+    render(<ListDigitalContent />);
     const user = {
       _id: '1',
       uid: '1',

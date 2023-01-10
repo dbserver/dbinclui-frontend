@@ -1,18 +1,16 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import firebase from 'firebase/compat/app';
+
 import { AxiosResponse } from 'axios';
 
 import { DictionaryDbinclui } from './index';
-import { googleProviderFunc, firebaseInitialize } from '../../firebase/config';
-import useGoogleLogin from '@hooks/useGoogleLogin';
-import { UserEntity } from '@interfaces/UserEntity';
-import { AuthContext } from '@contexts/AuthContext';
+
 import { getDbExpression } from '@services/dbExpressions';
 import { IDBExpression } from '@interfaces/IDBExpression';
 
+import { AuthContext } from '../../contexts/AuthContext';
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
   const useHref = jest.fn();
@@ -22,67 +20,15 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-jest.mock('../../firebase/config');
-jest.mock('@hooks/useGoogleLogin');
 jest.mock('@services/dbExpressions');
-
-jest.mock('firebase/compat/app', () => ({
-  initializeApp: jest.fn(),
-  apps: ['app'],
-}));
-
-const mockGoogleProviderFunc = googleProviderFunc as jest.MockedFunction<
-  typeof googleProviderFunc
->;
-
-const mockFirebaseInitialize = firebaseInitialize as jest.MockedFunction<
-  typeof firebaseInitialize
->;
-
-const mockUseGoogleLogin = useGoogleLogin as jest.MockedFunction<
-  typeof useGoogleLogin
->;
 
 const mockGetDbExpressions = getDbExpression as jest.MockedFunction<
   typeof getDbExpression
 >;
 
-const user: UserEntity = {
-  displayName: 'Raul',
-  email: 'raul@email.com',
-  photoURL: 'www.imagem.jpg',
-  token: '123',
-  uid: '1',
-  _id: '1',
-  admin: false,
-};
-
-const setUser = jest.fn();
-
-mockGoogleProviderFunc.mockImplementation(() => {
-  return {} as firebase.auth.GoogleAuthProvider;
-});
-
-mockFirebaseInitialize.mockReturnValue({
-  app: {} as any,
-  auth: {
-    signInWithPopup: jest.fn().mockReturnValue({
-      user: {
-        getIdToken: jest.fn(),
-      },
-    }),
-  } as any,
-  googleProvider: jest.fn().mockReturnValue(true),
-});
-
-mockUseGoogleLogin.mockReturnValue({
-  signInWithGoogle: jest.fn(),
-  signOutWithGoogle: jest.fn(),
-});
-
 describe('Teste do dictionaryDbinclui', () => {
   afterEach(() => {
-    mockGetDbExpressions.mockClear();
+    jest.clearAllMocks();
   });
   it('Deve exibir o título da página "Dicionário DBInclui"', async () => {
     await act(async () => {
@@ -108,10 +54,10 @@ describe('Teste do dictionaryDbinclui', () => {
     expect(mockGetDbExpressions).toBeCalledTimes(1);
   });
 
-  it('Deve aparecer as expressões se tiver expressões salvas.', async () => {
+  it('Deve renderizar as expressões salvas.', async () => {
     const expressionsMock: IDBExpression[] = [
       {
-        _id: '63bc1941e62c6644773b98e5',
+        _id: '1',
         expression: 'teste',
         author: 'autor teste',
         deleted: false,
@@ -120,7 +66,7 @@ describe('Teste do dictionaryDbinclui', () => {
         updated_at: '2023-01-10T13:02:52.228Z',
       },
       {
-        _id: '63bc1941e62c6644773b98e5',
+        _id: '2',
         expression: 'teste 2',
         author: 'autor teste 2',
         deleted: true,
@@ -145,4 +91,137 @@ describe('Teste do dictionaryDbinclui', () => {
 
     expect(Expression).toBeInTheDocument();
   });
+  it('Deve renderizar um erro caso o usuario deslogado clique no botao de deletar expressão', async () => {
+    const expressionsMock: IDBExpression[] = [
+      {
+        _id: '1',
+        expression: 'teste',
+        author: 'autor teste',
+        deleted: false,
+        favoriteOf: '123098102983019823012',
+        created_at: '2023-01-09T13:40:17.414Z',
+        updated_at: '2023-01-10T13:02:52.228Z',
+      },
+    ];
+
+    mockGetDbExpressions.mockImplementation(
+      async () =>
+        ({
+          data: { data: expressionsMock },
+        } as unknown as Promise<AxiosResponse<{ data: IDBExpression[] }>>),
+    );
+
+    const user = null;
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <DictionaryDbinclui />
+        </AuthContext.Provider>,
+      );
+    });
+
+    const deleteButton = screen.getByRole('button', { name: /deletebutton/i });
+
+    await act(() => {
+      fireEvent.click(deleteButton);
+    });
+
+    const noLoginWarning = await screen.findByText(
+      'Você precisa estar logado para deletar uma Expression. 🤔',
+    );
+
+    expect(noLoginWarning).toBeInTheDocument();
+  });
+
+  it('Deve renderizar um erro caso o usuario deslogado clique no botao de favoritar expressão', async () => {
+    const expressionsMock: IDBExpression[] = [
+      {
+        _id: '1',
+        expression: 'teste',
+        author: 'autor teste',
+        deleted: false,
+        favoriteOf: '123098102983019823012',
+        created_at: '2023-01-09T13:40:17.414Z',
+        updated_at: '2023-01-10T13:02:52.228Z',
+      },
+    ];
+
+    mockGetDbExpressions.mockImplementation(
+      async () =>
+        ({
+          data: { data: expressionsMock },
+        } as unknown as Promise<AxiosResponse<{ data: IDBExpression[] }>>),
+    );
+
+    const user = null;
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <DictionaryDbinclui />
+        </AuthContext.Provider>,
+      );
+    });
+
+    const favoriteButton = screen.getByRole('button', {
+      name: /favoritebutton/i,
+    });
+
+    await act(() => {
+      fireEvent.click(favoriteButton);
+    });
+
+    const noLoginWarning = await screen.findByText(
+      'Você precisa estar logado para favoritar uma Expression. 🤔',
+    );
+
+    expect(noLoginWarning).toBeInTheDocument();
+  });
+});
+
+it('Deve renderizar um erro caso o usuario deslogado clique no botao de favoritar expressão', async () => {
+  const expressionsMock: IDBExpression[] = [
+    {
+      _id: '1',
+      expression: 'teste',
+      author: 'autor teste',
+      deleted: false,
+      favoriteOf: '123098102983019823012',
+      created_at: '2023-01-09T13:40:17.414Z',
+      updated_at: '2023-01-10T13:02:52.228Z',
+    },
+  ];
+
+  mockGetDbExpressions.mockImplementation(
+    async () =>
+      ({
+        data: { data: expressionsMock },
+      } as unknown as Promise<AxiosResponse<{ data: IDBExpression[] }>>),
+  );
+
+  const user = null;
+  const setUser = jest.fn();
+
+  await act(async () => {
+    render(
+      <AuthContext.Provider value={{ user, setUser }}>
+        <DictionaryDbinclui />
+      </AuthContext.Provider>,
+    );
+  });
+
+  const deleteButton = screen.getByRole('button', { name: /deletebutton/i });
+
+  await act(() => {
+    fireEvent.click(deleteButton);
+  });
+
+  const noLoginWarning = await screen.findByText(
+    'Você precisa estar logado para deletar uma Expression. 🤔',
+  );
+
+  expect(noLoginWarning).toBeInTheDocument();
 });

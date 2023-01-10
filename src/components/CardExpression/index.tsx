@@ -23,7 +23,7 @@ export const CardExpression = (props: CardProps): JSX.Element => {
   items.push(expressionsNotFavorites);
 
   return (
-    <Container sx={styles.container} aria-label="OLHA EU AQUI">
+    <Container sx={styles.container} aria-label="expressoes dicionario db">
       {error && (
         <Notification
           message={`${errorMessage} 🤔`}
@@ -40,3 +40,5 @@ export const CardExpression = (props: CardProps): JSX.Element => {
     </Container>
   );
 };
+
+export default CardExpression;

@@ -11,7 +11,6 @@ import { getDbExpression } from '@services/dbExpressions';
 import { IDBExpression } from '@interfaces/IDBExpression';
 
 import { AuthContext } from '../../contexts/AuthContext';
-import { ItemList } from '@components/CardExpression/ItemList';
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
   const useHref = jest.fn();
@@ -55,10 +54,10 @@ describe('Teste do dictionaryDbinclui', () => {
     expect(mockGetDbExpressions).toBeCalledTimes(1);
   });
 
-  it('Deve aparecer as expressões se tiver expressões salvas.', async () => {
+  it('Deve renderizar as expressões salvas.', async () => {
     const expressionsMock: IDBExpression[] = [
       {
-        _id: '63bc1941e62c6644773b98e5',
+        _id: '1',
         expression: 'teste',
         author: 'autor teste',
         deleted: false,
@@ -67,7 +66,7 @@ describe('Teste do dictionaryDbinclui', () => {
         updated_at: '2023-01-10T13:02:52.228Z',
       },
       {
-        _id: '63bc1941e62c6644773b98e5',
+        _id: '2',
         expression: 'teste 2',
         author: 'autor teste 2',
         deleted: true,
@@ -92,12 +91,28 @@ describe('Teste do dictionaryDbinclui', () => {
 
     expect(Expression).toBeInTheDocument();
   });
-  it('Se o usuario não estiver logado o clique do button favorite chama o erro ', async () => {
+  it('Deve renderizar um erro caso o usuario deslogado clique no botao de deletar expressão', async () => {
+    const expressionsMock: IDBExpression[] = [
+      {
+        _id: '1',
+        expression: 'teste',
+        author: 'autor teste',
+        deleted: false,
+        favoriteOf: '123098102983019823012',
+        created_at: '2023-01-09T13:40:17.414Z',
+        updated_at: '2023-01-10T13:02:52.228Z',
+      },
+    ];
+
+    mockGetDbExpressions.mockImplementation(
+      async () =>
+        ({
+          data: { data: expressionsMock },
+        } as unknown as Promise<AxiosResponse<{ data: IDBExpression[] }>>),
+    );
+
     const user = null;
     const setUser = jest.fn();
-
-    const handleFavoriteExpressionMock = jest.fn();
-    const handleDeleteExpressionMock = jest.fn();
 
     await act(async () => {
       render(
@@ -107,11 +122,62 @@ describe('Teste do dictionaryDbinclui', () => {
       );
     });
 
-    const buttonFavorite = screen.getByRole('button', {
+    const deleteButton = screen.getByRole('button', { name: /deletebutton/i });
+
+    await act(() => {
+      fireEvent.click(deleteButton);
+    });
+
+    const noLoginWarning = await screen.findByText(
+      'Você precisa estar logado para deletar uma Expression. 🤔',
+    );
+
+    expect(noLoginWarning).toBeInTheDocument();
+  });
+
+  it('Deve renderizar um erro caso o usuario deslogado clique no botao de favoritar expressão', async () => {
+    const expressionsMock: IDBExpression[] = [
+      {
+        _id: '1',
+        expression: 'teste',
+        author: 'autor teste',
+        deleted: false,
+        favoriteOf: '123098102983019823012',
+        created_at: '2023-01-09T13:40:17.414Z',
+        updated_at: '2023-01-10T13:02:52.228Z',
+      },
+    ];
+
+    mockGetDbExpressions.mockImplementation(
+      async () =>
+        ({
+          data: { data: expressionsMock },
+        } as unknown as Promise<AxiosResponse<{ data: IDBExpression[] }>>),
+    );
+
+    const user = null;
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <DictionaryDbinclui />
+        </AuthContext.Provider>,
+      );
+    });
+
+    const favoriteButton = screen.getByRole('button', {
       name: /favoritebutton/i,
     });
-    const buttonDelete = screen.getByRole('button', { name: /deletebutton/i });
 
-    fireEvent.click(buttonFavorite);
+    await act(() => {
+      fireEvent.click(favoriteButton);
+    });
+
+    const noLoginWarning = await screen.findByText(
+      'Você precisa estar logado para favoritar uma Expression. 🤔',
+    );
+
+    expect(noLoginWarning).toBeInTheDocument();
   });
 });

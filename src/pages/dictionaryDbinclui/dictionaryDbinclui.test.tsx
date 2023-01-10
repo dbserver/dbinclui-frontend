@@ -213,10 +213,10 @@ it('Deve renderizar um erro caso o usuario deslogado clique no botao de favorita
     );
   });
 
-  const favoriteButton = screen.getByRole('button', { name: /deletebutton/i });
+  const deleteButton = screen.getByRole('button', { name: /deletebutton/i });
 
   await act(() => {
-    fireEvent.click(favoriteButton);
+    fireEvent.click(deleteButton);
   });
 
   const noLoginWarning = await screen.findByText(

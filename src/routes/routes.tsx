@@ -34,6 +34,7 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
             <Route path="admin/cadastrar-guia" element={<RegisterGuide />} />
             <Route path="admin/atualizar-guia/:id" element={<UpdateGuide />} />
             <Route path="admin/listar-guias" element={<GuideList />} />
+            <Route path="dictionaryDbInclui" element={<DictionaryDbinclui />} />
             <Route
               path="admin/listar-categorias"
               element={<CategoriesList />}
@@ -63,7 +64,6 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
               path="admin/atualizar-conteudo-digital/:id"
               element={<UpdateDigitalContent />}
             />
-            <Route path="dictionaryDbInclui" element={<DictionaryDbinclui />} />
 
             <Route
               path="admin/excluir-conteudo-digital/:id"

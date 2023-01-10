@@ -39,7 +39,7 @@ export const DictionaryDbinclui: React.FC<
   const favoriteExpressionDB = async (id: string) => {
     try {
       if (!user) {
-        userLogout('mensagem do favorite');
+        userLogout('Você precisa estar logado para favoritar uma Expression.');
         return;
       }
       await favoriteExpression(id, user!.token);
@@ -53,7 +53,7 @@ export const DictionaryDbinclui: React.FC<
   const deleteExpressionDB = async (id: string) => {
     try {
       if (!user) {
-        userLogout('mensagem do delete');
+        userLogout('Você precisa estar logado para deletar uma Expression.');
         return;
       }
       await deleteExpression(id, user!.token);
@@ -67,7 +67,7 @@ export const DictionaryDbinclui: React.FC<
   return (
     <>
       <AccessibilityTypography sx={styles.headingDictionaryDBInclui}>
-        Dicionario DBInclui
+        Dicionário DBInclui
       </AccessibilityTypography>
 
       <CardExpression

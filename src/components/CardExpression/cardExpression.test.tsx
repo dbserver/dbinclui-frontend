@@ -1,70 +1,134 @@
-// import React from 'react';
-// import { render, screen } from '@testing-library/react';
-// import '@testing-library/jest-dom';
-// import { CardExpression } from '@components/CardExpression';
-// import userEvent from '@testing-library/user-event';
-// import { googleProviderFunc, firebaseInitialize } from '../../firebase/config';
+import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/extend-expect';
+import { act } from 'react-dom/test-utils';
+import CardExpression from '.';
+import { ItemList } from './ItemList';
 
-// const mockedNavigate = jest.fn();
-// jest.mock('react-router-dom', () => {
-//   const useHref = jest.fn();
-//   return {
-//     useHref,
-//     useNavigate: () => mockedNavigate,
-//   };
-// });
+describe('CardExpression', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-// jest.mock('../../firebase/config');
-// jest.mock('@hooks/useGoogleLogin');
+  test('Deve renderizar o titulo da expressao no itemList passado por props', async () => {
+    const mockHandleDeleteExpression = jest.fn();
+    const mockHandleFavoriteExpression = jest.fn();
 
-// jest.mock('firebase/compat/app', () => ({
-//   initializeApp: jest.fn(),
-//   apps: ['app'],
-// }));
+    await act(async () => {
+      render(
+        <CardExpression
+          items={[
+            <ItemList
+              key="1"
+              title="Expressão"
+              isFavorite={false}
+              handleDeleteExpression={mockHandleDeleteExpression}
+              handleFavoriteExpression={mockHandleFavoriteExpression}
+            />,
+          ]}
+        />,
+      );
+    });
 
-// const mockGoogleProviderFunc = googleProviderFunc as jest.MockedFunction<
-//   typeof googleProviderFunc
-// >;
+    const expressionTitle = screen.getByText('Expressão');
 
-// const mockFirebaseInitialize = firebaseInitialize as jest.MockedFunction<
-//   typeof firebaseInitialize
-// >;
+    expect(expressionTitle).toBeInTheDocument();
+  });
 
-// const mockUseGoogleLogin = useGoogleLogin as jest.MockedFunction<
-//   typeof useGoogleLogin
-// >;
+  test('Dever renderizar a expressao favorita no topo da lista', async () => {
+    const mockHandleDeleteExpression = jest.fn();
+    const mockHandleFavoriteExpression = jest.fn();
 
-// describe('CardExpression', () => {
-//   const qualquerCoisa = [
-//     <li key={undefined}>
-//       <div>
-//         <span aria-label="teste">Expressão teste</span>
-//       </div>
-//       <div>
-//         <button>Favoritar</button>
-//         <button>Favoritar</button>
-//       </div>
-//     </li>,
-//     <li key={undefined}>
-//       <div>
-//         <span aria-label="teste">Expressão teste</span>
-//       </div>
-//       <div>
-//         <button>Favoritar</button>
-//         <button>Favoritar</button>
-//       </div>
-//     </li>,
-//   ];
+    await act(async () => {
+      render(
+        <CardExpression
+          items={[
+            <ItemList
+              key="1"
+              title="Expressão Normal"
+              isFavorite={false}
+              handleDeleteExpression={mockHandleDeleteExpression}
+              handleFavoriteExpression={mockHandleFavoriteExpression}
+            />,
+            <ItemList
+              key="2"
+              title="Expressão Favorita"
+              isFavorite={true}
+              handleDeleteExpression={mockHandleDeleteExpression}
+              handleFavoriteExpression={mockHandleFavoriteExpression}
+            />,
+          ]}
+        />,
+      );
+    });
 
-//   it(' Blabla ', async () => {
-//     render(<CardExpression items={qualquerCoisa}></CardExpression>);
+    const expressions = screen.getAllByText(/Expressão/i);
 
-//     // screen.logTestingPlaygroundURL();
+    expect(expressions[0].innerHTML).toEqual('Expressão Favorita');
+  });
 
-//     // const expressionTitle = await screen.findAllByText('Testando div');
-//     // expect(expressionTitle).toBeInTheDocument();
-//     screen.getByRole('span', { name: /Expressão teste/i });
-//   });
-// });
+  test('Deve chamar a função de deletar expressão ao clicar no botão', async () => {
+    const mockHandleDeleteExpression = jest.fn();
+    const mockHandleFavoriteExpression = jest.fn();
+
+    await act(async () => {
+      render(
+        <CardExpression
+          items={[
+            <ItemList
+              key="1"
+              title="Expressão"
+              isFavorite={false}
+              handleDeleteExpression={mockHandleDeleteExpression}
+              handleFavoriteExpression={mockHandleFavoriteExpression}
+            />,
+          ]}
+        />,
+      );
+    });
+
+    const deleteButton = screen.getByRole('button', {
+      name: /deletebutton/i,
+    });
+
+    await act(async () => {
+      fireEvent.click(deleteButton);
+    });
+
+    expect(mockHandleDeleteExpression).toHaveBeenCalledTimes(1);
+  });
+
+  test('Deve chamar a função de favoritar a expressão ao clicar no botão', async () => {
+    const mockHandleDeleteExpression = jest.fn();
+    const mockHandleFavoriteExpression = jest.fn();
+
+    await act(async () => {
+      render(
+        <CardExpression
+          items={[
+            <ItemList
+              key="1"
+              title="Expressão"
+              isFavorite={false}
+              handleDeleteExpression={mockHandleDeleteExpression}
+              handleFavoriteExpression={mockHandleFavoriteExpression}
+            />,
+          ]}
+        />,
+      );
+    });
+
+    const favoriteButton = screen.getByRole('button', {
+      name: /favoritebutton/i,
+    });
+
+    await act(async () => {
+      fireEvent.click(favoriteButton);
+    });
+
+    expect(mockHandleFavoriteExpression).toHaveBeenCalledTimes(1);
+  });
+});
 
 export {};

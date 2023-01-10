@@ -43,7 +43,7 @@ export const MenuItems: MenuItemsInterface[] = [
   },
   {
     title: 'DICIONÁRIO DBINCLUI',
-    href: '/',
+    href: '/dictionaryDbInclui',
   },
   {
     title: 'MANTER CONTEÚDOS',

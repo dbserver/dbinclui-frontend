@@ -12,7 +12,7 @@ export const CardExpression = (props: CardProps): JSX.Element => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const items: any = [];
+  const items = [];
   const expressionFavorites = props.items.filter(
     (item) => item.props.isFavorite === true,
   );
@@ -23,7 +23,7 @@ export const CardExpression = (props: CardProps): JSX.Element => {
   items.push(expressionsNotFavorites);
 
   return (
-    <Container sx={styles.container}>
+    <Container sx={styles.container} aria-label="OLHA EU AQUI">
       {error && (
         <Notification
           message={`${errorMessage} 🤔`}
@@ -34,7 +34,9 @@ export const CardExpression = (props: CardProps): JSX.Element => {
           }}
         />
       )}
-      <List sx={styles.list}>{items}</List>
+      <List sx={styles.list} aria-label="listExpressions">
+        {items}
+      </List>
     </Container>
   );
 };

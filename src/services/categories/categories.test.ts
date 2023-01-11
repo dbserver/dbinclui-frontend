@@ -83,13 +83,19 @@ describe('Testando o serviço "postCategories"', () => {
       shortDescription: 'shortDescription-teste',
       guide: '1',
     };
-    const authorization = {"headers": {"Authorization": "bearer token"}};
+    const authorization = {
+      headers: { Authorization: 'Bearer passandotoken' },
+    };
     const pathExpect = '/categories/';
     const resultExpect = true;
     apiMock.post.mockResolvedValue(resultExpect);
-    const result = await postCategories(postCategoryBody, "passandotoken");
+    const result = await postCategories(postCategoryBody, 'passandotoken');
     expect(result).toBe(resultExpect);
-    expect(apiMock.post).toBeCalledWith(pathExpect, postCategoryBody, authorization);
+    expect(apiMock.post).toBeCalledWith(
+      pathExpect,
+      postCategoryBody,
+      authorization,
+    );
   });
 
   it(`${postCategories.name}: Tratamento de erro quando o serviço não estiver disponível`, async () => {
@@ -104,7 +110,7 @@ describe('Testando o serviço "postCategories"', () => {
       throw throwError;
     });
     try {
-      await postCategories(postCategoryBody, "passandotoken");
+      await postCategories(postCategoryBody, 'passandotoken');
     } catch {}
     expect(apiMock.post).toBeCalledTimes(1);
     expect(apiMock.post).toThrow(Error);
@@ -149,8 +155,8 @@ describe('Testando o serviço "getCategoriesById"', () => {
 });
 
 describe('Testando o serviço "putCategories"', () => {
-  beforeEach(() => {
-    apiMock.put.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it(`Quando ${putCategories.name} é chamado, o resultado deve retornar true
@@ -161,15 +167,21 @@ describe('Testando o serviço "putCategories"', () => {
       shortDescription: 'shortDescription-teste',
       guide: '1',
     };
-    const authorization = {"headers": {"Authorization": "bearer token"}};
+    const authorization = {
+      headers: { Authorization: 'Bearer passandotoken' },
+    };
 
     const pathExpect = `/categories/${id}`;
     const resultExpect = true;
     apiMock.put.mockResolvedValue(resultExpect);
 
-    const result = await putCategories(id, putCategoryBody, "passandotoken");
+    const result = await putCategories(id, putCategoryBody, 'passandotoken');
     expect(result).toBe(resultExpect);
-    expect(apiMock.put).toBeCalledWith(pathExpect, putCategoryBody, authorization);
+    expect(apiMock.put).toBeCalledWith(
+      pathExpect,
+      putCategoryBody,
+      authorization,
+    );
   });
 
   it(`${putCategories.name}: Tratamento de erro quando o serviço não estiver disponível`, async () => {
@@ -180,7 +192,6 @@ describe('Testando o serviço "putCategories"', () => {
       guide: '1',
     };
 
-    const pathExpect = `/categories/${id}`;
     const errorMessage = 'Serviço não disponível';
     const throwError = new Error(errorMessage);
     apiMock.put.mockImplementation(() => {
@@ -188,12 +199,14 @@ describe('Testando o serviço "putCategories"', () => {
     });
 
     try {
-      await putCategories(id, putCategoryBody, "passandotoken");
+      await putCategories(id, putCategoryBody, 'passandotoken');
     } catch {}
     expect(apiMock.put).toBeCalledTimes(1);
     expect(apiMock.put).toThrow(Error);
     expect(apiMock.put).toThrow(errorMessage);
-    expect(apiMock.put).toBeCalledWith(pathExpect, putCategoryBody);
+    expect(apiMock.put).toBeCalledWith('/categories/1', putCategoryBody, {
+      headers: { Authorization: 'Bearer passandotoken' },
+    });
   });
 });
 
@@ -205,7 +218,7 @@ describe('Testando o serviço "deleteCategory"', () => {
   it(`${deleteCategory.name}: Devolvendo conteúdo "deleteCategory"`, async () => {
     const id = '1';
     apiMock.delete.mockResolvedValue([]);
-    const result = await deleteCategory(id, "passandotoken");
+    const result = await deleteCategory(id, 'passandotoken');
     expect(apiMock.delete).toBeCalledTimes(1);
     expect(result).toStrictEqual([]);
   });
@@ -218,7 +231,7 @@ describe('Testando o serviço "deleteCategory"', () => {
       throw throwError;
     });
     try {
-      await deleteCategory(id, "passandotoken");
+      await deleteCategory(id, 'passandotoken');
     } catch {}
     expect(apiMock.delete).toBeCalledTimes(1);
     expect(apiMock.delete).toThrow(Error);

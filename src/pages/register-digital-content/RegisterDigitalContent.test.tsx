@@ -1,6 +1,6 @@
 import React from 'react';
 import { RegisterDigitalContent } from '@pages/register-digital-content';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { fireEvent } from '@testing-library/react';
 import validateInput, { InputInterfaceProps } from './validator';
@@ -9,6 +9,7 @@ import { CategoryInterface, getCategoriesByGuide } from '@services/categories';
 import { GuideInterface, getGuides } from '@services/guides';
 import { AxiosResponse } from 'axios';
 import userEvent from '@testing-library/user-event';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/digitalContent');
@@ -119,7 +120,24 @@ describe('Página de cadastro de categorias', () => {
   });
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
-    render(<RegisterDigitalContent />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <RegisterDigitalContent />
+        </AuthContext.Provider>,
+      );
+    });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterfaceProps);
     postDigitalContentMock.mockResolvedValue(
@@ -292,7 +310,6 @@ describe('Página de cadastro de categorias', () => {
     });
 
     await userEvent.click(removeButton);
-
 
     expect(elementsFileName[0]).not.toBeVisible();
   });

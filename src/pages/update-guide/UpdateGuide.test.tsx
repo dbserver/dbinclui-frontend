@@ -1,13 +1,14 @@
 import React from 'react';
 import { UpdateGuide } from './index';
 import { render, screen, waitFor } from '@testing-library/react';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import validateInput, { InputInterface } from './validator';
 import { getGuideById, putGuides } from '@services/guides';
 import { act } from 'react-dom/test-utils';
 import { AxiosResponse } from 'axios';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/guides');
@@ -33,7 +34,6 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Página de atualização de guia', () => {
- 
   test('Deve mostrar um formulário', async () => {
     render(<UpdateGuide />);
 
@@ -126,8 +126,23 @@ describe('Página de atualização de guia', () => {
   });
 
   test('Deve chamar a função putGuides quando o botão do submit for clicado', async () => {
-    act(() => {
-      render(<UpdateGuide />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateGuide />
+        </AuthContext.Provider>,
+      );
     });
     const textoNoBotaoSubmit = 'Atualizar';
     const botaoSubmit = await screen.findByText(textoNoBotaoSubmit);
@@ -141,8 +156,23 @@ describe('Página de atualização de guia', () => {
   });
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
-    act(() => {
-      render(<UpdateGuide />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateGuide />
+        </AuthContext.Provider>,
+      );
     });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterface);
@@ -238,8 +268,23 @@ describe('Página de atualização de guia', () => {
   });
 
   test('Deve fechar a notificação de sucesso quando o botão de fechar for clicado', async () => {
-    act(() => {
-      render(<UpdateGuide />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateGuide />
+        </AuthContext.Provider>,
+      );
     });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterface);

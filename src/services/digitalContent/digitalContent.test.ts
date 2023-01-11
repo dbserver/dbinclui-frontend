@@ -64,10 +64,13 @@ describe('Testando o serviço "postGuides"', () => {
     const pathExpect = '/digital-contents/';
     const resultExpect = true;
     apiMock.post.mockResolvedValue(resultExpect);
-    const result = await postDigitalContent(formDataTest, "passandotoken");
+    const result = await postDigitalContent(formDataTest, 'passandotoken');
     expect(result).toBe(resultExpect);
     expect(apiMock.post).toBeCalledWith(pathExpect, formDataTest, {
-      headers: { 'Authorization': 'Bearer token' ,'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Authorization': 'Bearer passandotoken',
+        'Content-Type': 'multipart/form-data',
+      },
     });
   });
 
@@ -93,7 +96,7 @@ describe('Testando o serviço "postGuides"', () => {
       throw throwError;
     });
     try {
-      await postDigitalContent(formDataTest, "passandotoken");
+      await postDigitalContent(formDataTest, 'passandotoken');
     } catch {}
     expect(apiMock.post).toBeCalledTimes(1);
     expect(apiMock.post).toThrow(Error);
@@ -165,7 +168,7 @@ describe('Testando o serviço "putDigitalContent"', () => {
   });
 
   it(`Quando ${putDigitalContent.name} é chamado, o resultado deve retornar true
-  `, async () => {
+   `, async () => {
     const id = '1';
     const digitalContentBody = {
       title: 'title-teste',
@@ -186,10 +189,13 @@ describe('Testando o serviço "putDigitalContent"', () => {
     const resultExpect = true;
 
     apiMock.put.mockResolvedValue(resultExpect);
-    const result = await putDigitalContent(id, formDataTest, "passandotoken");
+    const result = await putDigitalContent(id, formDataTest, 'passandotoken');
     expect(result).toBe(resultExpect);
     expect(apiMock.put).toBeCalledWith(pathExpect, formDataTest, {
-      headers: { 'Authorization': 'Bearer token' ,'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Authorization': 'Bearer passandotoken',
+        'Content-Type': 'multipart/form-data',
+      },
     });
   });
 
@@ -216,12 +222,10 @@ describe('Testando o serviço "putDigitalContent"', () => {
       throw throwError;
     });
     try {
-      await putDigitalContent(id, formDataTest, "passandotoken");
+      await putDigitalContent(id, formDataTest, 'passandotoken');
     } catch {}
     expect(apiMock.put).toBeCalledTimes(1);
     expect(apiMock.put).toThrow(Error);
     expect(apiMock.put).toThrow(errorMessage);
   });
 });
-
-

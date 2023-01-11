@@ -315,7 +315,7 @@ export const ListDigitalContent: React.FC<
             </FormControl>
           </Grid>
           <Grid item>
-            <IconButton type="submit">
+            <IconButton data-testid="search-button" type="submit">
               <SearchIcon
                 sx={context.colorAccessibility ? { color: '#fff000' } : null}
               />

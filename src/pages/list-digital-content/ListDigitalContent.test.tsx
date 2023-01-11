@@ -163,8 +163,8 @@ describe('Teste do componente', () => {
     },
   ];
 
-  beforeEach(() => {
-    getDigitalContentMock.mockClear();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test('Deve exibir o título da página', async () => {
@@ -281,7 +281,6 @@ describe('Teste do componente', () => {
   });
 
   test('Verificar se a barra de pesquisa está recebendo o que usuário digita', async () => {
-    render(<ListDigitalContent />);
     const user = {
       _id: '1',
       uid: '1',
@@ -291,7 +290,6 @@ describe('Teste do componente', () => {
       token: 'token',
       admin: false,
     };
-
     const setUser = jest.fn();
 
     await act(async () => {
@@ -302,11 +300,13 @@ describe('Teste do componente', () => {
       );
     });
 
-    const searchInput = screen.getByPlaceholderText('Pesquise seu Conteúdo...');
+    const searchInput = screen.getByRole('textbox');
 
-    const description = 'Descrição3';
-    await userEvent.type(searchInput, description);
-    expect(searchInput).toHaveValue(description);
+    await act(async () => {
+      await userEvent.type(searchInput, 'Valor digitado');
+    });
+
+    expect(searchInput).toHaveValue('Valor digitado');
   });
 
   test('Verifica se o componente digitado na barra de busca está sendo exibido na listagem corretamente', async () => {
@@ -340,11 +340,21 @@ describe('Teste do componente', () => {
     });
     const searchInput = screen.getByRole('textbox');
 
-    await userEvent.type(searchInput, 'Titulo3');
+    await act(async () => {
+      await userEvent.type(searchInput, 'Titulo2');
+    });
 
-    expect(searchInput).toHaveValue('Titulo3');
+    const searchButton = screen.getByTestId('search-button');
 
-    expect('Titulo3').toBeInTheDocument();
+    await act(async () => {
+      await userEvent.click(searchButton);
+    });
+
+    const queryResult = screen.queryByText('Titulo2');
+
+    expect(searchInput).toHaveValue('Titulo2');
+
+    expect(queryResult).toBeInTheDocument();
   });
 
   test('Se o usuário digitar uma descrição inexistente, não deve retornar nenhum conteúdo digital', async () => {
@@ -363,7 +373,7 @@ describe('Teste do componente', () => {
     getDigitalContentMock.mockImplementation(
       async () =>
         ({
-          data: { data: dataMockDigitalContent },
+          data: { data: dataMockDigitalContent[0] },
         } as unknown as Promise<
           AxiosResponse<{ data: DigitalContentInterface[] }>
         >),
@@ -378,11 +388,21 @@ describe('Teste do componente', () => {
     });
     const searchInput = screen.getByRole('textbox');
 
-    await userEvent.type(searchInput, 'Inexistente');
+    await act(async () => {
+      await userEvent.type(searchInput, 'Descrição Inexistente');
+    });
 
-    expect(searchInput).toHaveValue('Inexistente');
+    const searchButton = screen.getByTestId('search-button');
 
-    expect('Qualquer coisa').not.toBeInTheDocument();
+    await act(async () => {
+      await userEvent.click(searchButton);
+    });
+
+    const queryResult = screen.queryByText('Categoria1');
+
+    expect(searchInput).toHaveValue('Descrição Inexistente');
+
+    expect(queryResult).not.toBeInTheDocument();
   });
 
   test('O botão de deletar deve ser rederizado caso o usuário esteja logado', async () => {
@@ -625,10 +645,20 @@ describe('Teste do componente', () => {
     });
     const searchInput = screen.getByRole('textbox');
 
-    await userEvent.type(searchInput, 'Título Inexistente');
+    await act(async () => {
+      await userEvent.type(searchInput, 'Título Inexistente');
+    });
+
+    const searchButton = screen.getByTestId('search-button');
+
+    await act(async () => {
+      await userEvent.click(searchButton);
+    });
+
+    const queryResult = screen.queryByText('Titulo1');
 
     expect(searchInput).toHaveValue('Título Inexistente');
 
-    expect('Qualquer coisa').not.toBeInTheDocument();
+    expect(queryResult).not.toBeInTheDocument();
   });
 });

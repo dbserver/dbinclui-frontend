@@ -8,6 +8,7 @@ import { GuideInterface, getGuides } from '@services/guides';
 import { act } from 'react-dom/test-utils';
 import { AxiosResponse } from 'axios';
 import { UpdateCategory } from '@pages/update-category';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/categories');
@@ -140,7 +141,24 @@ describe('Página para atualizar categorias', () => {
   });
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
-    render(<UpdateCategory />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateCategory />
+        </AuthContext.Provider>,
+      );
+    });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterface);
     putCategoryMock.mockResolvedValue(
@@ -178,8 +196,23 @@ describe('Página para atualizar categorias', () => {
     });
   });
   test('Deve chamar a função putCategory quando o botão do submit for clicado', async () => {
-    act(() => {
-      render(<UpdateCategory />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateCategory />
+        </AuthContext.Provider>,
+      );
     });
     const textoNoBotaoSubmit = 'Atualizar';
     const botaoSubmit = await screen.findByText(textoNoBotaoSubmit);
@@ -246,7 +279,24 @@ describe('Página para atualizar categorias', () => {
     const throwError = new Error(errorMessage);
     validateInputMock.mockRejectedValue(throwError);
 
-    render(<UpdateCategory />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateCategory />
+        </AuthContext.Provider>,
+      );
+    });
 
     const submitButtonText = 'Atualizar';
     const submitButton = screen.getByText(submitButtonText);
@@ -277,7 +327,24 @@ describe('Página para atualizar categorias', () => {
       },
     } as unknown as AxiosResponse<{ data: GuideInterface[] }>);
 
-    render(<UpdateCategory />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateCategory />
+        </AuthContext.Provider>,
+      );
+    });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterface);
     putCategoryMock.mockResolvedValue(

@@ -2,7 +2,7 @@ import React from 'react';
 import { UpdateDigitalContent } from '@pages/update-digital-content';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/react';
 import validateInput, { InputInterfaceProps } from './validator';
 import {
   getDigitalContentById,
@@ -13,6 +13,7 @@ import { GuideInterface, getGuides } from '@services/guides';
 import { act } from 'react-dom/test-utils';
 import { AxiosResponse } from 'axios';
 import userEvent from '@testing-library/user-event';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/digitalContent');
@@ -48,7 +49,6 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('Página de atualização de conteúdo', () => {
-
   const mockDigitalContent = {
     id: '1',
     guide: 'teste',
@@ -79,8 +79,7 @@ describe('Página de atualização de conteúdo', () => {
     },
     filePaths: [
       {
-        filePath:
-          'https://localhost/passarinho.png',
+        filePath: 'https://localhost/passarinho.png',
         publicId: 'uploads/ra1saywtgnglipikof0p',
         _id: '638e64ffb9180077c5c957f1',
       },
@@ -171,8 +170,23 @@ describe('Página de atualização de conteúdo', () => {
   });
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
-    act(() => {
-      render(<UpdateDigitalContent />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateDigitalContent />
+        </AuthContext.Provider>,
+      );
     });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterfaceProps);
@@ -253,8 +267,23 @@ describe('Página de atualização de conteúdo', () => {
   });
 
   test('Deve chamar a função putDigitalContent quando o botão do submit for clicado', async () => {
-    act(() => {
-      render(<UpdateDigitalContent />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <UpdateDigitalContent />
+        </AuthContext.Provider>,
+      );
     });
     const textoNoBotaoSubmit = 'Atualizar';
     const botaoSubmit = await screen.findByText(textoNoBotaoSubmit);
@@ -293,7 +322,7 @@ describe('Página de atualização de conteúdo', () => {
   });
 
   test('Deve verificar se a mídia é visível e se o src da mídia seja o mesmo da entidade', async () => {
-    getDigitalContentByIdMock.mockClear()
+    getDigitalContentByIdMock.mockClear();
     getDigitalContentByIdMock.mockResolvedValue({
       data: { data: mockDigitalContent1 },
     } as any);
@@ -303,14 +332,16 @@ describe('Página de atualização de conteúdo', () => {
     });
 
     const media = screen.getByRole('media');
-    const imageViewElement = screen.getByLabelText('media do conteúdo digital') as HTMLImageElement;
+    const imageViewElement = screen.getByLabelText(
+      'media do conteúdo digital',
+    ) as HTMLImageElement;
 
     expect(media).toBeVisible();
     expect(imageViewElement.src).toBe('https://localhost/passarinho.png');
   });
 
   test('Espera que ao inserir nova mídia o seu src seja o mesmo da entidade', async () => {
-    getDigitalContentByIdMock.mockClear()
+    getDigitalContentByIdMock.mockClear();
     getDigitalContentByIdMock.mockResolvedValue({
       data: { data: mockDigitalContent1 },
     } as any);
@@ -325,14 +356,15 @@ describe('Página de atualização de conteúdo', () => {
     const input = screen.getByTestId('inputFile') as HTMLInputElement;
     await userEvent.upload(input, file);
 
-    const imageViewElement = screen.getByLabelText('media do conteúdo digital') as HTMLImageElement;
+    const imageViewElement = screen.getByLabelText(
+      'media do conteúdo digital',
+    ) as HTMLImageElement;
 
-    expect(imageViewElement.src).toBe('blob:www.localhost/hello.png')
+    expect(imageViewElement.src).toBe('blob:www.localhost/hello.png');
   });
 
   test('Espera que o botão excluir mídia remova a nova mídia e exiba a mídia original', async () => {
-
-    getDigitalContentByIdMock.mockClear()
+    getDigitalContentByIdMock.mockClear();
     getDigitalContentByIdMock.mockResolvedValue({
       data: { data: mockDigitalContent1 },
     } as any);
@@ -347,12 +379,13 @@ describe('Página de atualização de conteúdo', () => {
     const input = screen.getByTestId('inputFile') as HTMLInputElement;
     await userEvent.upload(input, file);
 
-    const button = screen.getByLabelText('botão excluir')
+    const button = screen.getByLabelText('botão excluir');
     await userEvent.click(button);
-    const imageViewElement = screen.getByLabelText('media do conteúdo digital') as HTMLImageElement;
+    const imageViewElement = screen.getByLabelText(
+      'media do conteúdo digital',
+    ) as HTMLImageElement;
 
-    expect(imageViewElement.src).not.toBe('blob:www.localhost/hello.png')
-    expect(imageViewElement.src).toBe('https://localhost/passarinho.png')
+    expect(imageViewElement.src).not.toBe('blob:www.localhost/hello.png');
+    expect(imageViewElement.src).toBe('https://localhost/passarinho.png');
   });
-
 });

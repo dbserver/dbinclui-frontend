@@ -19,6 +19,7 @@ import validateInput from './validator';
 import { GuideInterface, getGuides } from '@services/guides';
 import { postCategories } from '@services/categories';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import { AuthContext } from '@contexts/AuthContext';
 
 export interface RegisterCategoryProps { }
 
@@ -37,6 +38,7 @@ export const RegisterCategory: React.FC<
   const [errorGetGuides, setErrorGetGuides] = useState(false);
   const [errorMessageGetGuides, setErrorMessageGetGuides] = useState('');
   const context = useContext(AccessibilityContext);
+  const { user } = useContext(AuthContext);
 
   async function getGuidesService() {
     try {
@@ -64,7 +66,7 @@ export const RegisterCategory: React.FC<
 
     try {
       await validateInput(cardBody);
-      await postCategories(cardBody);
+      await postCategories(cardBody, user!.token);
       setSuccess(true);
       title.current!.value = '';
       description.current!.value = '';
@@ -112,6 +114,9 @@ export const RegisterCategory: React.FC<
                 aria-labelledby="guideLabel"
                 name="guide"
                 id="guide"
+                MenuProps={{
+                  disableScrollLock: false,
+                }}
                 sx={[styles.input, styles.select]}
                 onChange={(event) => {
                   setGuide(event.target.value);

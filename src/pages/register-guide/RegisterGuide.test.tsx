@@ -1,13 +1,14 @@
 import React from 'react';
 import RegisterGuide from './index';
 import { render, screen, waitFor } from '@testing-library/react';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import validateInput, { InputInterface } from './validator';
 import { postGuides } from '@services/guides';
 import { act } from 'react-dom/test-utils';
 import { AxiosResponse } from 'axios';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/guides');
@@ -66,7 +67,7 @@ describe('Página de cadastro de nova guia', () => {
       selector: 'textarea',
     });
 
-    const inputText = 'Esse é o texto presente no elemento input';
+    const inputText = 'Esse é o texto no elemento input';
     const textAreaText =
       'Esse é o texto presente no elemento textarea\n Ele aceita novas linhas';
 
@@ -98,8 +99,23 @@ describe('Página de cadastro de nova guia', () => {
 
   test('Deve chamar a função postGuides quando o botão do submit for clicado', async () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
-    act(() => {
-      render(<RegisterGuide />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <RegisterGuide />
+        </AuthContext.Provider>,
+      );
     });
     const textoNoBotaoSubmit = 'Salvar';
     const botaoSubmit = screen.getByText(textoNoBotaoSubmit);
@@ -114,8 +130,24 @@ describe('Página de cadastro de nova guia', () => {
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
-    act(() => {
-      render(<RegisterGuide />);
+
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <RegisterGuide />
+        </AuthContext.Provider>,
+      );
     });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterface);

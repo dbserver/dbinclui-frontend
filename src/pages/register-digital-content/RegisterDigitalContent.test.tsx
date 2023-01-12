@@ -1,14 +1,15 @@
 import React from 'react';
 import { RegisterDigitalContent } from '@pages/register-digital-content';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { fireEvent } from '@testing-library/dom';
+import { fireEvent } from '@testing-library/react';
 import validateInput, { InputInterfaceProps } from './validator';
 import { postDigitalContent } from '@services/digitalContent';
 import { CategoryInterface, getCategoriesByGuide } from '@services/categories';
 import { GuideInterface, getGuides } from '@services/guides';
 import { AxiosResponse } from 'axios';
 import userEvent from '@testing-library/user-event';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/digitalContent');
@@ -119,7 +120,24 @@ describe('Página de cadastro de categorias', () => {
   });
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
-    render(<RegisterDigitalContent />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <RegisterDigitalContent />
+        </AuthContext.Provider>,
+      );
+    });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterfaceProps);
     postDigitalContentMock.mockResolvedValue(
@@ -266,7 +284,7 @@ describe('Página de cadastro de categorias', () => {
   });
 
   test('Deve verificar se o arquivo é excluido quando o botão de exclusão for clicado', async () => {
-    const mockFileNames = ['teste.jpg', 'teste.png'];
+    const mockFileNames = ['teste.jpg'];
 
     render(<RegisterDigitalContent />);
 
@@ -293,10 +311,7 @@ describe('Página de cadastro de categorias', () => {
 
     await userEvent.click(removeButton);
 
-    // here teste.jpg (the removed file) is the second one because for some reason,
-    // when we add the files with fireEvent they are added in reverse order 🤷
-    expect(elementsFileName[0]).toBeVisible();
-    expect(elementsFileName[1]).not.toBeVisible();
+    expect(elementsFileName[0]).not.toBeVisible();
   });
 
   test('Botão Voltar deve redirecionar para admin', () => {

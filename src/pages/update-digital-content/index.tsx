@@ -28,8 +28,9 @@ import AccessibilityTypography from '@components/AccessibilityTypography';
 import { Link, useParams } from 'react-router-dom';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import { AuthContext } from '@contexts/AuthContext';
 
-export interface UpdateDigitalContentProps { }
+export interface UpdateDigitalContentProps {}
 
 export interface UpdateDigitalInterface {
   title?: string | undefined;
@@ -70,6 +71,7 @@ export const UpdateDigitalContent: React.FC<
   const [, setCategoryText] = useState<string | undefined>('');
 
   const context = useContext(AccessibilityContext);
+  const { user } = useContext(AuthContext);
 
   async function getGuidesService(id: string) {
     let data: { data: DigitalContentInterface };
@@ -146,7 +148,7 @@ export const UpdateDigitalContent: React.FC<
 
     try {
       await validateInput({ ...cardBody, file: file } as InputInterfaceProps);
-      await putDigitalContent(id, formData);
+      await putDigitalContent(id, formData, user!.token);
       setSuccess(true);
     } catch (error: any) {
       console.log(error);
@@ -235,7 +237,7 @@ export const UpdateDigitalContent: React.FC<
                 {file.name}
               </CustomTypography>
               <Button
-                aria-label='botão excluir'
+                aria-label="botão excluir"
                 sx={styles.clearButton}
                 onClick={() => {
                   setFile({} as File);

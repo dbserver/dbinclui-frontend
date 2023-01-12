@@ -9,6 +9,7 @@ import { postCategories } from '@services/categories';
 import { GuideInterface, getGuides } from '@services/guides';
 import { act } from 'react-dom/test-utils';
 import { AxiosResponse } from 'axios';
+import { AuthContext } from '@contexts/AuthContext';
 
 jest.mock('./validator');
 jest.mock('@services/categories');
@@ -62,8 +63,23 @@ describe('Página de cadastro de categorias', () => {
 
   test('Deve mostrar na tela o card de notificação de sucesso quando o botão de submit for clicado', async () => {
     // eslint-disable-next-line testing-library/no-unnecessary-act
-    act(() => {
-      render(<RegisterCategory />);
+    const user = {
+      _id: '1',
+      uid: '1',
+      photoURL: 'photo/URL',
+      displayName: 'user',
+      email: 'user@email',
+      token: 'token',
+      admin: false,
+    };
+    const setUser = jest.fn();
+
+    await act(async () => {
+      render(
+        <AuthContext.Provider value={{ user, setUser }}>
+          <RegisterCategory />
+        </AuthContext.Provider>,
+      );
     });
 
     validateInputMock.mockResolvedValue(true as unknown as InputInterface);

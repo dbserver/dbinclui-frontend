@@ -134,7 +134,7 @@ describe('Componente de notificação', () => {
       />,
     );
 
-    const backButton = screen.getByText('Anterior');
+    const backButton = screen.getByTestId('beforeButton');
 
     expect(backButton).toBeDisabled();
   });

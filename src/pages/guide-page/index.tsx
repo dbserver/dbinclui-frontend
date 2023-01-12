@@ -37,6 +37,8 @@ export const GuidePage: React.FC<GuidePageProps> = (): JSX.Element => {
     !guide && getGuide();
   }, [id, guide]);
 
+  console.log(guide);
+
   return loading ? (
     <Box sx={styles.errorMessage}>
       <CircularProgress color="secondary" />

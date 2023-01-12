@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import validateInput, { InputInterface } from './validator';
 import {
   Button,
@@ -18,6 +18,7 @@ import AccessibilityTypography from '@components/AccessibilityTypography';
 import { useParams } from 'react-router-dom';
 import { FileUploadRounded } from '@mui/icons-material';
 import ClearIcon from '@mui/icons-material/Clear';
+import { AuthContext } from '@contexts/AuthContext';
 
 export interface UpdateGuideProps { }
 
@@ -39,6 +40,7 @@ export const UpdateGuide: React.FC<UpdateGuideProps> = (): JSX.Element => {
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext);
 
   async function getGuidesService(id: string) {
     let data: { data: GuideInterface } = {} as { data: GuideInterface };
@@ -90,7 +92,7 @@ export const UpdateGuide: React.FC<UpdateGuideProps> = (): JSX.Element => {
 
     try {
       await validateInput({ ...cardBody, file: file } as InputInterface);
-      await putGuides(id, formData);
+      await putGuides(id, formData, user!.token);
       setSuccess(true);
     } catch (error: any) {
       setErrorMessage(error.message);

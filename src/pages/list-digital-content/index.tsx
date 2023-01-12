@@ -15,9 +15,9 @@ import AccessibilityTypography from '@components/AccessibilityTypography';
 import styles from './styles';
 import './styles.css';
 import {
-  deleteDigitalContent,
   DigitalContentInterface,
   getDigitalContent,
+  patchDigitalContent,
 } from '@services/digitalContent';
 import { CreateSharp } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -28,7 +28,8 @@ import AccessibilityContext from '@contexts/AccessibilityContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { FormEvent, ChangeEvent } from 'react';
 import type { IrowData } from '@interfaces/IrowData';
-export interface DigitalContentInterfaceProps { }
+import { AuthContext } from '@contexts/AuthContext';
+export interface DigitalContentInterfaceProps {}
 export const ListDigitalContent: React.FC<
   DigitalContentInterfaceProps
 > = (): JSX.Element => {
@@ -44,6 +45,7 @@ export const ListDigitalContent: React.FC<
   const [confirmation, setConfirmation] = useState(false);
   const [id, setId] = useState('');
   const context = useContext(AccessibilityContext);
+  const { user } = useContext(AuthContext);
 
   async function getDigitalContentsService() {
     try {
@@ -59,7 +61,7 @@ export const ListDigitalContent: React.FC<
   async function handleDelete(value: boolean) {
     if (value) {
       try {
-        await deleteDigitalContent(id);
+        await patchDigitalContent(id, user!.token);
         setSuccess(true);
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
@@ -76,7 +78,7 @@ export const ListDigitalContent: React.FC<
     { field: '_id', headerName: 'ID', width: 50, hide: true },
     {
       field: 'guide',
-      width: 250,
+      width: user ? 250 : 300,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Guia
@@ -90,7 +92,7 @@ export const ListDigitalContent: React.FC<
     },
     {
       field: 'category',
-      width: 250,
+      width: user ? 250 : 320,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Categoria
@@ -103,11 +105,11 @@ export const ListDigitalContent: React.FC<
       ),
     },
     {
-      field: 'shortDescription',
-      width: 280,
+      field: 'title',
+      width: user ? 280 : 370,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
-          Descrição
+          Título
         </CustomTypography>
       ),
       renderCell: (params) => (
@@ -147,6 +149,7 @@ export const ListDigitalContent: React.FC<
           startIcon={<VisibilityIcon titleAccess="Botão de visualizar" />}
           sx={{ color: 'text.primary' }}
           aria-label="visualizar"
+          data-testid="view"
         ></Button>
       ),
     },
@@ -154,6 +157,9 @@ export const ListDigitalContent: React.FC<
       field: 'edit',
       width: 100,
       sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hide: user ? false : true,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Editar
@@ -164,6 +170,7 @@ export const ListDigitalContent: React.FC<
           href={params.value}
           startIcon={<CreateSharp titleAccess="Botão de editar" />}
           sx={{ color: 'text.primary' }}
+          data-testid="edit"
         ></Button>
       ),
     },
@@ -171,6 +178,9 @@ export const ListDigitalContent: React.FC<
       field: 'delete',
       width: 100,
       sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hide: user ? false : true,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Excluir
@@ -180,45 +190,58 @@ export const ListDigitalContent: React.FC<
         <Button
           onClick={() => {
             setConfirmation(true);
-            setId(params.value);
+            setId(params.value.digitalContentId);
           }}
           startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
+          disabled={user!.admin ? false : user!.uid !== params.value.authorId}
+          data-testid="delete"
         ></Button>
       ),
     },
   ];
 
-  const rowData: IrowData = digitalContents.map((card) => {
-    let path = card.filePaths[0].filePath;
-    let extension = path.split('/').pop() ?? '';
-    extension = extension.indexOf('.') < 1 ? '' : extension.split('.').pop() ?? '';
+  const handleRowData = (digitalContentData: any) => {
+    let newRowData = [];
+    for (let i = 0; i < digitalContentData.length; i++) {
+      if (!digitalContentData[i].deleted) {
+        let row = digitalContentData[i];
 
-    if (!extension.match(/png|jpg|jpeg|gif|webp/)) {
-      const fileName = path.replace(/\.[^/.]+$/, "");
-      path = fileName + '.jpg';
+        let path = row.filePaths[0].filePath;
+        let extension = path.split('/').pop() ?? '';
+        extension =
+          extension.indexOf('.') < 1 ? '' : extension.split('.').pop() ?? '';
+
+        if (!extension.match(/png|jpg|jpeg|gif|webp/)) {
+          const fileName = path.replace(/.[^/.]+$/, '');
+          path = fileName + '.jpg';
+        }
+
+        newRowData.push({
+          _id: row._id,
+          guide:
+            row.guide.title.length > 30
+              ? row.guide.title.substring(0, 30) + '...'
+              : row.guide.title,
+          category:
+            row.category?.title.length! > 30
+              ? row.category?.title.substring(0, 30) + '...'
+              : row.category?.title,
+          title:
+            row.title.length > 30
+              ? row.title.substring(0, 30) + '...'
+              : row.title,
+          filePaths: path,
+          view: '/admin/visualizar-conteudo-digital/' + row._id,
+          edit: '/admin/atualizar-conteudo-digital/' + row._id,
+          delete: { authorId: row.author.uid, digitalContentId: row._id },
+        });
+      }
     }
+    return newRowData;
+  };
 
-    return {
-      _id: card._id,
-      guide:
-        card.guide.title.length > 30
-          ? card.guide.title.substring(0, 30) + '...'
-          : card.guide.title,
-      category:
-        card.category?.title.length! > 30
-          ? card.category?.title.substring(0, 30) + '...'
-          : card.category?.title,
-      shortDescription:
-        card.shortDescription.length > 30
-          ? card.shortDescription.substring(0, 30) + '...'
-          : card.shortDescription,
-      filePaths: path,
-      view: '/admin/visualizar-conteudo-digital/' + card._id,
-      edit: '/admin/atualizar-conteudo-digital/' + card._id,
-      delete: card._id,
-    };
-  });
+  const rowData: IrowData = handleRowData(digitalContents);
   const [searchInput, setSearchInput] = useState('');
   const [query, setQuery] = useState('');
 
@@ -242,7 +265,7 @@ export const ListDigitalContent: React.FC<
       return (
         removeCharacters(row.category).includes(query) ||
         removeCharacters(row.guide).includes(query) ||
-        removeCharacters(row.shortDescription).includes(query)
+        removeCharacters(row.title).includes(query)
       );
     });
   }
@@ -285,14 +308,14 @@ export const ListDigitalContent: React.FC<
                   context.colorAccessibility
                     ? styles.TextFieldAccessibility
                     : context.colorAccessibility
-                      ? styles.TextFieldAccessibility
-                      : styles.TextField
+                    ? styles.TextFieldAccessibility
+                    : styles.TextField
                 }
               />
             </FormControl>
           </Grid>
           <Grid item>
-            <IconButton type="submit">
+            <IconButton data-testid="search-button" type="submit">
               <SearchIcon
                 sx={context.colorAccessibility ? { color: '#fff000' } : null}
               />
@@ -319,9 +342,11 @@ export const ListDigitalContent: React.FC<
               autoHeight
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
+              disableColumnSelector={true}
               rows={filterContent(rowData)}
               columns={columns}
-              columnBuffer={columns.length}
+              columnBuffer={columns.length + 1}
+              rowBuffer={15}
               sx={styles.table}
               pageSize={10}
               rowsPerPageOptions={[10]}
@@ -332,19 +357,22 @@ export const ListDigitalContent: React.FC<
             />
 
             <Box sx={styles.buttonBox}>
-              <Button
-                data-testid="new"
-                component={Link}
-                to="/admin/cadastrar-conteudo-digital"
-                sx={styles.button}
-                variant="contained"
-                type="submit"
-                role="button"
-                aria-label="BOTÃO NOVO"
-                tabIndex={16}
-              >
-                Novo
-              </Button>
+              {user && (
+                <Button
+                  data-testid="new"
+                  component={Link}
+                  to="/admin/cadastrar-conteudo-digital"
+                  sx={styles.button}
+                  variant="contained"
+                  type="submit"
+                  role="button"
+                  aria-label="BOTÃO NOVO"
+                  tabIndex={16}
+                >
+                  Novo
+                </Button>
+              )}
+
               <Button
                 data-testid="back"
                 component={Link}

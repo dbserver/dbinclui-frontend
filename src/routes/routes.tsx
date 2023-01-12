@@ -17,6 +17,8 @@ import UpdateDigitalContent from '@pages/update-digital-content';
 import CategoriesList from '@pages/categories-list';
 import ViewDigitalContent from '@pages/view-digital-content';
 import Translator from '@pages/translator';
+import MyExpressions from '@pages/my-dictionary';
+import { DictionaryDbinclui } from '@pages/dictionaryDbinclui';
 
 export interface RoutersProps {}
 
@@ -28,12 +30,14 @@ export const Routers: React.FC<RoutersProps> = (): JSX.Element => {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="sobre" element={<About />} />
-            <Route path="guia/tradutor-de-libras" element={<Translator />} />
+            <Route path="tradutor-de-libras" element={<Translator />} />
+            <Route path="meu-dicionario" element={<MyExpressions />} />
             <Route path="guia/:title" element={<GuidePage />} />
             <Route path="admin" element={<Admin />} />
             <Route path="admin/cadastrar-guia" element={<RegisterGuide />} />
             <Route path="admin/atualizar-guia/:id" element={<UpdateGuide />} />
             <Route path="admin/listar-guias" element={<GuideList />} />
+            <Route path="dictionaryDbInclui" element={<DictionaryDbinclui />} />
             <Route
               path="admin/listar-categorias"
               element={<CategoriesList />}

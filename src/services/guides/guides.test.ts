@@ -62,7 +62,7 @@ describe('Testando o serviço "postGuides"', () => {
 
     const resultExpect = true;
     apiMock.post.mockResolvedValue(resultExpect);
-    const result = await postGuides(formDataTest);
+    const result = await postGuides(formDataTest, 'passandotoken');
     expect(result).toBe(resultExpect);
   });
 
@@ -87,7 +87,7 @@ describe('Testando o serviço "postGuides"', () => {
       throw throwError;
     });
     try {
-      await postGuides(formDataTest);
+      await postGuides(formDataTest, 'passandotoken');
     } catch {}
     expect(apiMock.post).toBeCalledTimes(1);
     expect(apiMock.post).toThrow(Error);
@@ -119,7 +119,7 @@ describe('Testando o serviço "putGuides"', () => {
 
     const resultExpect = true;
     apiMock.put.mockResolvedValue(resultExpect);
-    const result = await putGuides(id, formDataTest);
+    const result = await putGuides(id, formDataTest, 'passandotoken');
     expect(result).toBe(resultExpect);
   });
 
@@ -145,7 +145,7 @@ describe('Testando o serviço "putGuides"', () => {
       throw throwError;
     });
     try {
-      await putGuides(id, formDataTest);
+      await putGuides(id, formDataTest, 'passandotoken');
     } catch {}
     expect(apiMock.put).toBeCalledTimes(1);
     expect(apiMock.put).toThrow(Error);
@@ -219,13 +219,14 @@ describe('Testando o serviço "deleteGuide', () => {
   it(`Quando ${deleteGuide.name} é chamado, o retorno deve ser true`, async () => {
     const id = '1';
     const resultExpect = true;
-    const pathExpect = `guides/${id}`;
     apiMock.delete.mockResolvedValue(resultExpect);
 
-    const result = await deleteGuide(id);
+    const result = await deleteGuide(id, 'passandotoken');
 
     expect(result).toStrictEqual(resultExpect);
-    expect(apiMock.delete).toBeCalledWith(pathExpect);
+    expect(apiMock.delete).toBeCalledWith('guides/1', {
+      headers: { Authorization: 'Bearer passandotoken' },
+    });
   });
 
   it(`${deleteGuide.name}: Tratamento de erro quando o serviço não estiver disponível`, async () => {
@@ -236,7 +237,7 @@ describe('Testando o serviço "deleteGuide', () => {
       throw throwError;
     });
     try {
-      await deleteGuide(id);
+      await deleteGuide(id, 'passandotoken');
     } catch {}
     expect(apiMock.delete).toBeCalledTimes(1);
     expect(apiMock.delete).toThrow(Error);

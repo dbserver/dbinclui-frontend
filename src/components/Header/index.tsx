@@ -10,7 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Logo from '../svgs/logo';
 import './styles.css';
 import AccessibilityTypography from '../../components/AccessibilityTypography';
@@ -20,9 +20,10 @@ import { useTheme } from '@emotion/react';
 import { AuthContext } from '@contexts/AuthContext';
 import SignoutModal from '@components/SignOutModal';
 import { SignInModal } from '@components/SignInModal';
-import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
 import useVerifyLogedUser from '@hooks/useVerifyLogedUser';
+import { HelpOutline } from '@mui/icons-material';
+import HelpModal from '@components/HelpModal';
 
 export interface HeaderProps {}
 
@@ -37,15 +38,15 @@ export const MenuItems: MenuItemsInterface[] = [
     href: '/',
   },
   {
-    title: 'SOBRE',
-    href: '/sobre',
+    title: 'TRADUTOR DE LIBRAS',
+    href: '/tradutor-de-libras',
   },
   {
-    title: 'CONTATO',
-    href: '/contato',
+    title: 'DICIONÁRIO DBINCLUI',
+    href: '/dictionaryDbInclui',
   },
   {
-    title: 'ADMINISTRAÇÃO',
+    title: 'MANTER CONTEÚDOS',
     href: '/admin',
   },
 ];
@@ -58,21 +59,14 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
   const [anchorElSignInModal, setAnchorElSignInModal] =
     React.useState<null | HTMLElement>(null);
 
+  const [anchorElHelpModal, setAnchorElHelpModal] =
+    React.useState<null | HTMLElement>(null);
+
   const { user } = React.useContext(AuthContext);
   const { verifyLogedGoogleUser, loadingUser } = useVerifyLogedUser();
 
-  if (!user) {
-    console.log('');
-  }
-
   const isAccessibility =
     React.useContext(AccessibilityContext).colorAccessibility;
-
-  const handleChangePage = (
-    target: React.MouseEvent<HTMLElement>['currentTarget'],
-  ) => {
-    setAnchorElNav(target);
-  };
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -84,6 +78,10 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
 
   const handleOpenSignInModal = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElSignInModal(event.currentTarget);
+  };
+
+  const handleOpenHelpModal = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElHelpModal(event.currentTarget);
   };
 
   const theme: any = useTheme();
@@ -137,7 +135,7 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
             </IconButton>
             <Menu
               id="menu-appbar"
-              disableScrollLock={true}
+              disableScrollLock={false}
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
@@ -176,7 +174,11 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
           {/*MENU DESKTOP*/}
 
           <Box
-            sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' } }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', lg: 'flex' },
+              justifyContent: 'center',
+            }}
             className="box-links"
           >
             {MenuItems.map((item, key) => (
@@ -186,9 +188,6 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
                 data-testid={`menu-item-desktop-testid:${item.title}`}
                 component={Link}
                 to={item.href}
-                onClick={({ currentTarget }: React.MouseEvent<HTMLElement>) =>
-                  handleChangePage(currentTarget)
-                }
               >
                 <AccessibilityTypography color="secondary">
                   {item.title}
@@ -208,23 +207,30 @@ export const Header: React.FC<HeaderProps> = (): JSX.Element => {
               gap: '8px',
             }}
           >
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              {user && (
-                <CustomTypography
-                  maxWidth="15ch"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  color={isAccessibility ? '#FFFF00' : '#221F52'}
-                  fontWeight={500}
-                  fontSize={18}
-                  component="p"
+            <Tooltip title="Ajuda" sx={{ width: '28px', height: '28px' }}>
+              <span>
+                <IconButton
+                  aria-label="Botão de ajuda"
+                  size="small"
+                  sx={{ p: 0, m: '0 auto' }}
+                  onClick={handleOpenHelpModal}
                 >
-                  {user?.displayName}
-                </CustomTypography>
-              )}
-            </Box>
-            <Tooltip title="Login" sx={{ width: '30px', height: '30px' }}>
+                  <HelpOutline
+                    htmlColor={isAccessibility ? '#FFFF00' : '#565C9B'}
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+
+            <HelpModal
+              anchorElHelpModal={anchorElHelpModal}
+              setAnchorElHelpModal={setAnchorElHelpModal}
+            />
+
+            <Tooltip
+              title="Menu de Usuário"
+              sx={{ width: '30px', height: '30px' }}
+            >
               <span>
                 <IconButton
                   size="large"

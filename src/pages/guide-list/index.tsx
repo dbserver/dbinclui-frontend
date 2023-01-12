@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
 import { Button, Box, CircularProgress, Grid } from '@mui/material';
 import AccessibilityTypography from '@components/AccessibilityTypography';
-import { deleteGuide, GuideInterface, getGuides } from '@services/guides';
+import { GuideInterface, getGuides, patchGuide } from '@services/guides';
 import { CreateSharp } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './styles';
@@ -12,9 +12,9 @@ import DialogBoxConfirmation from '@components/DialogBox/DialogBoxConfirmation';
 import Notification from '@components/Notification';
 import { CustomTypography } from '@components/CustomTypography';
 import AccessibilityContext from '@contexts/AccessibilityContext';
+import { AuthContext } from '@contexts/AuthContext';
 
-
-export interface GuideListPropsInterfaceProps { }
+export interface GuideListPropsInterfaceProps {}
 
 export const GuideList: React.FC<
   GuideListPropsInterfaceProps
@@ -29,7 +29,7 @@ export const GuideList: React.FC<
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const context = useContext(AccessibilityContext);
-
+  const { user } = useContext(AuthContext);
 
   async function getGuideListService() {
     try {
@@ -45,7 +45,7 @@ export const GuideList: React.FC<
   async function handleDelete(value: boolean) {
     if (value) {
       try {
-        await deleteGuide(id);
+        await patchGuide(id, user!.token);
         setSuccess(true);
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
@@ -78,7 +78,7 @@ export const GuideList: React.FC<
     },
     {
       field: 'guide',
-      width: 250,
+      width: user ? 250 : 300,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Guia
@@ -92,7 +92,7 @@ export const GuideList: React.FC<
     },
     {
       field: 'content',
-      width: 470,
+      width: user ? 470 : 610,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Descrição
@@ -108,6 +108,9 @@ export const GuideList: React.FC<
       field: 'edit',
       width: 100,
       sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hide: user ? false : true,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Editar
@@ -126,6 +129,9 @@ export const GuideList: React.FC<
       field: 'delete',
       width: 100,
       sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hide: user ? false : true,
       renderHeader: () => (
         <CustomTypography component={'p'} fontSize={14}>
           Excluir
@@ -136,28 +142,39 @@ export const GuideList: React.FC<
           data-testid="delete"
           onClick={() => {
             setConfirmation(true);
-            setId(params.value);
+            setId(params.value.guideId);
           }}
           startIcon={<DeleteIcon titleAccess="Botão de excluir" />}
           sx={{ color: 'text.primary' }}
+          disabled={user!.admin ? false : user!.uid !== params.value.authorId}
         ></Button>
       ),
     },
   ];
 
-  const rowData = guideList.map((card) => {
-    return {
-      _id: card._id,
-      guide: card.title,
-      content:
-        card.content.length > 65
-          ? card.content.substring(0, 65) + '...'
-          : card.content,
-      image: card.filePaths.filePath,
-      edit: '/admin/atualizar-guia/' + card._id,
-      delete: card._id,
-    };
-  });
+  const handleRowData = (guideData: any) => {
+    let newRowData = [];
+    for (let i = 0; i < guideData.length; i++) {
+      if (!guideData[i].deleted) {
+        let guide = guideData[i];
+
+        newRowData.push({
+          _id: guide._id,
+          guide: guide.title,
+          content:
+            guide.content.length > 65
+              ? guide.content.substring(0, 65) + '...'
+              : guide.content,
+          image: guide.filePaths.filePath,
+          edit: '/admin/atualizar-guia/' + guide._id,
+          delete: { authorId: guide.author.uid, guideId: guide._id },
+        });
+      }
+    }
+    return newRowData;
+  };
+
+  const rowData = handleRowData(guideList);
 
   return (
     <>
@@ -165,6 +182,7 @@ export const GuideList: React.FC<
         <Box>
           <DialogBoxConfirmation
             title="Deseja excluir esse guia?"
+            data-testid="confirmation"
             confirmation={confirmation}
             setConfirmation={setConfirmation}
             onClose={handleDelete}
@@ -201,8 +219,11 @@ export const GuideList: React.FC<
             <DataGrid
               data-testid="dataGrid"
               autoHeight
+              columnBuffer={5}
+              rowBuffer={10}
               getRowId={(row) => row._id}
               disableExtendRowFullWidth={true}
+              disableColumnSelector={true}
               rows={rowData}
               columns={columns}
               sx={styles.table}
@@ -214,19 +235,21 @@ export const GuideList: React.FC<
               }
             />
             <Box sx={styles.boxButton}>
-              <Button
-                data-testid="new"
-                component={Link}
-                to="/admin/cadastrar-guia"
-                sx={styles.button}
-                variant="contained"
-                type="submit"
-                role="button"
-                aria-label="BOTÃO NOVO"
-                tabIndex={3}
-              >
-                Novo
-              </Button>
+              {user && (
+                <Button
+                  data-testid="new"
+                  component={Link}
+                  to="/admin/cadastrar-guia"
+                  sx={styles.button}
+                  variant="contained"
+                  type="submit"
+                  role="button"
+                  aria-label="BOTÃO NOVO"
+                  tabIndex={3}
+                >
+                  Novo
+                </Button>
+              )}
 
               <Button
                 sx={styles.button}

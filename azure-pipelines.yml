@@ -12,8 +12,7 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-stages:
-    steps:
+  steps:
     - task: Npm@1
       inputs:
         command: 'install'
@@ -23,7 +22,7 @@ stages:
       inputs:
         command: 'run build'
         workingDir: './'
-    displayName: "building project"
+  displayName: "building project"
 
 step:
    - task: Docker@2

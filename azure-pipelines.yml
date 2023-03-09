@@ -28,6 +28,5 @@ pool:
 steps: 
    - task: Docker@2
      containerRegistry: 'docker-registry'
-     repository: '.'
      command: 'buildAndPush'
      Dockerfile: '**/Dockerfile'

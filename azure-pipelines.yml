@@ -26,8 +26,11 @@ pool:
 
 
 steps: 
-   - task: Docker@2
-     containerRegistry: "docker-registry"
-     repository: 'dbinclui/frontend'
-     command: 'buildAndPush'
-     Dockerfile: '**/Dockerfile'
+   
+- task: Docker@2
+  inputs:
+    containerRegistry: 'docker-registry'
+    repository: 'dbinclui/frontend'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+

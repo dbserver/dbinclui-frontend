@@ -24,10 +24,10 @@ pool:
         workingDir: './'
   displayName: "building project"
 
-step:
+
+steps: 
    - task: Docker@2
-     inputs:
-      containerRegistry: 'docker-registry'
-      repository: '.'
-      command: 'buildAndPush'
+     containerRegistry: 'docker-registry'
+     repository: '.'
+     command: 'buildAndPush'
      Dockerfile: '**/Dockerfile'

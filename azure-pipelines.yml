@@ -27,7 +27,7 @@ pool:
 
 steps: 
    - task: Docker@2
-     containerRegistry: 'docker-registry'
+     containerRegistry: "docker-registry"
      repository: 'dbinclui/backend'
      command: 'buildAndPush'
      Dockerfile: '**/Dockerfile'

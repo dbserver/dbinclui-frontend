@@ -24,9 +24,10 @@ stages:
         command: 'run build'
         workingDir: './'
     displayName: "building project"
-  
-- task: Docker@2
-      inputs:
+
+step:
+   - task: Docker@2
+     inputs:
       containerRegistry: 'docker-registry'
       repository: '.'
       command: 'buildAndPush'

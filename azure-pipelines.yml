@@ -65,7 +65,7 @@ stages:
               workingDir: ./
               customCommand: "run test:noInterface"
           - task: Npm@1
-            condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
+           # condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
             displayName: "Building project"
             inputs:
               command: custom
@@ -76,7 +76,7 @@ stages:
                 customCommand: "run build:staging"
           - task: Docker@2
             displayName: Building docker image and pushing to ACR
-            condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
+            #condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
             inputs:
               containerRegistry: $(acrServiceConnection)
               repository: $(dockerRepository)

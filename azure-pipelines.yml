@@ -2,10 +2,12 @@ pr:
   branches:
     include:
       - main
+      - cria-dockerignore
 trigger:
   branches:
     include:
       - main
+      - cria-dockerignore
   tags:
     include:
       - "*"

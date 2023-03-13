@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbinclui-app-${ENV}
+  namespace: dbinclui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbinclui-app-${ENV}
+  template:
+    metadata:
+      labels:
+        app: dbinclui-app-${ENV}
+    spec:
+      containers:
+        - name: dbinclui-app-${ENV}
+          image: "dbserverregistry.azurecr.io/dbinclui/frontend"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3

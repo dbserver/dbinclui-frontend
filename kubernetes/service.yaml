@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbinclui-app-service-${ENV}
+  namespace: dbinclui
+  labels:
+    app: dbinclui-app-${ENV}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: dbinclui-app-${ENV}

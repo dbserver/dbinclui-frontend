@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dbinclui-app-${ENV}
-  namespace: coracoesdalila
+  namespace: dbinclui
 spec:
   replicas: 1
   selector:

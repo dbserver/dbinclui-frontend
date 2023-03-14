@@ -52,14 +52,16 @@ stages:
     jobs:
       - job: CI
         displayName: Run tests, build and push image to ACR
-        steps:
+        steps:      
+          - task: NodeTool@0
+            inputs:
+              versionSource: 'spec'
+              versionSpec: '10.x'
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
-                versionSource: 'spec'
-                versionSpec: '10.x'
                 script:
-                  npm install
+                  npm install 
           - task: Npm@1
             displayName: "Running tests"
             inputs:

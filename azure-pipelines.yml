@@ -56,8 +56,11 @@ stages:
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
-              workingDir: .
-              command: "install"
+                versionSource: 'spec'
+                versionSpec: '10.x'
+                force32bit: true
+                workingDir: .
+                command: "install"
           - task: Npm@1
             displayName: "Running tests"
             inputs:

@@ -58,9 +58,8 @@ stages:
             inputs:
                 versionSource: 'spec'
                 versionSpec: '10.x'
-                force32bit: true
-                workingDir: .
-                command: "install"
+                script:
+                  npm install
           - task: Npm@1
             displayName: "Running tests"
             inputs:

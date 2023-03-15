@@ -61,7 +61,7 @@ stages:
             displayName: "Installing dependencies"
             inputs:
               script:
-                npm run install 
+                run install 
           - task: Npm@1
             displayName: "Running tests"
             inputs:

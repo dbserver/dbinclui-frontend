@@ -60,8 +60,8 @@ stages:
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
-                script:
-                  npm install 
+              script:
+                npm install 
           - task: Npm@1
             displayName: "Running tests"
             inputs:

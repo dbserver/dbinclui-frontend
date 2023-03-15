@@ -61,12 +61,12 @@ stages:
             displayName: "Installing dependencies"
             inputs:
               script:
-                run install 
+                run install --force
           - task: Npm@1
             displayName: "Running tests"
             inputs:
               script:
-                npm run test
+                 run test
           - task: Npm@1
             condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
             displayName: "Building project"

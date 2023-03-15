@@ -65,9 +65,8 @@ stages:
           - task: Npm@1
             displayName: "Running tests"
             inputs:
-              command: custom
-              workingDir: ./
-              customCommand: "run test:noInterface"
+              script:
+                run test
           - task: Npm@1
             condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
             displayName: "Building project"
@@ -75,7 +74,7 @@ stages:
               command: custom
               workingDir: ./
               ${{ if eq(variables['isTag'], 'true') }}:
-                customCommand: "run build:prd"
+                customCommand: "run build:"
               ${{ else }}:
                 customCommand: "run build:staging"
           - task: Docker@2

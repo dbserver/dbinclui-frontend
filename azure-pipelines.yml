@@ -66,7 +66,7 @@ stages:
             displayName: "Running tests"
             inputs:
               script:
-                run test
+                npm run test
           - task: Npm@1
             condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
             displayName: "Building project"

@@ -60,7 +60,6 @@ stages:
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
-                versionSpec: '10.x'
                 script:
                   npm install 
           - task: Npm@1

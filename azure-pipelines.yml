@@ -63,7 +63,6 @@ stages:
             displayName: "install dependencies"
             inputs:
               script: 'install'
-              workingDir: './'
           - task: Npm@1
             displayName: "Running tests"
             inputs:

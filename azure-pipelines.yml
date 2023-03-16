@@ -58,7 +58,6 @@ stages:
               versionSource: 'spec'
               versionSpec: '>=18.15.0'
               checkLatest: true
-              nodejsMirror: 'https://nodejs.org/dist/latest-gallium/'
               
           - task: Npm@1
             displayName: "Installing dependencies"

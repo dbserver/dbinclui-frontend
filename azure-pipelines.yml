@@ -53,9 +53,12 @@ stages:
       - job: CI
         displayName: Run tests, build and push image to ACR
         steps:      
-          - task: CmdLine@2
+          - task: NodeTool@0
             inputs:
-              script: 'npm install -g npm@latest'
+              versionSource: 'spec'
+              versionSpec: '>=18.15.0'
+              checkLatest: true
+              nodejsMirror: 'https://nodejs.org/dist/latest-gallium/'
               
           - task: Npm@1
             displayName: "Installing dependencies"

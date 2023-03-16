@@ -56,10 +56,11 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSource: 'spec'
-              versionSpec: '>=18.15.0'
+              versionSpec: '16.19.1'
               checkLatest: true
               
           - task: Npm@1
+            displayName: "install dependencies"
             inputs:
               command: 'install'
               workingDir: './'

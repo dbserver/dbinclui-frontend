@@ -53,6 +53,12 @@ stages:
       - job: CI
         displayName: Run tests, build and push image to ACR
         steps:      
+          - task: NodeTool@0
+            inputs:
+              versionSource: 'spec'
+              versionSpec: '>=18.0.0'
+              checkLatest: true
+              force32bit: true
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:

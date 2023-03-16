@@ -57,7 +57,7 @@ stages:
             inputs:
               versionSource: 'spec'
               versionSpec: '>9.0.0'
-             checkLatest: true
+              checkLatest: true
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:

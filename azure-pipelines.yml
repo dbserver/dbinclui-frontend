@@ -58,6 +58,10 @@ stages:
               versionSource: 'spec'
               versionSpec: '>=18.15.0'
               checkLatest: true
+          - task: Npm@1
+            inputs:
+              command: 'custom'
+              customCommand: 'npm install -g npm@latest'
               
           - task: Npm@1
             displayName: "Installing dependencies"

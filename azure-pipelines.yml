@@ -62,7 +62,7 @@ stages:
           - task: Npm@1
             displayName: "install dependencies"
             inputs:
-              script: 'install'
+              script: 'install --legacy-peer-deps'
           - task: Npm@1
             displayName: "Running tests"
             inputs:

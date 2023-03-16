@@ -56,8 +56,8 @@ stages:
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
-              script:
-                run install 
+              command: install 
+              verbose: false
           - task: Npm@1
             displayName: "Running tests"
             inputs:

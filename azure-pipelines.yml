@@ -53,12 +53,11 @@ stages:
       - job: CI
         displayName: Run tests, build and push image to ACR
         steps:      
-          - task: NodeTool@0
+          - task: Npm@1
             inputs:
-              versionSource: 'spec'
-              versionSpec: '>=16.x'
-              checkLatest: true
-              
+              command: custom
+              customCommand: 'install -g npm@latest'
+            displayName: 'Upgrade npm to latest version'
           - task: Npm@1
             displayName: "install dependencies"
             inputs:

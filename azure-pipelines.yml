@@ -56,9 +56,8 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSource: 'spec'
-              versionSpec: '>=18.0.0'
+              versionSpec: '<=16.0.0'
               checkLatest: true
-              force32bit: true
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:

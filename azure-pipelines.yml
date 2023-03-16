@@ -53,11 +53,10 @@ stages:
       - job: CI
         displayName: Run tests, build and push image to ACR
         steps:      
-          - task: NodeTool@0
+          - task: CmdLine@2
             inputs:
-              versionSource: 'spec'
-              versionSpec: '>9.0.0'
-              checkLatest: true
+              script: 'npm install -g npm@latest'
+              
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:

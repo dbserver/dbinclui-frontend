@@ -53,10 +53,6 @@ stages:
       - job: CI
         displayName: Run tests, build and push image to ACR
         steps:      
-          - task: NodeTool@0
-            inputs:
-              versionSource: 'spec'
-              versionSpec: '>=10.0.0'
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
@@ -74,7 +70,7 @@ stages:
               command: custom
               workingDir: ./
               ${{ if eq(variables['isTag'], 'true') }}:
-                customCommand: "run build:"
+                customCommand: "run build"
               ${{ else }}:
                 customCommand: "run build:staging"
           - task: Docker@2

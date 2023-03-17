@@ -57,10 +57,6 @@ stages:
             inputs:
               versionSource: 'spec'
               versionSpec: '14.17.3'
-            inputs:
-              command: custom
-              customCommand: 'install -g npm@6.0.0'
-            displayName: 'Upgrade npm to latest version'
           - task: Npm@1
             displayName: "install dependencies"
             inputs:

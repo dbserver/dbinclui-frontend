@@ -53,7 +53,10 @@ stages:
       - job: CI
         displayName: Run tests, build and push image to ACR
         steps:      
-          - task: Npm@1
+          - task: NodeTool@0
+            inputs:
+              versionSource: 'spec'
+              versionSpec: '14.17.3'
             inputs:
               command: custom
               customCommand: 'install -g npm@6.0.0'

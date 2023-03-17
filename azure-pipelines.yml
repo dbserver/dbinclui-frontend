@@ -72,6 +72,7 @@ stages:
             inputs:
               command: custom
               customCommand: "run build"
+              workingDir: ./
             
             
           - task: Docker@2

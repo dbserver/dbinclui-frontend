@@ -64,7 +64,7 @@ stages:
           - task: Npm@1
             displayName: "Running tests"
             inputs:
-              script:
+              command:
                  run test
           - task: Npm@1
             displayName: "Build Prod"

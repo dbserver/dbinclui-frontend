@@ -67,11 +67,13 @@ stages:
               script:
                  run test
           - task: Npm@1
+            displayName: "Build Prod"
             condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
-            displayName: "Building project"
             inputs:
-              command: run build
-              workingDir: ./
+              command: custom
+              customCommand: "run build"
+            
+            
           - task: Docker@2
             displayName: Building docker image and pushing to ACR
             condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))

@@ -70,7 +70,7 @@ stages:
             condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
             displayName: "Building project"
             inputs:
-              command: build
+              command: run build
               workingDir: ./
           - task: Docker@2
             displayName: Building docker image and pushing to ACR

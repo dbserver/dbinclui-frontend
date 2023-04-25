@@ -155,7 +155,7 @@ stages:
               arguments: "restart deploy dbinclui-app-dev"
 
   - stage: DeployToProduction
-    dependsOn: CI
+ #   dependsOn: CI
     condition: and(succeeded(), eq(variables['isTag'], 'true'))
     variables:
       - name: enviroment

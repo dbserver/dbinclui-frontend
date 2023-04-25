@@ -19,6 +19,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-           envFrom:
+          envFrom:
             - configMapRef:
                 name: dbinclui-app-configmap-${env}

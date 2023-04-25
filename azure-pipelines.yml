@@ -114,11 +114,11 @@ stages:
               kubernetesServiceEndpoint: $(aksServiceConnection)
               namespace: $(k8sNamespace)
               containerRegistryType: "Azure Container Registry"
-              configMapName: "dbinclui-app-configmap-dev"
+              configMapName: "dbinclui-app-configmap-dev-teste"
               forceUpdateConfigMap: true
               configMapArguments: >
-                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(appIdDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(apiKeyDBinclui)
+                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(apiKeyDBinclui)
+                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(appIdDBinclui)
                   --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(authDomainDBinclui)
                   --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(measurementIdDBinclui)
                   --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(messagingSenderIdDBinclui)

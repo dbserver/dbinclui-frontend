@@ -116,7 +116,7 @@ stages:
               containerRegistryType: "Azure Container Registry"
               configMapName: "dbinclui-app-configmap-dev"
               forceUpdateConfigMap: true
-              configMapArguments: >
+              configMapArguments: 
                   --from-literal=REACT_APP_FIREBASE_API_KEY=$(apiKeyDBinclui)
                   --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(authDomainDBinclui)
                   --from-literal=REACT_APP_FIREBASE_DATABASE_URL=$(DataBaseUrlDBinclui)

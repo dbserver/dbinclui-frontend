@@ -117,8 +117,8 @@ stages:
               configMapName: "dbinclui-app-configmap-dev"
               forceUpdateConfigMap: true
               configMapArguments: >
-                  --from-literal=REACT_APP_FIREBASE_API_KEY=$("AIzaSyCTq9YwK6wgJehVYCH2lLo9zGDHlpEFwIY")
-                  --from-literal=REACT_APP_FIREBASE_APP_ID=$("dbinclui-2f69e.firebaseapp.com")
+                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(apiKeyDBinclui)
+                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(appIdDBinclui)
                   --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(authDomainDBinclui)
                   --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(measurementIdDBinclui)
                   --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(messagingSenderIdDBinclui)

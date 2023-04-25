@@ -48,50 +48,50 @@ pool:
   vmImage: $(vmImage)
 
 stages:
-  - stage: CI
-    jobs:
-      - job: CI
-        displayName: Run tests, build and push image to ACR
-        steps:      
-          - task: NodeTool@0
-            inputs:
-              versionSource: 'spec'
-              versionSpec: '14.17.3'
-          - task: Npm@1
-            displayName: "install dependencies"
-            inputs:
-              script: "install"
-          - task: Npm@1
-            displayName: "Running tests"
-            inputs:
-              command: custom
-              customCommand: "run test"
-          - task: Npm@1
-            displayName: "Build Prod"
-            condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
-            inputs:
-              command: custom
-              customCommand: "run build"
-              workingDir: ./
+  # - stage: CI
+  #   jobs:
+  #     - job: CI
+  #       displayName: Run tests, build and push image to ACR
+  #       steps:      
+  #         - task: NodeTool@0
+  #           inputs:
+  #             versionSource: 'spec'
+  #             versionSpec: '14.17.3'
+  #         - task: Npm@1
+  #           displayName: "install dependencies"
+  #           inputs:
+  #             script: "install"
+  #         - task: Npm@1
+  #           displayName: "Running tests"
+  #           inputs:
+  #             command: custom
+  #             customCommand: "run test"
+  #         - task: Npm@1
+  #           displayName: "Build Prod"
+  #           condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
+  #           inputs:
+  #             command: custom
+  #             customCommand: "run build"
+  #             workingDir: ./
             
             
-          - task: Docker@2
-            displayName: Building docker image and pushing to ACR
-            condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
-            inputs:
-              containerRegistry: $(acrServiceConnection)
-              repository: $(dockerRepository)
-              command: "buildAndPush"
-              Dockerfile: "**/Dockerfile"
-              ${{ if eq(variables['isTag'], 'true') }}:
-                tags: $(branchName)
-              ${{ else }}:
-                tags: |
-                  $(buildId)
-                  latest
+  #         - task: Docker@2
+  #           displayName: Building docker image and pushing to ACR
+  #           condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
+  #           inputs:
+  #             containerRegistry: $(acrServiceConnection)
+  #             repository: $(dockerRepository)
+  #             command: "buildAndPush"
+  #             Dockerfile: "**/Dockerfile"
+  #             ${{ if eq(variables['isTag'], 'true') }}:
+  #               tags: $(branchName)
+  #             ${{ else }}:
+  #               tags: |
+  #                 $(buildId)
+  #                 latest
 
   - stage: DeployToDevelopment
-    dependsOn: CI
+  #  dependsOn: CI
     condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
     variables:
       - name: enviroment
@@ -113,7 +113,7 @@ stages:
               kubernetesServiceEndpoint: $(aksServiceConnection)
               namespace: $(k8sNamespace)
               containerRegistryType: "Azure Container Registry"
-              configMapName: "dbinclui-api-configmap-dev"
+              configMapName: "dbinclui-app-configmap-dev"
               forceUpdateConfigMap: true
               configMapArguments: >
                   --from-literal=REACT_APP_FIREBASE_API_KEY=$(apiKeyDBinclui)
@@ -155,7 +155,7 @@ stages:
               arguments: "restart deploy dbinclui-app-dev"
 
   - stage: DeployToProduction
-    dependsOn: CI
+ #   dependsOn: CI
     condition: and(succeeded(), eq(variables['isTag'], 'true'))
     variables:
       - name: enviroment

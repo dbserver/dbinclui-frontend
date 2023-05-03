@@ -1,11 +1,11 @@
 pr:
   branches:
     include:
-      - feat/cd
+      - azure-pipelines
 trigger:
   branches:
     include:
-      - feat/cd
+      - azure-pipelines
   tags:
     include:
       - "*"
@@ -43,56 +43,55 @@ variables:
 
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
+    
+  - group: dbinclui-app-env-dev
 
 pool:
   vmImage: $(vmImage)
 
 stages:
-  # - stage: CI
-  #   jobs:
-  #     - job: CI
-  #       displayName: Run tests, build and push image to ACR
-  #       steps:      
-  #         - task: NodeTool@0
-  #           inputs:
-  #             versionSource: 'spec'
-  #             versionSpec: '14.17.3'
-  #         - task: Npm@1
-  #           displayName: "install dependencies"
-  #           inputs:
-  #             script: "install"
-  #         - task: Npm@1
-  #           displayName: "Running tests"
-  #           inputs:
-  #             command: custom
-  #             customCommand: "run test"
-  #         - task: Npm@1
-  #           displayName: "Build Prod"
-  #           condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
-  #           inputs:
-  #             command: custom
-  #             customCommand: "run build"
-  #             workingDir: ./
+  - stage: CI
+    jobs:
+      - job: CI
+        displayName: Run tests, build and push image to ACR
+        steps:      
+          - task: Npm@1
+            displayName: "Running tests"
+            inputs:
+              command: custom
+              customCommand: "install --legacy-peers-deps"
+          - task: Npm@1
+            displayName: "Running tests"
+            inputs:
+              command: custom
+              customCommand: "run test"
+          - task: Npm@1
+            displayName: "Build Prod"
+            condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
+            inputs:
+              command: custom
+              customCommand: "run build"
+              workingDir: ./
             
             
-  #         - task: Docker@2
-  #           displayName: Building docker image and pushing to ACR
-  #           condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
-  #           inputs:
-  #             containerRegistry: $(acrServiceConnection)
-  #             repository: $(dockerRepository)
-  #             command: "buildAndPush"
-  #             Dockerfile: "**/Dockerfile"
-  #             ${{ if eq(variables['isTag'], 'true') }}:
-  #               tags: $(branchName)
-  #             ${{ else }}:
-  #               tags: |
-  #                 $(buildId)
-  #                 latest
+          - task: Docker@2
+            displayName: Building docker image and pushing to ACR
+            condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
+            inputs:
+              containerRegistry: $(acrServiceConnection)
+              repository: $(dockerRepository)
+              command: "buildAndPush"
+              Dockerfile: "**/Dockerfile"
+              ${{ if eq(variables['isTag'], 'true') }}:
+              #   tags: $(branchName)
+              # ${{ else }}:
+                tags: |
+                  $(buildId)
+                  latest
 
   - stage: DeployToDevelopment
   #  dependsOn: CI
-    condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+  # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
     variables:
       - name: enviroment
         value: "dev"
@@ -117,14 +116,14 @@ stages:
               configMapName: "dbinclui-app-configmap-dev"
               forceUpdateConfigMap: true
               configMapArguments: >
-                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(apiKeyDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(appIdDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(authDomainDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(measurementIdDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(messagingSenderIdDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_PROJECT_ID=$(projectIdDBinclui)
-                  --from-literal=REACT_APP_FIREBASE_STORAGE_BUCKET=$(storageBucketDBinclui)
-                  --from-literal=REACT_APP_BASE_URL=$(DataBaseUrlDBinclui)
+                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(REACT_APP_FIREBASE_API_KEY)
+                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(REACT_APP_FIREBASE_APP_ID)
+                  --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(REACT_APP_FIREBASE_AUTH_DOMAIN)
+                  --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(REACT_APP_FIREBASE_MEASUREMENT_ID)
+                  --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(REACT_APP_FIREBASE_MESSAGING_SENDER_ID)
+                  --from-literal=REACT_APP_FIREBASE_PROJECT_ID=$(REACT_APP_FIREBASE_PROJECT_ID)
+                  --from-literal=REACT_APP_FIREBASE_STORAGE_BUCKET=$(REACT_APP_FIREBASE_STORAGE_BUCKET)
+                  --from-literal=REACT_APP_BASE_URL=$(REACT_APP_BASE_URL)
          
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes
@@ -147,18 +146,18 @@ stages:
               useConfigurationFile: true
               configuration: "./kubernetes/ingress.yaml"
               outputFormat: none
-          - task: Kubernetes@1
-            displayName: Restart service
-            inputs:
-              connectionType: $(connectionType)
-              kubernetesServiceEndpoint: $(aksServiceConnection)
-              namespace: $(k8sNamespace)
-              command: "rollout"
-              arguments: "restart deploy dbinclui-app-dev"
+          # - task: Kubernetes@1
+          #   displayName: Restart service
+          #   inputs:
+          #     connectionType: $(connectionType)
+          #     kubernetesServiceEndpoint: $(aksServiceConnection)
+          #     namespace: $(k8sNamespace)
+          #     command: "rollout"
+          #     arguments: "restart deploy dbinclui-app-dev"
 
   - stage: DeployToProduction
  #   dependsOn: CI
-    condition: and(succeeded(), eq(variables['isTag'], 'true'))
+  #  condition: and(succeeded(), eq(variables['isTag'], 'true'))
     variables:
       - name: enviroment
         value: "prd"
@@ -172,6 +171,25 @@ stages:
             displayName: Changing yaml's variables
             inputs:
               scriptPath: "./kubernetes/change_variables.sh"
+          
+          - task: Kubernetes@1
+            displayName: Create configmap
+            inputs:
+              connectionType: $(connectionType)
+              kubernetesServiceEndpoint: $(aksServiceConnection)
+              namespace: $(k8sNamespace)
+              containerRegistryType: "Azure Container Registry"
+              configMapName: "dbinclui-app-configmap-prd"
+              forceUpdateConfigMap: true
+              configMapArguments: >
+                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(REACT_APP_FIREBASE_API_KEY)
+                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(REACT_APP_FIREBASE_APP_ID)
+                  --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(REACT_APP_FIREBASE_AUTH_DOMAIN)
+                  --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(REACT_APP_FIREBASE_MEASUREMENT_ID)
+                  --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(REACT_APP_FIREBASE_MESSAGING_SENDER_ID)
+                  --from-literal=REACT_APP_FIREBASE_PROJECT_ID=$(REACT_APP_FIREBASE_PROJECT_ID)
+                  --from-literal=REACT_APP_FIREBASE_STORAGE_BUCKET=$(REACT_APP_FIREBASE_STORAGE_BUCKET)
+                  --from-literal=REACT_APP_BASE_URL=$(REACT_APP_BASE_URL)
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes
             inputs:
@@ -193,11 +211,11 @@ stages:
               useConfigurationFile: true
               configuration: "./kubernetes/ingress.yaml"
               outputFormat: none
-          - task: Kubernetes@1
-            displayName: Restart service
-            inputs:
-              connectionType: $(connectionType)
-              kubernetesServiceEndpoint: $(aksServiceConnection)
-              namespace: $(k8sNamespace)
-              command: "rollout"
-              arguments: "restart deploy dbinclui-app-prd"
+          # - task: Kubernetes@1
+          #   displayName: Restart service
+          #   inputs:
+          #     connectionType: $(connectionType)
+          #     kubernetesServiceEndpoint: $(aksServiceConnection)
+          #     namespace: $(k8sNamespace)
+          #     command: "rollout"
+          #     arguments: "restart deploy dbinclui-app-prd"

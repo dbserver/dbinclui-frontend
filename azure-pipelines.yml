@@ -44,7 +44,7 @@ variables:
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
     
-  - group: dbinclui-app-env-dev
+  
 
 pool:
   vmImage: $(vmImage)
@@ -53,6 +53,8 @@ stages:
   - stage: CI
     jobs:
       - job: CI
+        variables:
+        - group: dbinclui-app-env-dev
         displayName: Run tests, build and push image to ACR
         steps:      
           - task: Npm@1
@@ -106,24 +108,6 @@ stages:
             displayName: Changing yaml's variables
             inputs:
               scriptPath: "./kubernetes/change_variables.sh"
-          - task: Kubernetes@1
-            displayName: Create configmap
-            inputs:
-              connectionType: $(connectionType)
-              kubernetesServiceEndpoint: $(aksServiceConnection)
-              namespace: $(k8sNamespace)
-              containerRegistryType: "Azure Container Registry"
-              configMapName: "dbinclui-app-configmap-dev"
-              forceUpdateConfigMap: true
-              configMapArguments: >
-                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(REACT_APP_FIREBASE_API_KEY)
-                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(REACT_APP_FIREBASE_APP_ID)
-                  --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(REACT_APP_FIREBASE_AUTH_DOMAIN)
-                  --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(REACT_APP_FIREBASE_MEASUREMENT_ID)
-                  --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(REACT_APP_FIREBASE_MESSAGING_SENDER_ID)
-                  --from-literal=REACT_APP_FIREBASE_PROJECT_ID=$(REACT_APP_FIREBASE_PROJECT_ID)
-                  --from-literal=REACT_APP_FIREBASE_STORAGE_BUCKET=$(REACT_APP_FIREBASE_STORAGE_BUCKET)
-                  --from-literal=REACT_APP_BASE_URL=$(REACT_APP_BASE_URL)
          
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes
@@ -167,29 +151,6 @@ stages:
       - job: ApplyManifests
         displayName: Applying kubernetes manifests
         steps:
-          - task: ShellScript@2
-            displayName: Changing yaml's variables
-            inputs:
-              scriptPath: "./kubernetes/change_variables.sh"
-          
-          - task: Kubernetes@1
-            displayName: Create configmap
-            inputs:
-              connectionType: $(connectionType)
-              kubernetesServiceEndpoint: $(aksServiceConnection)
-              namespace: $(k8sNamespace)
-              containerRegistryType: "Azure Container Registry"
-              configMapName: "dbinclui-app-configmap-prd"
-              forceUpdateConfigMap: true
-              configMapArguments: >
-                  --from-literal=REACT_APP_FIREBASE_API_KEY=$(REACT_APP_FIREBASE_API_KEY)
-                  --from-literal=REACT_APP_FIREBASE_APP_ID=$(REACT_APP_FIREBASE_APP_ID)
-                  --from-literal=REACT_APP_FIREBASE_AUTH_DOMAIN=$(REACT_APP_FIREBASE_AUTH_DOMAIN)
-                  --from-literal=REACT_APP_FIREBASE_MEASUREMENT_ID=$(REACT_APP_FIREBASE_MEASUREMENT_ID)
-                  --from-literal=REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$(REACT_APP_FIREBASE_MESSAGING_SENDER_ID)
-                  --from-literal=REACT_APP_FIREBASE_PROJECT_ID=$(REACT_APP_FIREBASE_PROJECT_ID)
-                  --from-literal=REACT_APP_FIREBASE_STORAGE_BUCKET=$(REACT_APP_FIREBASE_STORAGE_BUCKET)
-                  --from-literal=REACT_APP_BASE_URL=$(REACT_APP_BASE_URL)
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes
             inputs:

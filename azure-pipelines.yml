@@ -56,10 +56,10 @@ stages:
         displayName: Run tests, build and push image to ACR
         steps:      
           - task: Npm@1
-            displayName: "Running tests"
+            displayName: "Running install"
             inputs:
               command: custom
-              customCommand: "install --legacy-peers-deps"
+              customCommand: "install --legacy-peer-deps"
           - task: Npm@1
             displayName: "Running tests"
             inputs:

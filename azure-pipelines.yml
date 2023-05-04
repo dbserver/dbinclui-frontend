@@ -8,7 +8,7 @@ trigger:
       - azure-pipelines
   tags:
     include:
-      - "*"
+      - '*'
 
 variables:
   - name: buildId
@@ -24,28 +24,27 @@ variables:
     value: Kubernetes Service Connection
 
   - name: acrServiceConnection
-    value: "docker-registry"
+    value: 'docker-registry'
 
   - name: aksServiceConnection
-    value: "AKS-DBSERVER"
+    value: 'AKS-DBSERVER'
 
   - name: dockerRepository
-    value: "dbinclui/frontend"
+    value: 'dbinclui/frontend'
 
   - name: branchName
     value: $(Build.SourceBranchName)
 
   - name: acrUrl
-    value: "dbserverregistry.azurecr.io/dbinclui/frontend"
+    value: 'dbserverregistry.azurecr.io/dbinclui/frontend'
 
   - name: isTag
     value: ${{startsWith(variables['Build.SourceBranch'],'refs/tags/')}}
 
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
-  
+
   - group: dbinclui-app-env-dev
-  
 
 pool:
   vmImage: $(vmImage)
@@ -55,50 +54,29 @@ stages:
     jobs:
       - job: CI
         displayName: Run tests, build and push image to ACR
-        steps:      
+        steps:
           - task: Bash@3
             inputs:
               targetType: 'inline'
               script: 'env | sort'
           - task: Npm@1
-            displayName: "Running install"
+            displayName: 'Running install'
             inputs:
               command: custom
-              customCommand: "install --legacy-peer-deps"
+              customCommand: 'install --legacy-peer-deps'
           # - task: Npm@1
           #   displayName: "Running tests"
           #   inputs:
           #     command: custom
           #     customCommand: "run test"
-
-    # Download secure file from azure library
-          - task: DownloadSecureFile@1
-            inputs:
-              secureFile: '.env-development'
-
-          # Copy the .env file
-          - task: CopyFiles@2
-            inputs:
-              sourceFolder: '$(Agent.TempDirectory)'
-              contents: '**/*.env-development'
-              targetFolder: './'
-              cleanTargetFolder: false
-          
-          - task: CmdLine@2
-            inputs:
-              script: |
-                set -a # automatically export all variables
-                source .env-development
-                set +a
-                
           - task: Npm@1
-            displayName: "Build Prod"
-           # condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
+            displayName: 'Build Prod'
+            # condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
             inputs:
               command: custom
-              customCommand: "run build"
+              customCommand: 'run build'
               workingDir: ./
-            
+
             #testing
           - task: Docker@2
             displayName: Building docker image and pushing to ACR
@@ -106,23 +84,23 @@ stages:
             inputs:
               containerRegistry: $(acrServiceConnection)
               repository: $(dockerRepository)
-              command: "buildAndPush"
-              Dockerfile: "**/Dockerfile"
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
               ${{ if eq(variables['isTag'], 'true') }}:
-              #   tags: $(branchName)
-              # ${{ else }}:
+                #   tags: $(branchName)
+                # ${{ else }}:
                 tags: |
                   $(buildId)
                   latest
 
   - stage: DeployToDevelopment
-  #  dependsOn: CI
-  # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+    #  dependsOn: CI
+    # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
     variables:
       - name: enviroment
-        value: "dev"
+        value: 'dev'
       - name: ingress_domain
-        value: "dbinclui-dev"
+        value: 'dbinclui-dev'
       - group: dbinclui-app-env-dev
     jobs:
       - job: ApplyManifests
@@ -131,8 +109,8 @@ stages:
           - task: ShellScript@2
             displayName: Changing yaml's variables
             inputs:
-              scriptPath: "./kubernetes/change_variables.sh"
-         
+              scriptPath: './kubernetes/change_variables.sh'
+
           - task: KubernetesManifest@0
             displayName: Deploy to Kubernetes
             inputs:
@@ -150,9 +128,9 @@ stages:
               connectionType: $(connectionType)
               kubernetesServiceEndpoint: $(aksServiceConnection)
               namespace: $(k8sNamespace)
-              command: "apply"
+              command: 'apply'
               useConfigurationFile: true
-              configuration: "./kubernetes/ingress.yaml"
+              configuration: './kubernetes/ingress.yaml'
               outputFormat: none
           # - task: Kubernetes@1
           #   displayName: Restart service
@@ -162,7 +140,6 @@ stages:
           #     namespace: $(k8sNamespace)
           #     command: "rollout"
           #     arguments: "restart deploy dbinclui-app-dev"
-
 #   - stage: DeployToProduction
 #  #   dependsOn: CI
 #   #  condition: and(succeeded(), eq(variables['isTag'], 'true'))

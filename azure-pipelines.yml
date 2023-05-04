@@ -47,8 +47,7 @@ variables:
   - group: dbinclui-app-env-dev
 
 pool:
-  name: Azure Pipelines
-  demands: npm
+  vmImage: $(vmImage)
 
 stages:
   - stage: CI

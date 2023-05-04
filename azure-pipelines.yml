@@ -43,7 +43,8 @@ variables:
 
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
-    
+  
+  - group: dbinclui-app-env-dev
   
 
 pool:
@@ -53,8 +54,6 @@ stages:
   - stage: CI
     jobs:
       - job: CI
-        variables:
-        - group: dbinclui-app-env-dev
         displayName: Run tests, build and push image to ACR
         steps:      
           - task: Npm@1
@@ -67,19 +66,6 @@ stages:
           #   inputs:
           #     command: custom
           #     customCommand: "run test"
-
-            # Download secure file from azure library
-          - task: DownloadSecureFile@1
-            inputs:
-              secureFile: '.env-dbinclui-frontend'
-
-          # Copy the .env file
-          - task: CopyFiles@2
-            inputs:
-              sourceFolder: '$(Agent.TempDirectory)'
-              contents: '**/*.env-dbinclui-frontend'
-              targetFolder: ./
-              cleanTargetFolder: false
 
           - task: Npm@1
             displayName: "Build Prod"

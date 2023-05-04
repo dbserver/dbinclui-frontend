@@ -87,12 +87,12 @@ stages:
               repository: $(dockerRepository)
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile'
-              ${{ if eq(variables['isTag'], 'true') }}:
-                #   tags: $(branchName)
-                # ${{ else }}:
-                tags: |
-                  $(buildId)
-                  latest
+              # ${{ if eq(variables['isTag'], 'true') }}:
+              #   tags: $(branchName)
+              # ${{ else }}:
+              tags: |
+                $(buildId)
+                latest
 
   - stage: DeployToDevelopment
     #  dependsOn: CI

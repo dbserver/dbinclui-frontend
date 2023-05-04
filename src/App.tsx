@@ -11,7 +11,6 @@ function App() {
   const toggleTheme = () => (themeMode === 'default' ? 'contrast' : 'default');
   return (
     <ThemeProvider theme={theme(themeMode)}>
-      <h1>TESTEEEE</h1>
       <GlobalContext>
         <CssBaseline />
         <AccessibilityTools

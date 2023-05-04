@@ -67,6 +67,26 @@ stages:
           #     command: custom
           #     customCommand: "run test"
 
+    # Download secure file from azure library
+          - task: DownloadSecureFile@1
+            inputs:
+              secureFile: '.env-development'
+
+          # Copy the .env file
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: '$(Agent.TempDirectory)'
+              contents: '**/*.-'
+              targetFolder: '$(YOUR_DEFINED_PROJECT_ROOT_FOLDER_VARIABLE)'
+              cleanTargetFolder: false
+          
+          - task: CmdLine@2
+            inputs:
+              script: |
+                set -a # automatically export all variables
+                source .env-development
+                set +a
+
           - task: Npm@1
             displayName: "Build Prod"
            # condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))

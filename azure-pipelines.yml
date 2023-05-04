@@ -75,7 +75,7 @@ stages:
               customCommand: "run build"
               workingDir: ./
             
-            
+            #testing
           - task: Docker@2
             displayName: Building docker image and pushing to ACR
             condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))

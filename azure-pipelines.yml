@@ -52,12 +52,12 @@ pool:
 stages:
   - stage: CI
     jobs:
-      - job: CI Development
+      - job: 'CI Development'
        # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
         variables: 
-          - group: dbinclui-app-env-dev
-          - name: enviroment
-            value: 'dev'
+        - group: dbinclui-app-env-dev
+        - name: enviroment
+          value: 'dev'
         displayName: Run tests, build and push image to ACR
         steps:
          

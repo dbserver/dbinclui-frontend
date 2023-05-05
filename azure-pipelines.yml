@@ -44,7 +44,7 @@ variables:
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
 
-  - group: dbinclui-app-env-dev
+  
 
 pool:
   vmImage: $(vmImage)
@@ -52,43 +52,47 @@ pool:
 stages:
   - stage: CI
     jobs:
-      - job: CI
+      - job: CI Development
+       # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+        variables: 
+          - group: dbinclui-app-env-dev
+          - name: enviroment
+            value: 'dev'
         displayName: Run tests, build and push image to ACR
         steps:
+         
+         #ver variáveis de ambiente 
           - task: Bash@3
             inputs:
               targetType: 'inline'
               script: 'env | sort'
+
           - task: Npm@1
             displayName: 'Running install'
             inputs:
               command: custom
               customCommand: 'install --legacy-peer-deps'
+              
           # - task: Npm@1
           #   displayName: "Running tests"
           #   inputs:
           #     command: custom
           #     customCommand: "run test"
+
           - task: Npm@1
-            displayName: 'Build Prod'
-            # condition: or(eq(variables['isTag'], 'true'), eq(variables['isMergePR'], 'true'))
+            displayName: 'build dev'
             inputs:
               command: custom
               customCommand: 'run build'
               workingDir: ./
 
-            #testing
           - task: Docker@2
             displayName: Building docker image and pushing to ACR
-            condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
             inputs:
               containerRegistry: $(acrServiceConnection)
               repository: $(dockerRepository)
               command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile'
-              # ${{ if eq(variables['isTag'], 'true') }}:
-              #   tags: $(branchName)
-              # ${{ else }}:
+              Dockerfile: '**/Dockerfile' 
               tags: |
                 $(buildId)
                 latest

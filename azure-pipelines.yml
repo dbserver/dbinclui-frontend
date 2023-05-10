@@ -49,15 +49,55 @@ variables:
 pool:
   vmImage: $(vmImage)
 
-stages:
-  - stage: CI
+# stages:
+#   - stage: 'CI_Development'
+#     jobs:
+#       - job: 
+#        # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+#         variables: 
+#         - group: dbinclui-app-env-dev
+#         - name: enviroment
+#           value: 'dev'
+#         displayName: Run tests, build and push image to ACR
+#         steps:
+         
+#          #ver variáveis de ambiente 
+#           - task: Bash@3
+#             inputs:
+#               targetType: 'inline'
+#               script: 'env | sort'
+#           - task: Npm@1
+#             displayName: 'Running install'
+#             inputs:
+#               command: custom
+#               customCommand: 'install --legacy-peer-deps' 
+
+#           - task: Npm@1
+#             displayName: 'build dev'
+#             inputs:
+#               command: custom
+#               customCommand: 'run build'
+#               workingDir: ./
+
+#           - task: Docker@2
+#             displayName: Building docker image and pushing to ACR
+#             inputs:
+#               containerRegistry: $(acrServiceConnection)
+#               repository: $(dockerRepository)
+#               command: 'buildAndPush'
+#               Dockerfile: '**/Dockerfile' 
+#               tags: |
+#                 $(buildId)
+#                 latest
+
+  - stage: 'CI_Production'
     jobs:
-      - job: 'CI_Development'
-       # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+      - job: 
+#   #  condition: and(succeeded(), eq(variables['isTag'], 'true'))
         variables: 
         - group: dbinclui-app-env-dev
         - name: enviroment
-          value: 'dev'
+          value: 'prod'
         displayName: Run tests, build and push image to ACR
         steps:
          
@@ -66,21 +106,20 @@ stages:
             inputs:
               targetType: 'inline'
               script: 'env | sort'
-
           - task: Npm@1
             displayName: 'Running install'
             inputs:
               command: custom
-              customCommand: 'install --legacy-peer-deps'
-              
-          # - task: Npm@1
-          #   displayName: "Running tests"
-          #   inputs:
-          #     command: custom
-          #     customCommand: "run test"
+              customCommand: 'install --legacy-peer-deps' 
 
           - task: Npm@1
-            displayName: 'build dev'
+            displayName: "Running tests"
+            inputs:
+              command: custom
+              customCommand: "run test:test"
+
+          - task: Npm@1
+            displayName: 'build prod'
             inputs:
               command: custom
               customCommand: 'run build'
@@ -93,9 +132,7 @@ stages:
               repository: $(dockerRepository)
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile' 
-              tags: |
-                $(buildId)
-                latest
+              tags: $(branchName)
 
   - stage: DeployToDevelopment
     #  dependsOn: CI
@@ -144,6 +181,9 @@ stages:
           #     namespace: $(k8sNamespace)
           #     command: "rollout"
           #     arguments: "restart deploy dbinclui-app-dev"
+
+          
+
 #   - stage: DeployToProduction
 #  #   dependsOn: CI
 #   #  condition: and(succeeded(), eq(variables['isTag'], 'true'))

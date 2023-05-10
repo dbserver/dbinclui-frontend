@@ -116,7 +116,7 @@ stages:
             displayName: "Running tests"
             inputs:
               command: custom
-              customCommand: "run test --verbose=true"
+              customCommand: "run test"
 
           - task: Npm@1
             displayName: 'build prod'

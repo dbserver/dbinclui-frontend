@@ -95,7 +95,7 @@ stages:
       - job: 
 #   #  condition: and(succeeded(), eq(variables['isTag'], 'true'))
         variables: 
-        - group: dbinclui-app-env-dev
+        - group: dbinclui-app-env-prd
         - name: enviroment
           value: 'prod'
         displayName: Run tests, build and push image to ACR

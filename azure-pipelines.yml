@@ -52,8 +52,8 @@ pool:
 stages:
   - stage: 'CI_Development'
     jobs:
-      - job: 
-       # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+      - job: CI_Development
+        condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
         variables: 
         - group: dbinclui-app-env-dev
         - name: enviroment
@@ -93,7 +93,7 @@ stages:
   - stage: 'CI_Production'
     jobs:
       - job: 
-#   #  condition: and(succeeded(), eq(variables['isTag'], 'true'))
+        condition: and(succeeded(), eq(variables['isTag'], 'true'))
         variables: 
         - group: dbinclui-app-env-prd
         - name: enviroment
@@ -135,7 +135,7 @@ stages:
               tags: $(branchName)
 
   - stage: DeployToDevelopment
-    dependsOn: CI
+    dependsOn: CI_Development
     condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
     variables:
       - name: enviroment

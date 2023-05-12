@@ -1,11 +1,11 @@
 pr:
   branches:
     include:
-      - azure-pipelines
+      - main
 trigger:
   branches:
     include:
-      - azure-pipelines
+      - main
   tags:
     include:
       - '*'
@@ -50,45 +50,45 @@ pool:
   vmImage: $(vmImage)
 
 stages:
-#   - stage: 'CI_Development'
-#     jobs:
-#       - job: 
-#        # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
-#         variables: 
-#         - group: dbinclui-app-env-dev
-#         - name: enviroment
-#           value: 'dev'
-#         displayName: Run tests, build and push image to ACR
-#         steps:
+  - stage: 'CI_Development'
+    jobs:
+      - job: 
+       # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+        variables: 
+        - group: dbinclui-app-env-dev
+        - name: enviroment
+          value: 'dev'
+        displayName: Run tests, build and push image to ACR
+        steps:
          
-#          #ver variáveis de ambiente 
-#           - task: Bash@3
-#             inputs:
-#               targetType: 'inline'
-#               script: 'env | sort'
-#           - task: Npm@1
-#             displayName: 'Running install'
-#             inputs:
-#               command: custom
-#               customCommand: 'install --legacy-peer-deps' 
+         #ver variáveis de ambiente 
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: 'env | sort'
+          - task: Npm@1
+            displayName: 'Running install'
+            inputs:
+              command: custom
+              customCommand: 'install --legacy-peer-deps' 
 
-#           - task: Npm@1
-#             displayName: 'build dev'
-#             inputs:
-#               command: custom
-#               customCommand: 'run build'
-#               workingDir: ./
+          - task: Npm@1
+            displayName: 'build dev'
+            inputs:
+              command: custom
+              customCommand: 'run build'
+              workingDir: ./
 
-#           - task: Docker@2
-#             displayName: Building docker image and pushing to ACR
-#             inputs:
-#               containerRegistry: $(acrServiceConnection)
-#               repository: $(dockerRepository)
-#               command: 'buildAndPush'
-#               Dockerfile: '**/Dockerfile' 
-#               tags: |
-#                 $(buildId)
-#                 latest
+          - task: Docker@2
+            displayName: Building docker image and pushing to ACR
+            inputs:
+              containerRegistry: $(acrServiceConnection)
+              repository: $(dockerRepository)
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile' 
+              tags: |
+                $(buildId)
+                latest
 
   - stage: 'CI_Production'
     jobs:
@@ -134,45 +134,45 @@ stages:
               Dockerfile: '**/Dockerfile' 
               tags: $(branchName)
 
-  # - stage: DeployToDevelopment
-  #   #  dependsOn: CI
-  #   # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
-  #   variables:
-  #     - name: enviroment
-  #       value: 'dev'
-  #     - name: ingress_domain
-  #       value: 'dbinclui-dev'
-  #     - group: dbinclui-app-env-dev
-  #   jobs:
-  #     - job: ApplyManifests
-  #       displayName: Applying kubernetes manifests
-  #       steps:
-  #         - task: ShellScript@2
-  #           displayName: Changing yaml's variables
-  #           inputs:
-  #             scriptPath: './kubernetes/change_variables.sh'
+  - stage: DeployToDevelopment
+    dependsOn: CI
+    condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+    variables:
+      - name: enviroment
+        value: 'dev'
+      - name: ingress_domain
+        value: 'dbinclui-dev'
+      - group: dbinclui-app-env-dev
+    jobs:
+      - job: ApplyManifests
+        displayName: Applying kubernetes manifests
+        steps:
+          - task: ShellScript@2
+            displayName: Changing yaml's variables
+            inputs:
+              scriptPath: './kubernetes/change_variables.sh'
 
-  #         - task: KubernetesManifest@0
-  #           displayName: Deploy to Kubernetes
-  #           inputs:
-  #             action: deploy
-  #             namespace: $(k8sNamespace)
-  #             kubernetesServiceConnection: $(aksServiceConnection)
-  #             manifests: |
-  #               ./kubernetes/deployment.yaml
-  #               ./kubernetes/service.yaml
-  #             containers: |
-  #               $(acrUrl):latest
-  #         - task: Kubernetes@1
-  #           displayName: Apply Ingress
-  #           inputs:
-  #             connectionType: $(connectionType)
-  #             kubernetesServiceEndpoint: $(aksServiceConnection)
-  #             namespace: $(k8sNamespace)
-  #             command: 'apply'
-  #             useConfigurationFile: true
-  #             configuration: './kubernetes/ingress.yaml'
-  #             outputFormat: none
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes
+            inputs:
+              action: deploy
+              namespace: $(k8sNamespace)
+              kubernetesServiceConnection: $(aksServiceConnection)
+              manifests: |
+                ./kubernetes/deployment.yaml
+                ./kubernetes/service.yaml
+              containers: |
+                $(acrUrl):latest
+          - task: Kubernetes@1
+            displayName: Apply Ingress
+            inputs:
+              connectionType: $(connectionType)
+              kubernetesServiceEndpoint: $(aksServiceConnection)
+              namespace: $(k8sNamespace)
+              command: 'apply'
+              useConfigurationFile: true
+              configuration: './kubernetes/ingress.yaml'
+              outputFormat: none
           # - task: Kubernetes@1
           #   displayName: Restart service
           #   inputs:
@@ -185,8 +185,8 @@ stages:
           
 
   - stage: DeployToProduction
- #   dependsOn: CI_Production
-  #  condition: and(succeeded(), eq(variables['isTag'], 'true'))
+    dependsOn: CI_Production
+    condition: and(succeeded(), eq(variables['isTag'], 'true'))
     variables:
       - name: enviroment
         value: "prd"

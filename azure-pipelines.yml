@@ -60,7 +60,7 @@ stages:
             inputs:
               command: custom
               workingDir: ./
-              customCommand: "run install --legacy-peer-deps"
+              customCommand: "install --legacy-peer-deps"
               
           - task: Npm@1
             displayName: "Running tests"

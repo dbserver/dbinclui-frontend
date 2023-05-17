@@ -43,6 +43,11 @@ variables:
 
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
+    
+  ${{ if and(succeeded(), eq(variables['isTag'], 'true')) }}:
+    - group: dbinclui-app-env-prd
+  ${{ if not(and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))) }}:
+   - group: dbinclui-app-env-dev
 
   
 

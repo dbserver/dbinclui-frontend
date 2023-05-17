@@ -47,7 +47,7 @@ variables:
   ${{ if and(succeeded(), eq(variables['isTag'], 'true')) }}:
     - group: dbinclui-app-env-prd
   ${{ if not(and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))) }}:
-   - group: dbinclui-app-env-dev
+    - group: dbinclui-app-env-dev
 
   
 

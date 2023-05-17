@@ -58,7 +58,9 @@ stages:
           - task: Npm@1
             displayName: "Installing dependencies"
             inputs:
-              command: "install"
+              command: custom
+              workingDir: ./
+              customCommand: "run install --legacy-peer-deps"
               
           - task: Npm@1
             displayName: "Running tests"

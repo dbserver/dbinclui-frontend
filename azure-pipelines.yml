@@ -52,7 +52,7 @@ stages:
     variables:
     - ${{ if eq(variables['isTag'], and(succeeded(), 'true')) }}:
       - group: dbinclui-app-env-prd
-    - ${{ if noteq(variables['isMergePR'], and(succeeded(),  'true') }}:
+    - ${{ if eq(variables['isMergePR'], and(succeeded(),  'true') }}:
       - group: dbinclui-app-env-dev
     jobs:
       - job: CI

@@ -50,7 +50,7 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main'))}}:
+    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}:
       - group: dbinclui-app-env-dev
     jobs:
       - job: CI

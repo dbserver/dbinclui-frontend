@@ -50,8 +50,10 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}:
-      - group: dbinclui-app-env-dev
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines'))}}:
+      - group: dbinclui-app-env-prd
+    # - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+    #   - group: dbinclui-app-env-dev
     jobs:
       - job: CI
         displayName: Run tests, build and push image to ACR
@@ -130,14 +132,14 @@ stages:
               useConfigurationFile: true
               configuration: './kubernetes/ingress.yaml'
               outputFormat: none
-          # - task: Kubernetes@1
-          #   displayName: Restart service
-          #   inputs:
-          #     connectionType: $(connectionType)
-          #     kubernetesServiceEndpoint: $(aksServiceConnection)
-          #     namespace: $(k8sNamespace)
-          #     command: "rollout"
-          #     arguments: "restart deploy dbinclui-app-dev"
+          - task: Kubernetes@1
+            displayName: Restart service
+            inputs:
+              connectionType: $(connectionType)
+              kubernetesServiceEndpoint: $(aksServiceConnection)
+              namespace: $(k8sNamespace)
+              command: "rollout"
+              arguments: "restart deploy dbinclui-app-dev"
 
           
 

@@ -45,7 +45,7 @@ variables:
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
   
   - name: isMain 
-    value: ${{and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))}}
+    value: ${{ne(variables['Build.SourceBranch'], 'refs/heads/main'))}}
 
 pool:
   vmImage: $(vmImage)
@@ -53,7 +53,7 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if eq(variables['isMain'], 'true') }}:
+    - ${{ if and(succeeded(), eq(variables['isMain'], 'true') }}:
       - group: dbinclui-app-env-dev
     jobs:
       - job: CI

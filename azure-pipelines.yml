@@ -51,7 +51,7 @@ stages:
   - stage: CI
     variables:
     - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
-      - group: dbinclui-app-env-prd
+      - group: dbinclui-app-env-dev
     # - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
     #   - group: dbinclui-app-env-dev
     jobs:

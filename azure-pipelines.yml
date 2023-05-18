@@ -43,6 +43,9 @@ variables:
 
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
+  
+  - name: isMain 
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')]
 
 pool:
   vmImage: $(vmImage)
@@ -50,8 +53,8 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if eq(variables['branchName'], 'refs/heads/azure-pipelines') }}:
-      - group: dbinclui-app-env-prd
+    - ${{ if eq(variables['isMain'], 'azure-pipelines') }}:
+      - group: dbinclui-app-env-dev
     - ${{ else }}:
       - group: dbinclui-app-env-dev
     jobs:

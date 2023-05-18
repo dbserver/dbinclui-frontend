@@ -45,7 +45,7 @@ variables:
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
   
   - name: isMain 
-    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/')]
+    value: ${{and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))}}
 
 pool:
   vmImage: $(vmImage)

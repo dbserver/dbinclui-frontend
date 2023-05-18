@@ -44,16 +44,13 @@ variables:
   - name: isMergePR
     value: ${{ne(variables['Build.Reason'], 'PullRequest')}}
   
-  - name: isMain 
-    value: ${{ne(variables['Build.SourceBranch'], 'refs/heads/main'))}}
-
 pool:
   vmImage: $(vmImage)
 
 stages:
   - stage: CI
     variables:
-    - ${{ if and(succeeded(), eq(variables['isMain'], 'true') }}:
+    - ${{ if and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))}}:
       - group: dbinclui-app-env-dev
     jobs:
       - job: CI

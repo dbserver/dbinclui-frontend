@@ -90,10 +90,10 @@ stages:
               # ${{ if eq(variables['isTag'], 'true') }}:
               #   tags: $(branchName)
               # # ${{ else }}:
-                tags: |
-                    $(buildId)
-                    latest
-                    $(branchName)
+              tags: |
+                  $(buildId)
+                  latest
+                  $(branchName)
 
   - stage: DeployToDevelopment
     dependsOn: CI

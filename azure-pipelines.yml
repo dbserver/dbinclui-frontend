@@ -99,7 +99,7 @@ stages:
     variables:
       - name: enviroment
         value: 'dev'
-      - name: ingress_doazure-pipelines
+      - name: ingress_domain
         value: 'dbinclui-dev'
     jobs:
       - job: ApplyManifests

@@ -1,11 +1,11 @@
 pr:
   branches:
     include:
-      - azure-pipelines
+      - main
 trigger:
   branches:
     include:
-      - azure-pipelines
+      - main
   tags:
     include:
       - '*'
@@ -50,10 +50,10 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
+    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
       - group: dbinclui-app-env-dev
-    # - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
-    #   - group: dbinclui-app-env-dev
+    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+      - group: dbinclui-app-env-prd
     jobs:
       - job: CI
         displayName: Run tests, build and push image to ACR
@@ -65,12 +65,13 @@ stages:
               workingDir: ./
               customCommand: "install --legacy-peer-deps"
               
-          # - task: Npm@1
-          #   displayName: "Running tests"
-          #   inputs:
-          #     command: custom
-          #     workingDir: ./
-          #     customCommand: "run test"
+          - task: Npm@1
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/main') 
+            displayName: "Running tests"
+            inputs:
+              command: custom
+              workingDir: ./
+              customCommand: "run test"
           - task: Npm@1
             displayName: "Building project"
             inputs:
@@ -80,22 +81,22 @@ stages:
              
           - task: Docker@2
             displayName: Building docker image and pushing to ACR
-     #       condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
+            condition: and(succeeded(), or(eq(variables['isMergePR'], 'true'), eq(variables['isTag'], 'true')))
             inputs:
               containerRegistry: $(acrServiceConnection)
               repository: $(dockerRepository)
               command: "buildAndPush"
               Dockerfile: "**/Dockerfile"
-              # ${{ if eq(variables['isTag'], 'true') }}:
-              #   tags: $(branchName)
-              # ${{ else }}:
+              ${{ if eq(variables['isTag'], 'true') }}:
+                tags: $(branchName)
+              ${{ else }}:
               tags: |
                   $(buildId)
                   latest
 
   - stage: DeployToDevelopment
     dependsOn: CI
-#    condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+    condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
     variables:
       - name: enviroment
         value: 'dev'
@@ -181,11 +182,11 @@ stages:
               configuration: "./kubernetes/ingress.yaml"
               outputFormat: none
               
-          # - task: Kubernetes@1
-          #   displayName: Restart service
-          #   inputs:
-          #     connectionType: $(connectionType)
-          #     kubernetesServiceEndpoint: $(aksServiceConnection)
-          #     namespace: $(k8sNamespace)
-          #     command: "rollout"
-          #     arguments: "restart deploy dbinclui-app-prd"
+          - task: Kubernetes@1
+            displayName: Restart service
+            inputs:
+              connectionType: $(connectionType)
+              kubernetesServiceEndpoint: $(aksServiceConnection)
+              namespace: $(k8sNamespace)
+              command: "rollout"
+              arguments: "restart deploy dbinclui-app-prd"

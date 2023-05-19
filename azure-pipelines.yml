@@ -101,7 +101,6 @@ stages:
         value: 'dev'
       - name: ingress_doazure-pipelines
         value: 'dbinclui-dev'
-      - group: dbinclui-app-env-dev
     jobs:
       - job: ApplyManifests
         displayName: Applying kubernetes manifests
@@ -149,7 +148,7 @@ stages:
     variables:
       - name: enviroment
         value: "prd"
-      - name: ingress_doazure-pipelines
+      - name: ingress_domain
         value: "dbinclui"
     jobs:
       - job: ApplyManifests

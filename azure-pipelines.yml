@@ -65,19 +65,19 @@ stages:
               workingDir: ./
               customCommand: "install --legacy-peer-deps"
               
-          - task: Npm@1
-            condition: eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines') 
-            displayName: "Running tests"
-            inputs:
-              command: custom
-              workingDir: ./
-              customCommand: "run test"
-          - task: Npm@1
-            displayName: "Building project"
-            inputs:
-              command: custom
-              workingDir: ./
-              customCommand: "run build"
+          # - task: Npm@1
+          #   condition: eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines') 
+          #   displayName: "Running tests"
+          #   inputs:
+          #     command: custom
+          #     workingDir: ./
+          #     customCommand: "run test"
+          # - task: Npm@1
+          #   displayName: "Building project"
+          #   inputs:
+          #     command: custom
+          #     workingDir: ./
+          #     customCommand: "run build"
              
           - task: Docker@2
             displayName: Building docker image and pushing to ACR

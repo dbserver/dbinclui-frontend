@@ -1,11 +1,11 @@
 pr:
   branches:
     include:
-      - main
+      - azure-pipelines
 trigger:
   branches:
     include:
-      - main
+      - azure-pipelines
   tags:
     include:
       - '*'
@@ -52,7 +52,7 @@ stages:
     variables:
     - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
       - group: dbinclui-app-env-dev
-    # - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+    # - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
     #   - group: dbinclui-app-env-dev
     jobs:
       - job: CI
@@ -99,7 +99,7 @@ stages:
     variables:
       - name: enviroment
         value: 'dev'
-      - name: ingress_domain
+      - name: ingress_doazure-pipelines
         value: 'dbinclui-dev'
       - group: dbinclui-app-env-dev
     jobs:
@@ -149,7 +149,7 @@ stages:
     variables:
       - name: enviroment
         value: "prd"
-      - name: ingress_domain
+      - name: ingress_doazure-pipelines
         value: "dbinclui"
     jobs:
       - job: ApplyManifests

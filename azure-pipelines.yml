@@ -1,11 +1,11 @@
 pr:
   branches:
     include:
-      - main
+      - azure-pipelines
 trigger:
   branches:
     include:
-      - main
+      - azure-pipelines
   tags:
     include:
       - '*'
@@ -50,9 +50,9 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
       - group: dbinclui-app-env-dev
-    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines')}}: #ok
       - group: dbinclui-app-env-prd
     jobs:
       - job: CI
@@ -66,7 +66,7 @@ stages:
               customCommand: "install --legacy-peer-deps"
               
           - task: Npm@1
-            condition: eq(variables['Build.SourceBranch'], 'refs/heads/main') 
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/azure-pipelines') 
             displayName: "Running tests"
             inputs:
               command: custom
@@ -87,16 +87,17 @@ stages:
               repository: $(dockerRepository)
               command: "buildAndPush"
               Dockerfile: "**/Dockerfile"
-              ${{ if eq(variables['isTag'], 'true') }}:
-                tags: $(branchName)
-              ${{ else }}:
+              # ${{ if eq(variables['isTag'], 'true') }}:
+              #   tags: $(branchName)
+              # # ${{ else }}:
                 tags: |
                     $(buildId)
                     latest
+                    $(branchName)
 
   - stage: DeployToDevelopment
     dependsOn: CI
-    condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
+    # condition: and(succeeded(), eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true'))
     variables:
       - name: enviroment
         value: 'dev'
@@ -145,7 +146,7 @@ stages:
 
   - stage: DeployToProduction
     dependsOn: CI
-    condition: and(succeeded(), eq(variables['isTag'], 'true'))
+    # condition: and(succeeded(), eq(variables['isTag'], 'true'))
     variables:
       - name: enviroment
         value: "prd"

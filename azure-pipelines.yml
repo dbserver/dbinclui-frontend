@@ -50,9 +50,9 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+    - ${{ if eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true')}}:
       - group: dbinclui-app-env-dev
-    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main')}}: #ok
+    - ${{ if eq(variables['isTag'], 'true')}}: 
       - group: dbinclui-app-env-prd
     jobs:
       - job: CI

@@ -50,7 +50,7 @@ pool:
 stages:
   - stage: CI
     variables:
-    - ${{ if eq(variables['isMergePR'], 'true'), ne(variables['isTag'], 'true')}}:
+    - ${{ if eq(variables['isMergePR'], 'true') && ne(variables['isTag'], 'true')}}:
       - group: dbinclui-app-env-dev
     - ${{ if eq(variables['isTag'], 'true')}}: 
       - group: dbinclui-app-env-prd

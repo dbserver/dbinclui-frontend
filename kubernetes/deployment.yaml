@@ -5,6 +5,8 @@ metadata:
   namespace: dbinclui
 spec:
   replicas: 1
+  strategy:
+        type: Recreate
   selector:
     matchLabels:
       app: dbinclui-app-${ENV}
@@ -19,19 +21,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 10
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              port: 8080
-              path: /health
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 10
-            failureThreshold: 3
